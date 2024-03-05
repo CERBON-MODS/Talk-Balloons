@@ -18,10 +18,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.cerbon.ml_template.fabric.ModNameFabric"
+      "com.cerbon.talk_balloons.fabric.TalkBalloonsFabric"
     ],
     "client": [
-      "com.cerbon.ml_template.fabric.ModNameFabric"
+      "com.cerbon.talk_balloons.fabric.TalkBalloonsFabric"
     ]
   },
   "mixins": [
