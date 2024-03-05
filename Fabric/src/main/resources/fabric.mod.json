@@ -22,6 +22,9 @@
     ],
     "client": [
       "com.cerbon.talk_balloons.fabric.TalkBalloonsFabric"
+    ],
+    "modmenu": [
+      "com.cerbon.talk_balloons.fabric.client.TBConfigMenu"
     ]
   },
   "mixins": [
