@@ -6,6 +6,8 @@
   "mixins": [
   ],
   "client": [
+    "PlayerRendererMixin",
+    "accessor.GuiGraphicsAccessor",
     "test.TestMixin"
   ],
   "injectors": {
