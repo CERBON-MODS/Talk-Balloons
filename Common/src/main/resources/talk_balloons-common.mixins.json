@@ -6,6 +6,8 @@
   "mixins": [
   ],
   "client": [
+    "AbstractClientPlayerMixin",
+    "ChatListenerMixin",
     "PlayerRendererMixin",
     "accessor.GuiGraphicsAccessor",
     "test.TestMixin"

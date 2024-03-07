@@ -1,6 +1,7 @@
 package com.cerbon.talk_balloons.mixin;
 
 import com.cerbon.talk_balloons.client.BalloonRenderer;
+import com.cerbon.talk_balloons.util.mixin.IAbstractClientPlayer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -13,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-
 @Mixin(PlayerRenderer.class)
 public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
@@ -26,6 +25,9 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
     private void tb_render(AbstractClientPlayer player, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
         if (player.isInvisible() || !player.isAlive()) return;
 
-        BalloonRenderer.renderBalloon(poseStack, buffer, this.entityRenderDispatcher, this.getFont(), List.of(), 49, 1, player.getBbHeight(), packedLight);
+        IAbstractClientPlayer playerMixin = (IAbstractClientPlayer) player;
+        if (playerMixin.getBalloonMessages() == null || playerMixin.getBalloonMessages().isEmpty()) return;
+
+        BalloonRenderer.renderBalloons(poseStack, buffer, this.entityRenderDispatcher, this.getFont(), playerMixin.getBalloonMessages(), player.getBbHeight(), packedLight);
     }
 }
