@@ -36,7 +36,7 @@ public class BalloonRenderer {
             if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow
                 balloonWidth--;
 
-            poseStack.translate(0.0, playerHeight + 0.6F, 0.0D);
+            poseStack.translate(0.0, playerHeight + 0.9F, 0.0D);
             poseStack.mulPose(Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y));
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 
