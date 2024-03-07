@@ -49,20 +49,22 @@ public class BalloonRenderer {
             Minecraft client = Minecraft.getInstance();
             GuiGraphics guiGraphics = GuiGraphicsAccessor.getGuiGraphics(client, poseStack, client.renderBuffers().bufferSource());
 
+            int balloonsDistance = i * 12;
+
             // Left
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 - i * 12, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 + 5 - i * 12, 5, balloonHeight + (balloonHeight - 1) * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, 5 + (balloonHeight - 1) - i * 12, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 - balloonsDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 + 5 - balloonsDistance, 5, balloonHeight + (balloonHeight - 1) * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, 5 + (balloonHeight - 1) - balloonsDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Mid
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, -balloonHeight - (balloonHeight - 1) * 7 - i * 12, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, -balloonHeight - (balloonHeight - 1) * 7 + 5 - i * 12, balloonWidth - 4, balloonHeight + (balloonHeight - 1) * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, 5 + (balloonHeight - 1) - i * 12, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, -balloonHeight - (balloonHeight - 1) * 7 - balloonsDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, -balloonHeight - (balloonHeight - 1) * 7 + 5 - balloonsDistance, balloonWidth - 4, balloonHeight + (balloonHeight - 1) * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, 5 + (balloonHeight - 1) - balloonsDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Right
-            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 - i * 12, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 + 5 - i * 12, 5, balloonHeight + (balloonHeight - 1) * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, 5 + (balloonHeight - 1) - i * 12, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 - balloonsDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 + 5 - balloonsDistance, 5, balloonHeight + (balloonHeight - 1) * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, 5 + (balloonHeight - 1) - balloonsDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Arrow
             RenderSystem.polygonOffset(2.0F, 2.0F);
@@ -71,7 +73,7 @@ public class BalloonRenderer {
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
 
-            font.drawInBatch(message, -messageWidth / 2.0F + 1, balloonHeight / 2.0F - i * 12, 1315860, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+            font.drawInBatch(message, -messageWidth / 2.0F + 1, balloonHeight / 2.0F - balloonsDistance, 1315860, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
 
             poseStack.popPose();
         }
