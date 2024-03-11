@@ -70,6 +70,10 @@ allprojects {
             name 'ClothConfig'
             url "https://maven.shedaniel.me/"
         }
+        maven {
+            name 'SimpleVoiceChat'
+            url 'https://maven.maxhenkel.de/repository/public'
+        }
         flatDir {
             dir "libs"
         }

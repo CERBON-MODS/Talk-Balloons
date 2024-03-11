@@ -25,6 +25,9 @@
     ],
     "modmenu": [
       "com.cerbon.talk_balloons.fabric.client.TBConfigMenu"
+    ],
+    "voicechat": [
+      "com.cerbon.talk_balloons.voicechat.TBVoiceChatPlugin"
     ]
   },
   "mixins": [
