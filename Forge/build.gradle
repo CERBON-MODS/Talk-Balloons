@@ -36,6 +36,8 @@ dependencies {
 
     modImplementation "curse.maven:simple-voice-chat-416089:${voicechat_version_forge}"
 
+    forgeRuntimeLibrary 'io.github.givimad:whisper-jni:1.5.4-0'
+
     modApi("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
