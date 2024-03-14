@@ -20,6 +20,7 @@ subprojects {
         modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
 
         api 'io.github.givimad:whisper-jni:1.5.4-0'
+        implementation 'com.microsoft.onnxruntime:onnxruntime:1.17.1'
 
         mappings loom.layered() {
             officialMojangMappings()
