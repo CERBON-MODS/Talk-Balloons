@@ -2,7 +2,6 @@ package com.cerbon.talk_balloons.forge.event;
 
 import com.cerbon.talk_balloons.config.TBConfig;
 import com.cerbon.talk_balloons.util.TBConstants;
-import com.cerbon.talk_balloons.voicechat.whisper.WhisperHandler;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
@@ -16,8 +15,6 @@ public class TBClientEventsForge {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        WhisperHandler.loadWhisper();
-
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> AutoConfig.getConfigScreen(TBConfig.class, parent).get()));
     }
 }

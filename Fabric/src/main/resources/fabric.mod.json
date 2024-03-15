@@ -27,7 +27,7 @@
       "com.cerbon.talk_balloons.fabric.client.TBConfigMenu"
     ],
     "voicechat": [
-      "com.cerbon.talk_balloons.voicechat.TBVoiceChatPlugin"
+      "com.cerbon.talk_balloons.integration.voicechat.TBVoiceChatPlugin"
     ]
   },
   "mixins": [

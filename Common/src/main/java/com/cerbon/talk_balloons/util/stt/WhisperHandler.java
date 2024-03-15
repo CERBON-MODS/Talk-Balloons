@@ -1,4 +1,4 @@
-package com.cerbon.talk_balloons.voicechat.whisper;
+package com.cerbon.talk_balloons.util.stt;
 
 import io.github.givimad.whisperjni.WhisperContext;
 import io.github.givimad.whisperjni.WhisperFullParams;
@@ -41,13 +41,13 @@ public final class WhisperHandler {
 
     /**
      *
-     * @param samples The audio samples (f32 encoded samples with sample rate 16KHZ).
+     * @param audioData The audio data in a float array. (Must be in 16khz).
      */
-    public static void transcribeAudioToText(float[] samples) {
+    public static void transcribeAudioToText(float[] audioData) {
         ExecutorService threadPool = Executors.newSingleThreadExecutor();
 
         threadPool.execute(() -> {
-            int result = whisper.full(context, whisperParams, samples, samples.length);
+            int result = whisper.full(context, whisperParams, audioData, audioData.length);
             if (result != 0)
                 throw new RuntimeException("Transcription failed with code " + result);
 
@@ -58,16 +58,16 @@ public final class WhisperHandler {
             }
         });
 
-        threadPool.shutdown();
+        if (!threadPool.isShutdown())
+            threadPool.shutdown();
     }
 
     /**
      * Retrieves and clears the most recent transcribed text.
      *
      * This method creates a copy of the current transcribed text, then clears the original list for subsequent inputs.
-     * It's useful when you want to process the current transcriptions and prepare the system for new ones.
      *
-     * @return A list of strings representing a copy of the most recent transcribed text. If no transcription has occurred since the last call or since the start of the program, it returns an empty list.
+     * @return A list of strings representing the most recent transcribed text. If no transcription has occurred it returns an empty list.
      */
     public static List<String> getTranscribedText() {
         List<String> transcribedTextCopy = new ObjectArrayList<>(transcribedText);
