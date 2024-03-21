@@ -5,8 +5,6 @@ dependencies {
 
     modImplementation "com.cerbon:cerbons_api-common-${minecraft_version}:${cerbons_api_version}"
 
-    implementation "de.maxhenkel.voicechat:voicechat-api:${voicechat_api_version}"
-
     modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
