@@ -15,4 +15,6 @@ public class TBConfig implements ConfigData {
     public int balloonAge = 15;
 
     public int textColor = 1315860;
+
+    public boolean showOwnBalloon = true;
 }

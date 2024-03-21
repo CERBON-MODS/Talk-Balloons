@@ -29,6 +29,9 @@ public class ChatListenerMixin {
         Level level = this.minecraft.level;
         if (level == null) return;
 
+        Player thisClientPlayer = this.minecraft.player;
+        if (thisClientPlayer != null && thisClientPlayer.getUUID() == chatMessage.sender() && !TalkBalloons.config.showOwnBalloon) return;
+
         Player player = level.getPlayerByUUID(chatMessage.sender());
         if (player == null) return;
 
