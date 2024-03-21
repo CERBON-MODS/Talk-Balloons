@@ -3,6 +3,7 @@ package com.cerbon.talk_balloons.mixin;
 import com.cerbon.cerbons_api.api.general.data.HistoricalData;
 import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.static_utilities.CapabilityUtils;
+import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.util.mixin.IAbstractClientPlayer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -24,7 +25,7 @@ public abstract class AbstractClientPlayerMixin extends Player implements IAbstr
     @Override
     public void createBalloonMessage(String text, int timeToRemove) {
         if (balloonMessages == null)
-            balloonMessages = new HistoricalData<>(text, 7);
+            balloonMessages = new HistoricalData<>(text, TalkBalloons.config.maxBalloons);
         else
             balloonMessages.add(text);
 

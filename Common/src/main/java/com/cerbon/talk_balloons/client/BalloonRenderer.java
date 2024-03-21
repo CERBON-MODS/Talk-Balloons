@@ -1,6 +1,7 @@
 package com.cerbon.talk_balloons.client;
 
 import com.cerbon.cerbons_api.api.general.data.HistoricalData;
+import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.mixin.accessor.GuiGraphicsAccessor;
 import com.cerbon.talk_balloons.util.TBConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -36,7 +37,7 @@ public class BalloonRenderer {
             if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow
                 balloonWidth--;
 
-            poseStack.translate(0.0, playerHeight + 0.9F, 0.0D);
+            poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonHeight, 0.0D);
             poseStack.mulPose(Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y));
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 
@@ -73,7 +74,7 @@ public class BalloonRenderer {
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
 
-            font.drawInBatch(message, -messageWidth / 2.0F + 1, balloonHeight / 2.0F - balloonsDistance, 1315860, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+            font.drawInBatch(message, -messageWidth / 2.0F + 1, balloonHeight / 2.0F - balloonsDistance, TalkBalloons.config.textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
 
             poseStack.popPose();
         }

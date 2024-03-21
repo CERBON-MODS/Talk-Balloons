@@ -1,5 +1,6 @@
 package com.cerbon.talk_balloons.mixin;
 
+import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.util.mixin.IAbstractClientPlayer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -31,6 +32,6 @@ public class ChatListenerMixin {
         Player player = level.getPlayerByUUID(chatMessage.sender());
         if (player == null) return;
 
-        ((IAbstractClientPlayer) player).createBalloonMessage(chatMessage.signedContent(), 15 * 20);
+        ((IAbstractClientPlayer) player).createBalloonMessage(chatMessage.signedContent(), TalkBalloons.config.balloonAge * 20);
     }
 }
