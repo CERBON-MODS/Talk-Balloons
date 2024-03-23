@@ -7,6 +7,7 @@ import com.cerbon.talk_balloons.util.TBConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -15,24 +16,31 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.List;
+
 @Environment(EnvType.CLIENT)
 public class BalloonRenderer {
     private static final ResourceLocation BALLOON_TEXTURE = new ResourceLocation(TBConstants.MOD_ID, "textures/gui/balloon.png");
+
     private static final int MIN_BALLOON_WIDTH = 13;
+    private static final int MAX_BALLOON_WIDTH = 180;
 
     public static void renderBalloons(PoseStack poseStack, MultiBufferSource buffer, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<String> messages, float playerHeight, int packedLight) {
+        List<Integer> heights = new IntArrayList();
+
         for (int i = 0; i < messages.size(); i++) {
             poseStack.pushPose();
 
             String message = messages.get(i);
             int messageWidth = font.width(message);
 
-            int balloonWidth = Math.max(messageWidth, MIN_BALLOON_WIDTH);
-            int balloonHeight = 1;
+            int balloonWidth = Mth.clamp(messageWidth, MIN_BALLOON_WIDTH, MAX_BALLOON_WIDTH);
+            int balloonHeight = messageWidth > MAX_BALLOON_WIDTH ? Mth.ceil((float) messageWidth / MAX_BALLOON_WIDTH) : 1;
 
             if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow
                 balloonWidth--;
@@ -50,22 +58,41 @@ public class BalloonRenderer {
             Minecraft client = Minecraft.getInstance();
             GuiGraphics guiGraphics = GuiGraphicsAccessor.getGuiGraphics(client, poseStack, client.renderBuffers().bufferSource());
 
-            int balloonsDistance = i * 12;
+            int balloonsDistance = 0;
+            for (int height : heights) {
+                balloonsDistance += switch (height) {
+                    case 1 -> 12;
+                    case 2 -> 21;
+                    case 3 -> 30;
+                    case 4 -> 39;
+                    case 5 -> 48;
+                    case 6 -> 57;
+                    case 7 -> 66;
+                    case 8 -> 75;
+                    case 9 -> 84;
+                    default -> 0;
+                };
+            }
+            heights.add(balloonHeight);
+
+            int j = balloonHeight - 1;
+
+            int baseY = (-balloonHeight - j * 7) - j;
 
             // Left
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 - balloonsDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 + 5 - balloonsDistance, 5, balloonHeight + (balloonHeight - 1) * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, 5 + (balloonHeight - 1) - balloonsDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, baseY - balloonsDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, baseY + 5 - balloonsDistance, 5, balloonHeight + j * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, 5 - balloonsDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Mid
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, -balloonHeight - (balloonHeight - 1) * 7 - balloonsDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, -balloonHeight - (balloonHeight - 1) * 7 + 5 - balloonsDistance, balloonWidth - 4, balloonHeight + (balloonHeight - 1) * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, 5 + (balloonHeight - 1) - balloonsDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, baseY - balloonsDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, baseY + 5 - balloonsDistance, balloonWidth - 4, balloonHeight + j * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, 5 - balloonsDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Right
-            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 - balloonsDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, -balloonHeight - (balloonHeight - 1) * 7 + 5 - balloonsDistance, 5, balloonHeight + (balloonHeight - 1) * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, 5 + (balloonHeight - 1) - balloonsDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, baseY - balloonsDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, baseY + 5 - balloonsDistance, 5, balloonHeight + j * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, 5 - balloonsDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Arrow
             RenderSystem.polygonOffset(2.0F, 2.0F);
