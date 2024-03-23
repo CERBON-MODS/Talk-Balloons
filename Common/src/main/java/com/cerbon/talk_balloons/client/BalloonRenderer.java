@@ -31,10 +31,21 @@ public class BalloonRenderer {
     private static final int MAX_BALLOON_WIDTH = 180;
 
     public static void renderBalloons(PoseStack poseStack, MultiBufferSource buffer, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<String> messages, float playerHeight, int packedLight) {
-        List<Integer> heights = new IntArrayList();
+        List<Integer> previousHeights = new IntArrayList();
 
         for (int i = 0; i < messages.size(); i++) {
             poseStack.pushPose();
+
+            poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonHeight, 0.0D);
+            poseStack.mulPose(Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y));
+            poseStack.scale(-0.025F, -0.025F, 0.025F);
+
+            RenderSystem.enableDepthTest();
+            RenderSystem.enablePolygonOffset();
+            RenderSystem.polygonOffset(3.0F, 3.0F);
+
+            Minecraft client = Minecraft.getInstance();
+            GuiGraphics guiGraphics = GuiGraphicsAccessor.getGuiGraphics(client, poseStack, client.renderBuffers().bufferSource());
 
             String message = messages.get(i);
             int messageWidth = font.width(message);
@@ -45,21 +56,8 @@ public class BalloonRenderer {
             if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow
                 balloonWidth--;
 
-            poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonHeight, 0.0D);
-            poseStack.mulPose(Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y));
-            poseStack.scale(-0.025F, -0.025F, 0.025F);
-
-            Matrix4f matrix4f = poseStack.last().pose();
-
-            RenderSystem.enableDepthTest();
-            RenderSystem.enablePolygonOffset();
-            RenderSystem.polygonOffset(3.0F, 3.0F);
-
-            Minecraft client = Minecraft.getInstance();
-            GuiGraphics guiGraphics = GuiGraphicsAccessor.getGuiGraphics(client, poseStack, client.renderBuffers().bufferSource());
-
             int balloonsDistance = 0;
-            for (int height : heights) {
+            for (int height : previousHeights) {
                 balloonsDistance += switch (height) {
                     case 1 -> 12;
                     case 2 -> 21;
@@ -73,26 +71,27 @@ public class BalloonRenderer {
                     default -> 0;
                 };
             }
-            heights.add(balloonHeight);
+            previousHeights.add(balloonHeight);
 
             int j = balloonHeight - 1;
-
+            
+            int baseX = balloonWidth / 2;
             int baseY = (-balloonHeight - j * 7) - j;
 
             // Left
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, baseY - balloonsDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, baseY + 5 - balloonsDistance, 5, balloonHeight + j * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 - 2, 5 - balloonsDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, baseY - balloonsDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, baseY + 5 - balloonsDistance, 5, balloonHeight + j * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, 5 - balloonsDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Mid
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, baseY - balloonsDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, baseY + 5 - balloonsDistance, balloonWidth - 4, balloonHeight + j * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -balloonWidth / 2 + 3, 5 - balloonsDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, baseY - balloonsDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, baseY + 5 - balloonsDistance, balloonWidth - 4, balloonHeight + j * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, 5 - balloonsDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Right
-            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, baseY - balloonsDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, baseY + 5 - balloonsDistance, 5, balloonHeight + j * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, balloonWidth / 2 - 2, 5 - balloonsDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, baseY - balloonsDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, baseY + 5 - balloonsDistance, 5, balloonHeight + j * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, 5 - balloonsDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Arrow
             RenderSystem.polygonOffset(2.0F, 2.0F);
@@ -101,6 +100,7 @@ public class BalloonRenderer {
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
 
+            Matrix4f matrix4f = poseStack.last().pose();
             font.drawInBatch(message, -messageWidth / 2.0F + 1, balloonHeight / 2.0F - balloonsDistance, TalkBalloons.config.textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
 
             poseStack.popPose();
