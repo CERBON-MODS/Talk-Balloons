@@ -7,7 +7,6 @@ import com.cerbon.talk_balloons.util.TBConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -33,21 +32,24 @@ public class BalloonRenderer {
     private static final int MAX_BALLOON_WIDTH = TalkBalloons.config.maxBalloonWidth;
 
     public static void renderBalloons(PoseStack poseStack, MultiBufferSource buffer, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<String> messages, float playerHeight, int packedLight) {
-        List<Integer> previousHeights = new IntArrayList();
+        Minecraft client = Minecraft.getInstance();
+        GuiGraphics guiGraphics = GuiGraphicsAccessor.getGuiGraphics(client, poseStack, client.renderBuffers().bufferSource());
+
+        Quaternionf quaternionf = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y);
+
+        int balloonsDistance = 0;
+        int previousBalloonHeight = 0;
 
         for (int i = 0; i < messages.size(); i++) {
             poseStack.pushPose();
 
             poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonsHeightOffset, 0.0D);
-            poseStack.mulPose(Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y));
+            poseStack.mulPose(quaternionf);
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 
             RenderSystem.enableDepthTest();
             RenderSystem.enablePolygonOffset();
             RenderSystem.polygonOffset(3.0F, 3.0F);
-
-            Minecraft client = Minecraft.getInstance();
-            GuiGraphics guiGraphics = GuiGraphicsAccessor.getGuiGraphics(client, poseStack, client.renderBuffers().bufferSource());
 
             String message = messages.get(i);
             List<FormattedText> substrings = font.getSplitter().splitLines(message, MAX_BALLOON_WIDTH, Style.EMPTY);
@@ -66,14 +68,12 @@ public class BalloonRenderer {
             if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow
                 balloonWidth--;
 
-            int balloonsDistance = 0;
-            for (int height : previousHeights)
-                balloonsDistance += 9 * height + TalkBalloons.config.distanceBetweenBalloons;
+            if (previousBalloonHeight != 0)
+                balloonsDistance += 9 * previousBalloonHeight + TalkBalloons.config.distanceBetweenBalloons;
 
-            previousHeights.add(balloonHeight);
+            previousBalloonHeight = balloonHeight;
 
             int j = balloonHeight - 1;
-
             int baseX = balloonWidth / 2;
             int baseY = (-balloonHeight - j * 7) - j;
 
