@@ -36,7 +36,7 @@ public class BalloonRenderer {
         for (int i = 0; i < messages.size(); i++) {
             poseStack.pushPose();
 
-            poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonHeightOffset, 0.0D);
+            poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonsHeightOffset, 0.0D);
             poseStack.mulPose(Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y));
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 

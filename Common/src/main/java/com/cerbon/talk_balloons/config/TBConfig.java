@@ -8,7 +8,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 @Config(name = TBConstants.MOD_ID)
 public class TBConfig implements ConfigData {
 
-    public float balloonHeightOffset = 0.9f;
+    public float balloonsHeightOffset = 0.9f;
     public int distanceBetweenBalloons = 3;
 
     public int maxBalloons = 7;
