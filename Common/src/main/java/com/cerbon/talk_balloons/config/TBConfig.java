@@ -9,8 +9,12 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 public class TBConfig implements ConfigData {
 
     public float balloonHeightOffset = 0.9f;
+    public int distanceBetweenBalloons = 3;
 
     public int maxBalloons = 7;
+    public int minBalloonWidth = 13;
+    public int maxBalloonWidth = 180;
+
     @Comment("In seconds")
     public int balloonAge = 15;
 

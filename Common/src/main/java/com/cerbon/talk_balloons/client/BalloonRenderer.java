@@ -27,8 +27,8 @@ import java.util.List;
 public class BalloonRenderer {
     private static final ResourceLocation BALLOON_TEXTURE = new ResourceLocation(TBConstants.MOD_ID, "textures/gui/balloon.png");
 
-    private static final int MIN_BALLOON_WIDTH = 13;
-    private static final int MAX_BALLOON_WIDTH = 180;
+    private static final int MIN_BALLOON_WIDTH = TalkBalloons.config.minBalloonWidth;
+    private static final int MAX_BALLOON_WIDTH = TalkBalloons.config.maxBalloonWidth;
 
     public static void renderBalloons(PoseStack poseStack, MultiBufferSource buffer, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<String> messages, float playerHeight, int packedLight) {
         List<Integer> previousHeights = new IntArrayList();
@@ -58,7 +58,7 @@ public class BalloonRenderer {
 
             int balloonsDistance = 0;
             for (int height : previousHeights)
-                balloonsDistance += 9 * height + 3;
+                balloonsDistance += 9 * height + TalkBalloons.config.distanceBetweenBalloons;
 
             previousHeights.add(balloonHeight);
 
