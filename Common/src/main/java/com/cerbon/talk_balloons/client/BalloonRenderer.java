@@ -52,9 +52,15 @@ public class BalloonRenderer {
             String message = messages.get(i);
             List<FormattedText> substrings = font.getSplitter().splitLines(message, MAX_BALLOON_WIDTH, Style.EMPTY);
 
-            int messageWidth = font.width(message);
+            int maxSubStringWidth = 0;
+            for (FormattedText substring : substrings) {
+                int substringWidth = font.width(substring.getString());
 
-            int balloonWidth = Mth.clamp(messageWidth, MIN_BALLOON_WIDTH, MAX_BALLOON_WIDTH);
+                if (substringWidth > maxSubStringWidth)
+                    maxSubStringWidth = substringWidth;
+            }
+
+            int balloonWidth = Mth.clamp(maxSubStringWidth, MIN_BALLOON_WIDTH, MAX_BALLOON_WIDTH);
             int balloonHeight = substrings.size();
 
             if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow
@@ -103,7 +109,7 @@ public class BalloonRenderer {
                     substringsDistance += 9;
                 }
             }
-            else font.drawInBatch(message, -messageWidth / 2.0F + 1, balloonHeight - balloonsDistance, TalkBalloons.config.textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+            else font.drawInBatch(message, -maxSubStringWidth / 2.0F + 1, balloonHeight - balloonsDistance, TalkBalloons.config.textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
 
             poseStack.popPose();
         }
