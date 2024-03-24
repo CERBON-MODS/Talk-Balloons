@@ -57,20 +57,9 @@ public class BalloonRenderer {
                 balloonWidth--;
 
             int balloonsDistance = 0;
-            for (int height : previousHeights) {
-                balloonsDistance += switch (height) {
-                    case 1 -> 12;
-                    case 2 -> 21;
-                    case 3 -> 30;
-                    case 4 -> 39;
-                    case 5 -> 48;
-                    case 6 -> 57;
-                    case 7 -> 66;
-                    case 8 -> 75;
-                    case 9 -> 84;
-                    default -> 0;
-                };
-            }
+            for (int height : previousHeights)
+                balloonsDistance += 9 * height + 3;
+
             previousHeights.add(balloonHeight);
 
             int j = balloonHeight - 1;
