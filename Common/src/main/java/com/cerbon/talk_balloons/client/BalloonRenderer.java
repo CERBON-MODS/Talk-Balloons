@@ -54,7 +54,7 @@ public class BalloonRenderer {
 
             int maxSubStringWidth = 0;
             for (FormattedText substring : substrings) {
-                int substringWidth = font.width(substring.getString());
+                int substringWidth = font.width(substring);
 
                 if (substringWidth > maxSubStringWidth)
                     maxSubStringWidth = substringWidth;
