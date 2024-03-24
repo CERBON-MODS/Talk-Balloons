@@ -15,6 +15,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
@@ -48,10 +50,12 @@ public class BalloonRenderer {
             GuiGraphics guiGraphics = GuiGraphicsAccessor.getGuiGraphics(client, poseStack, client.renderBuffers().bufferSource());
 
             String message = messages.get(i);
+            List<FormattedText> substrings = font.getSplitter().splitLines(message, MAX_BALLOON_WIDTH, Style.EMPTY);
+
             int messageWidth = font.width(message);
 
             int balloonWidth = Mth.clamp(messageWidth, MIN_BALLOON_WIDTH, MAX_BALLOON_WIDTH);
-            int balloonHeight = messageWidth > MAX_BALLOON_WIDTH ? Mth.ceil((float) messageWidth / MAX_BALLOON_WIDTH) : 1;
+            int balloonHeight = substrings.size();
 
             if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow
                 balloonWidth--;
@@ -90,11 +94,22 @@ public class BalloonRenderer {
             RenderSystem.disablePolygonOffset();
 
             Matrix4f matrix4f = poseStack.last().pose();
-            font.drawInBatch(message, -messageWidth / 2.0F + 1, balloonHeight / 2.0F - balloonsDistance, TalkBalloons.config.textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+
+            if (balloonHeight > 1) {
+                int substringsDistance = 0;
+
+                for (FormattedText substring : substrings) {
+                    font.drawInBatch(substring.getString(), -font.width(substring) / 2.0F + 1, -(9 * balloonHeight - 10) - balloonsDistance + substringsDistance, TalkBalloons.config.textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+                    substringsDistance += 9;
+                }
+            }
+            else font.drawInBatch(message, -messageWidth / 2.0F + 1, balloonHeight - balloonsDistance, TalkBalloons.config.textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
 
             poseStack.popPose();
         }
     }
+
+    private static void drawMessage(int balloonHeight, List<FormattedText> substrings) {}
 
     private static Vector3f toEulerXyz(Quaternionf quaternionf) {
         float f = quaternionf.w() * quaternionf.w();
