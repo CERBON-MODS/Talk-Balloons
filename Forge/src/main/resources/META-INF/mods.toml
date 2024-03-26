@@ -12,6 +12,7 @@ issueTrackerURL="${issues_url}"
    #credits="Thanks for this example mod goes to Java"
    authors="${mod_authors}"
    description='''${mod_description}'''
+   displayTest="IGNORE_ALL_VERSION"
 
 [[dependencies.${mod_id}]]
    modId="forge"
@@ -32,11 +33,11 @@ issueTrackerURL="${issues_url}"
    mandatory=true
    versionRange="${cerbons_api_version_range_forge}"
    ordering="NONE"
-   side="BOTH"
+   side="CLIENT"
 
 [[dependencies.${mod_id}]]
    modId="cloth_config"
    mandatory=true
    versionRange="${cloth_config_version_range_forge}"
    ordering="NONE"
-   side="BOTH"
+   side="CLIENT"
