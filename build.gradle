@@ -19,8 +19,6 @@ subprojects {
 
         modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
 
-        api 'io.github.givimad:whisper-jni:1.5.4-0'
-
         mappings loom.layered() {
             officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-${mapping_version}@zip")
