@@ -12,39 +12,36 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BalloonRenderer {
+public final class BalloonRenderer {
     private static final ResourceLocation BALLOON_TEXTURE = new ResourceLocation(TBConstants.MOD_ID, "textures/gui/balloon.png");
 
     private static final int MIN_BALLOON_WIDTH = TalkBalloons.config.minBalloonWidth;
     private static final int MAX_BALLOON_WIDTH = TalkBalloons.config.maxBalloonWidth;
 
-    public static void renderBalloons(PoseStack poseStack, MultiBufferSource buffer, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<String> messages, float playerHeight, int packedLight) {
-        Minecraft client = Minecraft.getInstance();
+    private static final Minecraft client = Minecraft.getInstance();
+
+    public static void renderBalloons(PoseStack poseStack, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<String> messages, float playerHeight) {
         GuiGraphics guiGraphics = GuiGraphicsAccessor.getGuiGraphics(client, poseStack, client.renderBuffers().bufferSource());
+        Quaternionf rotation = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y);
 
-        Quaternionf quaternionf = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y);
-
-        int balloonsDistance = 0;
+        int balloonDistance = 0;
         int previousBalloonHeight = 0;
-
         for (int i = 0; i < messages.size(); i++) {
             poseStack.pushPose();
 
             poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonsHeightOffset, 0.0D);
-            poseStack.mulPose(quaternionf);
+            poseStack.mulPose(rotation);
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 
             RenderSystem.enableDepthTest();
@@ -52,24 +49,24 @@ public class BalloonRenderer {
             RenderSystem.polygonOffset(3.0F, 3.0F);
 
             String message = messages.get(i);
-            List<FormattedText> substrings = font.getSplitter().splitLines(message, MAX_BALLOON_WIDTH, Style.EMPTY);
+            List<FormattedCharSequence> dividedMessage = font.split(FormattedText.of(message), MAX_BALLOON_WIDTH);
 
-            int maxSubStringWidth = 0;
-            for (FormattedText substring : substrings) {
-                int substringWidth = font.width(substring);
+            int greatestTextWidth = 0;
+            for (FormattedCharSequence text : dividedMessage) {
+                int textWidth = font.width(text);
 
-                if (substringWidth > maxSubStringWidth)
-                    maxSubStringWidth = substringWidth;
+                if (textWidth > greatestTextWidth)
+                    greatestTextWidth = textWidth;
             }
 
-            int balloonWidth = Mth.clamp(maxSubStringWidth, MIN_BALLOON_WIDTH, MAX_BALLOON_WIDTH);
-            int balloonHeight = substrings.size();
+            int balloonWidth = Mth.clamp(greatestTextWidth, MIN_BALLOON_WIDTH, MAX_BALLOON_WIDTH);
+            int balloonHeight = dividedMessage.size();
 
             if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow
                 balloonWidth--;
 
             if (previousBalloonHeight != 0)
-                balloonsDistance += 9 * previousBalloonHeight + TalkBalloons.config.distanceBetweenBalloons;
+                balloonDistance += 9 * previousBalloonHeight + TalkBalloons.config.distanceBetweenBalloons;
 
             previousBalloonHeight = balloonHeight;
 
@@ -78,38 +75,35 @@ public class BalloonRenderer {
             int baseY = (-balloonHeight - j * 7) - j;
 
             // Left
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, baseY - balloonsDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, baseY + 5 - balloonsDistance, 5, balloonHeight + j * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, 5 - balloonsDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, baseY - balloonDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, baseY + 5 - balloonDistance, 5, balloonHeight + j * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, 5 - balloonDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Mid
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, baseY - balloonsDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, baseY + 5 - balloonsDistance, balloonWidth - 4, balloonHeight + j * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, 5 - balloonsDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, baseY - balloonDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, baseY + 5 - balloonDistance, balloonWidth - 4, balloonHeight + j * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, 5 - balloonDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Right
-            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, baseY - balloonsDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, baseY + 5 - balloonsDistance, 5, balloonHeight + j * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, 5 - balloonsDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
-
-            // Arrow
-            RenderSystem.polygonOffset(2.0F, 2.0F);
-            guiGraphics.blit(BALLOON_TEXTURE, -3, 9, 18, 6, 7, 4, 32, 32);
+            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, baseY - balloonDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
+            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, baseY + 5 - balloonDistance, 5, balloonHeight + j * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
+            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, 5 - balloonDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
 
-            Matrix4f matrix4f = poseStack.last().pose();
+            // Arrow
+            guiGraphics.blit(BALLOON_TEXTURE, -3, 9, 18, 6, 7, 4, 32, 32);
 
-            if (balloonHeight > 1) {
-                int substringsDistance = 0;
+            if (dividedMessage.size() > 1) {
+                int textDistance = 0;
 
-                for (FormattedText substring : substrings) {
-                    font.drawInBatch(substring.getString(), -font.width(substring) / 2.0F + 1, -(9 * balloonHeight - 10) - balloonsDistance + substringsDistance, TalkBalloons.config.textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-                    substringsDistance += 9;
+                for (FormattedCharSequence text : dividedMessage) {
+                    guiGraphics.drawString(font, text, -font.width(text) / 2 + 1, -(9 * balloonHeight - 10) - balloonDistance + textDistance, TalkBalloons.config.textColor, false);
+                    textDistance += 9;
                 }
             }
-            else font.drawInBatch(message, -maxSubStringWidth / 2.0F + 1, balloonHeight - balloonsDistance, TalkBalloons.config.textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+            else guiGraphics.drawString(font, message, -greatestTextWidth / 2 + 1, balloonHeight - balloonDistance, TalkBalloons.config.textColor, false);
 
             poseStack.popPose();
         }

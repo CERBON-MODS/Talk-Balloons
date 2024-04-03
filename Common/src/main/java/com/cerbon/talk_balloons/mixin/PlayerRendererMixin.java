@@ -28,6 +28,6 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
         IAbstractClientPlayer playerMixin = (IAbstractClientPlayer) player;
         if (playerMixin.getBalloonMessages() == null || playerMixin.getBalloonMessages().isEmpty()) return;
 
-        BalloonRenderer.renderBalloons(poseStack, buffer, this.entityRenderDispatcher, this.getFont(), playerMixin.getBalloonMessages(), player.getBbHeight(), packedLight);
+        BalloonRenderer.renderBalloons(poseStack, this.entityRenderDispatcher, this.getFont(), playerMixin.getBalloonMessages(), player.getBbHeight());
     }
 }
