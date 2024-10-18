@@ -1,6 +1,6 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
 }
 
 architectury {
@@ -73,6 +73,14 @@ allprojects {
         maven {
             name 'SimpleVoiceChat'
             url 'https://maven.maxhenkel.de/repository/public'
+        }
+        maven {
+            url "https://maven.nucleoid.xyz/"
+            name "Nucleoid"
+        }
+        maven {
+            name "NeoForge"
+            url "https://maven.neoforged.net/releases/"
         }
         flatDir {
             dir "libs"

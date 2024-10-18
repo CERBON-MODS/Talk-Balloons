@@ -8,7 +8,7 @@ plugins {
 
 architectury {
     platformSetupLoomIde()
-    forge()
+    neoForge()
 }
 
 configurations {
@@ -16,25 +16,20 @@ configurations {
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentForge.extendsFrom common
+    developmentNeoForge.extendsFrom common
 }
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
-
-    forge {
-        mixinConfig "${mod_id}.mixins.json"
-        mixinConfig "${mod_id}-common.mixins.json"
-    }
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    neoForge "net.neoforged:neoforge:${neoforge_version}"
 
     // Mod Dependencies
-    modImplementation "com.cerbon:CerbonsAPI-Forge-${minecraft_version}:${cerbons_api_version}"
+    modImplementation "com.cerbon:CerbonsAPI-NeoForge-${minecraft_version}:${cerbons_api_version}"
 
-    modApi("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}") {
+    modApi("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
@@ -42,16 +37,16 @@ dependencies {
     // modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
     // modRuntimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
 
-    modImplementation "curse.maven:jade-324717:${jade_version_forge}"
+    modImplementation "curse.maven:jade-324717:${jade_version_neoforge}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 }
 
 processResources {
     var replaceProperties = [
             minecraft_version_range          : minecraft_version_range_forge,
-            forge_version_range              : forge_version_range,
+            neoforge_version_range           : neoforge_version_range,
             loader_version_range             : loader_version_range,
             mod_id                           : mod_id,
             mod_name                         : mod_name,
@@ -73,7 +68,7 @@ processResources {
 }
 
 base {
-    archivesBaseName = archives_base_name + "-Forge-${minecraft_version}"
+    archivesBaseName = archives_base_name + "-NeoForge-${minecraft_version}"
 }
 
 shadowJar {
@@ -116,7 +111,7 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
 
     def mainFile = upload(curseforge_project_id, remapJar)
-    mainFile.addModLoader("Forge")
+    mainFile.addModLoader("NeoForge")
     mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
 
     mainFile.releaseType = release_type
@@ -131,7 +126,7 @@ modrinth {
 
     projectId = modrinth_project_id
     uploadFile = remapJar
-    loaders = ["forge"]
+    loaders = ["neoforge"]
 
     gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 

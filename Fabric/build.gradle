@@ -28,7 +28,7 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}+${minecraft_version}"
 
     // Mod Dependencies
-    modImplementation "com.cerbon:cerbons_api-fabric-${minecraft_version}:${cerbons_api_version}"
+    modImplementation "com.cerbon:CerbonsAPI-Fabric-${minecraft_version}:${cerbons_api_version}"
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
