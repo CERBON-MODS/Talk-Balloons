@@ -24,7 +24,7 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public final class BalloonRenderer {
-    private static final ResourceLocation BALLOON_TEXTURE = new ResourceLocation(TBConstants.MOD_ID, "textures/gui/balloon.png");
+    private static final ResourceLocation BALLOON_TEXTURE = ResourceLocation.fromNamespaceAndPath(TBConstants.MOD_ID, "textures/gui/balloon.png");
 
     private static final int MIN_BALLOON_WIDTH = TalkBalloons.config.minBalloonWidth;
     private static final int MAX_BALLOON_WIDTH = TalkBalloons.config.maxBalloonWidth;
@@ -33,7 +33,7 @@ public final class BalloonRenderer {
 
     public static void renderBalloons(PoseStack poseStack, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<String> messages, float playerHeight) {
         GuiGraphics guiGraphics = GuiGraphicsAccessor.getGuiGraphics(client, poseStack, client.renderBuffers().bufferSource());
-        Quaternionf rotation = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y);
+        Quaternionf rotation = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y + 180);
 
         int balloonDistance = 0;
         int previousBalloonHeight = 0;
