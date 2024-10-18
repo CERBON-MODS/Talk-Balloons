@@ -60,6 +60,14 @@ allprojects {
             name 'SimpleVoiceChat'
             url 'https://maven.maxhenkel.de/repository/public'
         }
+        maven {
+            url "https://maven.nucleoid.xyz/"
+            name "Nucleoid"
+        }
+        maven {
+            name "NeoForge"
+            url "https://maven.neoforged.net/releases/"
+        }
     }
 
     tasks.withType(JavaCompile) {
