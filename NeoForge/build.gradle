@@ -1,0 +1,156 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'net.darkhax.curseforgegradle' version '1.1.18'
+    id "com.modrinth.minotaur" version "2.+"
+}
+
+architectury {
+    platformSetupLoomIde()
+    neoForge()
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentNeoForge.extendsFrom common
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
+dependencies {
+    neoForge "net.neoforged:neoforge:${neoforge_version}"
+
+    // Mod Dependencies
+    modImplementation "com.cerbon:CerbonsAPI-NeoForge-${minecraft_version}:${cerbons_api_version}"
+
+    modApi("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    // Useful Mods
+    // modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
+    // modRuntimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
+
+    modImplementation "curse.maven:jade-324717:${jade_version_neoforge}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
+}
+
+processResources {
+    var replaceProperties = [
+            minecraft_version_range          : minecraft_version_range_forge,
+            neoforge_version_range           : neoforge_version_range,
+            loader_version_range             : loader_version_range,
+            mod_id                           : mod_id,
+            mod_name                         : mod_name,
+            mod_license                      : mod_license,
+            mod_version                      : mod_version,
+            mod_authors                      : mod_authors,
+            mod_description                  : mod_description,
+            issues_url                       : issues_url,
+            curseforge_url                   : curseforge_url,
+            logo_file                        : logo_file,
+            cerbons_api_version_range_forge  : cerbons_api_version_range_forge,
+            cloth_config_version_range_forge : cloth_config_version_range_forge,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(["META-INF/mods.toml", "pack.mcmeta"]) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+base {
+    archivesBaseName = archives_base_name + "-NeoForge-${minecraft_version}"
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier.set("dev-shadow")
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set(null)
+    atAccessWideners.add("${mod_id}.accesswidener")
+}
+
+jar {
+    archiveClassifier.set("dev")
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+tasks.register("publishCurseForgeAndModrinth", Task) {
+    dependsOn publishCurseForge
+    dependsOn tasks.modrinth
+}
+
+tasks.register("publishCurseForge", TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+
+    def mainFile = upload(curseforge_project_id, remapJar)
+    mainFile.addModLoader("NeoForge")
+    mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
+
+    mainFile.releaseType = release_type
+    mainFile.changelogType = changelog_type
+    mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
+
+    mainFile.addRequirement(required_dependencies_forge.replaceAll(" ", "").split(","))
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+
+    projectId = modrinth_project_id
+    uploadFile = remapJar
+    loaders = ["neoforge"]
+
+    gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
+
+    versionName = archivesBaseName + "-" + mod_version
+    versionNumber = mod_version
+    versionType = release_type
+
+    changelog = rootProject.file(project.changelog).getText('UTF-8')
+
+    dependencies {
+        required.project required_dependencies_forge.replaceAll(" ", "").split(",")
+    }
+}
+
+publishing {
+    publications {
+        mavenForge(MavenPublication) {
+            artifactId = archives_base_name + "-" + project.name
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+
+    }
+}
