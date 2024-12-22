@@ -6,6 +6,12 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
 }
 
+def changelogFile = rootProject.file("../CHANGELOG.md")
+
+if (!changelogFile.exists()) {
+    logger.warn("Missing changelog, publishing will be disabled!")
+}
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -105,36 +111,40 @@ tasks.register("publishCurseForgeAndModrinth", Task) {
 }
 
 tasks.register("publishCurseForge", TaskPublishCurseForge) {
-    apiToken = System.getenv("CURSEFORGE_TOKEN")
+    if (changelogFile.exists()) {
+        apiToken = System.getenv("CURSEFORGE_TOKEN")
 
-    def mainFile = upload(curseforge_project_id, remapJar)
-    mainFile.addModLoader("Fabric")
-    mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
+        def mainFile = upload(curseforge_project_id, remapJar)
+        mainFile.addModLoader("Fabric")
+        mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
 
-    mainFile.releaseType = release_type
-    mainFile.changelogType = changelog_type
-    mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
+        mainFile.releaseType = release_type
+        mainFile.changelogType = changelog_type
+        mainFile.changelog = changelogFile.getText("UTF-8")
 
-    mainFile.addRequirement(required_dependencies_fabric.replaceAll(" ", "").split(","))
+        mainFile.addRequirement(required_dependencies_fabric.replaceAll(" ", "").split(","))
+    }
 }
 
 modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
+    if (changelogFile.exists()) {
+        token = System.getenv("MODRINTH_TOKEN")
 
-    projectId = modrinth_project_id
-    uploadFile = remapJar
-    loaders = ["fabric"]
+        projectId = modrinth_project_id
+        uploadFile = remapJar
+        loaders = ["fabric"]
 
-    gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
+        gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
-    versionName = archivesBaseName + "-" + mod_version
-    versionNumber = mod_version
-    versionType = release_type
+        versionName = archivesBaseName + "-" + mod_version
+        versionNumber = mod_version
+        versionType = release_type
 
-    changelog = rootProject.file(project.changelog).getText('UTF-8')
+        changelog = changelogFile.getText("UTF-8")
 
-    dependencies {
-        required.project required_dependencies_fabric.replaceAll(" ", "").split(",")
+        dependencies {
+            required.project required_dependencies_fabric.replaceAll(" ", "").split(",")
+        }
     }
 }
 
