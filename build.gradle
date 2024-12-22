@@ -1,3 +1,7 @@
 tasks.register("remapAllVersions", Task) {
     dependsOn(gradle.includedBuilds*.task(":remapJar"))
 }
+
+tasks.register("publishAllVersions", Task) {
+    dependsOn(gradle.includedBuilds*.task(":publishAllCurseforgeAndModrinth"))
+}
