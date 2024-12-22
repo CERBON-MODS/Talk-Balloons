@@ -8,7 +8,9 @@
   "client": [
     "AbstractClientPlayerMixin",
     "ChatListenerMixin",
+    "LivingEntityRendererMixin",
     "PlayerRendererMixin",
+    "PlayerRenderStateMixin",
     "accessor.GuiGraphicsAccessor"
   ],
   "injectors": {

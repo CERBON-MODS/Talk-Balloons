@@ -12,11 +12,13 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -75,25 +77,28 @@ public final class BalloonRenderer {
             int baseY = (-balloonHeight - j * 7) - j;
 
             // Left
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, baseY - balloonDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, baseY + 5 - balloonDistance, 5, balloonHeight + j * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX - 2, 5 - balloonDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(guiGraphics, BALLOON_TEXTURE, -baseX - 2, baseY - balloonDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(guiGraphics, BALLOON_TEXTURE, -baseX - 2, baseY + 5 - balloonDistance, 5, balloonHeight + j * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(guiGraphics, BALLOON_TEXTURE, -baseX - 2, 5 - balloonDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Mid
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, baseY - balloonDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, baseY + 5 - balloonDistance, balloonWidth - 4, balloonHeight + j * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE, -baseX + 3, 5 - balloonDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(guiGraphics, BALLOON_TEXTURE, -baseX + 3, baseY - balloonDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(guiGraphics, BALLOON_TEXTURE, -baseX + 3, baseY + 5 - balloonDistance, balloonWidth - 4, balloonHeight + j * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(guiGraphics, BALLOON_TEXTURE, -baseX + 3, 5 - balloonDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Right
-            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, baseY - balloonDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
-            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, baseY + 5 - balloonDistance, 5, balloonHeight + j * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
-            guiGraphics.blit(BALLOON_TEXTURE,  baseX - 2, 5 - balloonDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(guiGraphics, BALLOON_TEXTURE,  baseX - 2, baseY - balloonDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(guiGraphics, BALLOON_TEXTURE,  baseX - 2, baseY + 5 - balloonDistance, 5, balloonHeight + j * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(guiGraphics, BALLOON_TEXTURE,  baseX - 2, 5 - balloonDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
 
+            poseStack.pushPose();
+            poseStack.translate(0f, 0f, -0.005f);
+
             // Arrow
-            guiGraphics.blit(BALLOON_TEXTURE, -3, 9, 18, 6, 7, 4, 32, 32);
+            guiGraphics.blit(RenderType::guiTextured, BALLOON_TEXTURE, -3, 9, 18, 6, 7, 4, 32, 32);
 
             if (dividedMessage.size() > 1) {
                 int textDistance = 0;
@@ -106,7 +111,38 @@ public final class BalloonRenderer {
             else guiGraphics.drawString(font, message, -greatestTextWidth / 2 + 1, balloonHeight - balloonDistance, TalkBalloons.config.textColor, false);
 
             poseStack.popPose();
+            poseStack.popPose();
         }
+    }
+
+    private static void blit(GuiGraphics guiGraphics, ResourceLocation location, int x, int y, int width, int height, float uOffset, float vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight) {
+        var bufferSource = client.renderBuffers().bufferSource();
+        var buffer = bufferSource.getBuffer(RenderType.guiTextured(location));
+
+        Matrix4f matrix = guiGraphics.pose().last().pose();
+        int x2 = x + width;
+        int y2 = y + height;
+
+        float minU = (uOffset + 0f) / (float) textureWidth;
+        float minV = (vOffset + 0f) / (float) textureHeight;
+        float maxU = (uOffset + (float) uWidth) / (float) textureWidth;
+        float maxV = (vOffset + (float) vHeight) / (float) textureHeight;
+
+        buffer.addVertex(matrix, (float) x, (float) y, 0f)
+            .setUv(minU, minV)
+            .setColor(-1);
+
+        buffer.addVertex(matrix, (float) x, (float) y2, 0f)
+            .setUv(minU, maxV)
+            .setColor(-1);
+
+        buffer.addVertex(matrix, (float) x2, (float) y2, 0f)
+            .setUv(maxU, maxV)
+            .setColor(-1);
+
+        buffer.addVertex(matrix, (float) x2, (float) y, 0f)
+            .setUv(maxU, minV)
+            .setColor(-1);
     }
 
     private static Vector3f toEulerXyz(Quaternionf quaternionf) {
