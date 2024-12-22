@@ -27,18 +27,11 @@ dependencies {
     neoForge "net.neoforged:neoforge:${neoforge_version}"
 
     // Mod Dependencies
-    modImplementation "com.cerbon:CerbonsAPI-NeoForge-${minecraft_version}:${cerbons_api_version}"
-
     modApi("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
     // Useful Mods
-    // modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
-    // modRuntimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
-
-    modImplementation "curse.maven:jade-324717:${jade_version_neoforge}"
-
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 }
@@ -57,12 +50,11 @@ processResources {
             issues_url                       : issues_url,
             curseforge_url                   : curseforge_url,
             logo_file                        : logo_file,
-            cerbons_api_version_range_forge  : cerbons_api_version_range_forge,
             cloth_config_version_range_forge : cloth_config_version_range_forge,
     ]
     inputs.properties replaceProperties
 
-    filesMatching(["META-INF/mods.toml", "pack.mcmeta"]) {
+    filesMatching(["META-INF/neoforge.mods.toml", "pack.mcmeta"]) {
         expand replaceProperties + [project: project]
     }
 }
