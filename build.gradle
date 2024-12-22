@@ -1,6 +1,6 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.9-SNAPSHOT" apply false
 }
 
 architectury {
@@ -16,8 +16,6 @@ subprojects {
 
     dependencies {
         minecraft "com.mojang:minecraft:${minecraft_version}"
-
-        modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
 
         mappings loom.layered() {
             officialMojangMappings()
@@ -47,18 +45,6 @@ allprojects {
             }
         }
         maven {
-            name "Progwml6's maven" // JEI
-            url "https://dvs1.progwml6.com/files/maven/"
-        }
-        maven {
-            name "Jared's maven" // JEI
-            url "https://maven.blamejared.com/"
-        }
-        maven {
-            name "ModMaven" // JEI
-            url "https://modmaven.dev"
-        }
-        maven {
             name "ModMenu"
             url "https://maven.terraformersmc.com/"
         }
@@ -73,9 +59,6 @@ allprojects {
         maven {
             name 'SimpleVoiceChat'
             url 'https://maven.maxhenkel.de/repository/public'
-        }
-        flatDir {
-            dir "libs"
         }
     }
 
