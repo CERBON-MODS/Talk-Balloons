@@ -83,4 +83,5 @@ allprojects {
 tasks.register("publishAllCurseforgeAndModrinth", Task) {
     dependsOn ":forge:publishCurseForgeAndModrinth"
     dependsOn ":fabric:publishCurseForgeAndModrinth"
+    dependsOn ":neoforge:publishCurseForgeAndModrinth"
 }
