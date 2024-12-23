@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2024-12-23
 
 - Remove dependency on CERBON's API
-- Update up to 1.21.4
+- Update up to 1.21.4 (Fabric, Forge, NeoForge)
 
 ## [1.0.0] - 2024-03-26
 
