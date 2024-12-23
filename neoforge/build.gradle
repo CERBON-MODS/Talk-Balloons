@@ -25,10 +25,6 @@ configurations {
     developmentNeoForge.extendsFrom common
 }
 
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-}
-
 dependencies {
     neoForge "net.neoforged:neoforge:${neoforge_version}"
 
@@ -81,7 +77,6 @@ remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set(null)
-    atAccessWideners.add("${mod_id}.accesswidener")
 }
 
 jar {

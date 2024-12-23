@@ -26,8 +26,6 @@ configurations {
 }
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-
     forge {
         mixinConfig "${mod_id}.mixins.json"
         mixinConfig "${mod_id}-common.mixins.json"
@@ -85,7 +83,6 @@ remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set(null)
-    atAccessWideners.add("${mod_id}.accesswidener")
 }
 
 jar {
