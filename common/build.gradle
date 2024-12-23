@@ -16,10 +16,6 @@ base {
     archivesBaseName = archives_base_name + "-Common-${minecraft_version}"
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
-}
-
 publishing {
     publications {
         mavenCommon(MavenPublication) {
