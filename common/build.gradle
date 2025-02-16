@@ -12,6 +12,12 @@ architectury {
     common("fabric", "forge")
 }
 
+loom {
+    mixin {
+        defaultRefmapName = "talk_balloons-common.refmap.json"
+    }
+}
+
 base {
     archivesBaseName = archives_base_name + "-Common-${minecraft_version}"
 }
