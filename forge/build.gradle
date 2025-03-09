@@ -132,8 +132,8 @@ modrinth {
 
         gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
-        versionName = archivesBaseName + "-" + mod_version
-        versionNumber = mod_version
+        versionName = archivesBaseName + "-" + this.version
+        versionNumber = this.version + "-${minecraft_version}-forge"
         versionType = release_type
 
         changelog = changelogFile.getText("UTF-8")
