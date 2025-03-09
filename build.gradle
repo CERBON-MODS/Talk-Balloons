@@ -29,7 +29,7 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    version = mod_version
+    version = rootProject.file("../mod_version.txt").getText("UTF-8")
     group = maven_group
 
     repositories {
