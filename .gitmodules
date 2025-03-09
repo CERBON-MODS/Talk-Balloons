@@ -18,3 +18,11 @@
 	path = 1.20.1
 	url = git@github.com:CERBON-MODS/Talk-Balloons.git
 	branch = version/1.20.1
+[submodule "1.19.2"]
+	path = 1.19.2
+	url = git@github.com:CERBON-MODS/Talk-Balloons.git
+	branch = version/1.19.2
+[submodule "1.18.2"]
+	path = 1.18.2
+	url = git@github.com:CERBON-MODS/Talk-Balloons.git
+	branch = version/1.18.2

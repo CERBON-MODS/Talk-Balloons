@@ -16,3 +16,5 @@
 /Forge/build/
 /Forge/run/*
 !/Forge/run/options.txt
+
+/run/

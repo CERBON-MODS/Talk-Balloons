@@ -1,6 +1,6 @@
 rootProject.name = "TalkBalloons"
 
-def supportedVersions = ["1.20.1", "1.20.4", "1.20.6", "1.21.1", "1.21.3"]
+def supportedVersions = ["1.18.2", "1.19.2", "1.20.1", "1.20.4", "1.20.6", "1.21.1", "1.21.3"]
 
 for (final def mcVersion in supportedVersions) {
     includeBuild(mcVersion)
