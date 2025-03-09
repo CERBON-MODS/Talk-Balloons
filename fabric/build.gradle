@@ -49,7 +49,7 @@ processResources {
             mod_id                            : mod_id,
             mod_name                          : mod_name,
             mod_license                       : mod_license,
-            mod_version                       : mod_version,
+            mod_version                       : project.version,
             mod_authors                       : mod_authors,
             mod_description                   : mod_description,
             source_code_url                   : source_code_url,
@@ -127,8 +127,8 @@ modrinth {
 
     gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
-    versionName = archivesBaseName + "-" + mod_version
-    versionNumber = mod_version
+    versionName = archivesBaseName + "-" + this.version
+    versionNumber = this.version + "-${minecraft_version}-fabric"
     versionType = release_type
 
     changelog = rootProject.file(project.changelog).getText('UTF-8')

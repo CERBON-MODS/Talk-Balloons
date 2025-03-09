@@ -4,7 +4,7 @@ import com.cerbon.talk_balloons.config.TBConfig;
 import com.cerbon.talk_balloons.util.TBConstants;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -15,6 +15,6 @@ public class TBClientEventsForge {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> AutoConfig.getConfigScreen(TBConfig.class, parent).get()));
+        ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory((client, parent) -> AutoConfig.getConfigScreen(TBConfig.class, parent).get()));
     }
 }
