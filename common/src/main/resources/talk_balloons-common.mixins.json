@@ -6,10 +6,9 @@
   "mixins": [
   ],
   "client": [
-    "AbstractClientPlayerMixin",
     "ChatListenerMixin",
-    "PlayerRendererMixin",
-    "accessor.GuiGraphicsAccessor"
+    "PlayerMixin",
+    "PlayerRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

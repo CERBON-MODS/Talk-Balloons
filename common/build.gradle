@@ -12,12 +12,14 @@ architectury {
     common("fabric", "forge")
 }
 
-base {
-    archivesBaseName = archives_base_name + "-Common-${minecraft_version}"
+loom {
+    mixin {
+        defaultRefmapName = "talk_balloons-common.refmap.json"
+    }
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
+base {
+    archivesBaseName = archives_base_name + "-Common-${minecraft_version}"
 }
 
 publishing {
