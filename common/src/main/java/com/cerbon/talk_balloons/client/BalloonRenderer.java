@@ -43,6 +43,7 @@ public final class BalloonRenderer {
 
             RenderSystem.enableDepthTest();
             RenderSystem.enablePolygonOffset();
+            RenderSystem.enableBlend();
             RenderSystem.polygonOffset(3.0F, 3.0F);
 
             String message = messages.get(i);
@@ -92,6 +93,7 @@ public final class BalloonRenderer {
 
             // Arrow
             Screen.blit(poseStack, -3, 9, 18, 6, 7, 4, 32, 32);
+            RenderSystem.disableBlend();
 
             if (dividedMessage.size() > 1) {
                 int textDistance = 0;
