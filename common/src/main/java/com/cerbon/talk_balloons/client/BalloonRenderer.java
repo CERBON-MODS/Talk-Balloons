@@ -46,6 +46,7 @@ public final class BalloonRenderer {
             poseStack.mulPose(rotation);
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 
+            RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
             RenderSystem.enablePolygonOffset();
             RenderSystem.polygonOffset(3.0F, 3.0F);
@@ -99,6 +100,7 @@ public final class BalloonRenderer {
 
             // Arrow
             guiGraphics.blit(RenderType::guiTextured, BALLOON_TEXTURE, -3, 9, 18, 6, 7, 4, 32, 32);
+            RenderSystem.disableBlend();
 
             if (dividedMessage.size() > 1) {
                 int textDistance = 0;
