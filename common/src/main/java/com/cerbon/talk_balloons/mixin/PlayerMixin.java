@@ -16,8 +16,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("AddedMixinMembersNamePattern")
 public abstract class PlayerMixin extends LivingEntity implements IAbstractClientPlayer {
     @Unique private HistoricalData<String> balloonMessages;
-    @Unique private Set<Supplier<Boolean>> talk_balloons$queuedTickEvents = new HashSet<>();
+    @Unique private final Collection<Supplier<Boolean>> talk_balloons$queuedTickEvents = new ConcurrentLinkedDeque<>();
 
     protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
