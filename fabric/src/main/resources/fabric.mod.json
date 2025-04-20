@@ -7,13 +7,13 @@
   "description": "${mod_description}",
   "authors": ["${mod_authors}"],
   "contact": {
-    "homepage": "${curseforge_url}",
-    "sources": "${source_code_url}",
-    "issues": "${issues_url}"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/talk-balloons",
+    "sources": "https://github.com/CERBON-MODS/Talk-Balloons",
+    "issues": "https://github.com/CERBON-MODS/Talk-Balloons/issues"
   },
 
-  "license": "${mod_license}",
-  "icon": "${logo_file}",
+  "license": "LGPL-3.0",
+  "icon": "logo.png",
 
   "environment": "*",
   "entrypoints": {
@@ -32,8 +32,8 @@
     "${mod_id}-common.mixins.json"
   ],
   "depends": {
-    "fabricloader": "${fabric_loader_version_range}",
+    "fabricloader": ">=${fabric_loader_version}",
     "minecraft": "${minecraft_version_range}",
-    "cloth-config": "${cloth_config_version_range_fabric}"
+    "cloth-config": ">=${cloth_config_version}"
   }
 }

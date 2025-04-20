@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.cerbon.talk_balloons.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "PlayerMixin"
+  ],
+  "client": [
+    //? if >= 1.19 {
+    "ChatListenerMixin",
+    //?} else {
+    /*"ClientPacketListenerMixin",
+    *///?}
+    "PlayerRendererMixin",
+
+    //? if >= 1.21.3
+    /*"PlayerRenderStateMixin",*/
+    //? if >= 1.20
+    /*"GuiGraphicsAccessor"*/
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
