@@ -147,7 +147,7 @@ public final class BalloonRenderer {
     private static void blit(PoseStack poseStack, ResourceLocation location, int x, int y, int width, int height, float uOffset, float vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight) {
         //? if < 1.20 {
         RenderSystem.setShaderTexture(0, location);
-        Screen.blit(poseStack, x, y, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
+        Screen.blit(poseStack, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
         //?} else {
         /*var guiGraphics = getContext(poseStack);
         guiGraphics.blit(/^? if >= 1.21.3 {^//^RenderType::guiTextured, ^//^?}^/location, x, y, uOffset, vOffset, width, height, textureWidth, textureHeight);
