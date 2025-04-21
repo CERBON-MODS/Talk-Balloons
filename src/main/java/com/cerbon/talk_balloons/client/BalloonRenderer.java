@@ -54,7 +54,7 @@ public final class BalloonRenderer {
         for (Component message : messages.reversed()) {
             poseStack.pushPose();
 
-            poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonsHeightOffset, 0.0D);
+            poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonsHeightOffset - 0.4, 0.0D);
             poseStack.mulPose(rotation);
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 
