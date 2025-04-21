@@ -52,10 +52,13 @@ public final class BalloonRenderer {
 
         int balloonDistance = 0;
         int previousBalloonHeight = 0;
-        for (Component message : messages.reversed()) {
+        int padding = TalkBalloons.config.balloonPadding;
+
+        for (int i = 0; i < messages.size(); i++) {
+            Component message = messages.get(i);
             poseStack.pushPose();
 
-            poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonsHeightOffset - 0.4, 0.0D);
+            poseStack.translate(0.0, playerHeight + TalkBalloons.config.balloonsHeightOffset - 0.4 + (padding / 32.0), 0.0D);
             poseStack.mulPose(rotation);
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 
@@ -64,10 +67,6 @@ public final class BalloonRenderer {
             RenderSystem.enableDepthTest();
             RenderSystem.enablePolygonOffset();
             RenderSystem.polygonOffset(3.0F, 3.0F);
-
-            // Arrow
-            if (previousBalloonHeight == 0)
-                blit(poseStack, BALLOON_TEXTURE, -3, 10, 7, 4, 18, 6, 7, 4, 32, 32);
 
             List<FormattedCharSequence> dividedMessage = font.split(message, MAX_BALLOON_WIDTH);
 
@@ -86,7 +85,7 @@ public final class BalloonRenderer {
                 balloonWidth--;
 
             if (previousBalloonHeight != 0)
-                balloonDistance += 9 * previousBalloonHeight + TalkBalloons.config.distanceBetweenBalloons + TalkBalloons.config.balloonPadding;
+                balloonDistance += 9 * previousBalloonHeight + TalkBalloons.config.distanceBetweenBalloons + (padding * 2);
 
             previousBalloonHeight = balloonHeight;
 
@@ -95,22 +94,26 @@ public final class BalloonRenderer {
             int baseY = (-balloonHeight - j * 7) - j;
 
             // Left
-            blit(poseStack, BALLOON_TEXTURE, -baseX - 3, baseY - balloonDistance, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
-            blit(poseStack, BALLOON_TEXTURE, -baseX - 3, baseY + 5 - balloonDistance, 5, balloonHeight + j * 8, 0.0F, 6.0F, 5, 1, 32, 32); // MID
-            blit(poseStack, BALLOON_TEXTURE, -baseX - 3, 5 - balloonDistance, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(poseStack, BALLOON_TEXTURE, -baseX - 3 - padding, baseY - balloonDistance - padding, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(poseStack, BALLOON_TEXTURE, -baseX - 3 - padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 0.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(poseStack, BALLOON_TEXTURE, -baseX - 3 - padding, 5 - balloonDistance + padding, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Mid
-            blit(poseStack, BALLOON_TEXTURE, -baseX + 2, baseY - balloonDistance, balloonWidth - 4, 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
-            blit(poseStack, BALLOON_TEXTURE, -baseX + 2, baseY + 5 - balloonDistance, balloonWidth - 4, balloonHeight + j * 8, 6.0F, 6.0F, 5, 1, 32, 32); // MID
-            blit(poseStack, BALLOON_TEXTURE, -baseX + 2, 5 - balloonDistance, balloonWidth - 4, 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(poseStack, BALLOON_TEXTURE, -baseX + 2 - padding, baseY - balloonDistance - padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(poseStack, BALLOON_TEXTURE, -baseX + 2 - padding, baseY + 5 - balloonDistance - padding, balloonWidth - 4 + (padding * 2), balloonHeight + j * 8 + (padding * 2), 6.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(poseStack, BALLOON_TEXTURE, -baseX + 2 - padding, 5 - balloonDistance + padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Right
-            blit(poseStack, BALLOON_TEXTURE, baseX - 1, baseY - balloonDistance, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
-            blit(poseStack, BALLOON_TEXTURE, baseX - 1, baseY + 5 - balloonDistance, 5, balloonHeight + j * 8, 12.0F, 6.0F, 5, 1, 32, 32); // MID
-            blit(poseStack, BALLOON_TEXTURE, baseX - 1, 5 - balloonDistance, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(poseStack, BALLOON_TEXTURE, baseX - 1 + padding, baseY - balloonDistance - padding, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(poseStack, BALLOON_TEXTURE, baseX - 1 + padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 12.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(poseStack, BALLOON_TEXTURE, baseX - 1 + padding, 5 - balloonDistance + padding, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
+
+            // Arrow
+            if (i == 0)
+                blit(poseStack, BALLOON_TEXTURE, -3, 9 + padding, 7, 4, 18, 6, 7, 4, 32, 32);
 
             RenderSystem.disableBlend();
 

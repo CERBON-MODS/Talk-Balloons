@@ -6,5 +6,6 @@
   "text.autoconfig.talk_balloons.option.maxBalloonWidth": "Max balloon width",
   "text.autoconfig.talk_balloons.option.balloonAge": "Balloon age",
   "text.autoconfig.talk_balloons.option.textColor": "Text color",
-  "text.autoconfig.talk_balloons.option.showOwnBalloon": "Show own balloon"
+  "text.autoconfig.talk_balloons.option.showOwnBalloon": "Show own balloon",
+  "text.autoconfig.talk_balloons.option.balloonPadding": "Balloon padding"
 }

@@ -15,7 +15,7 @@ public class TBConfig implements ConfigData {
     public int minBalloonWidth = 13;
     public int maxBalloonWidth = 180;
 
-    public int balloonPadding = 2;
+    public int balloonPadding = 1;
 
     @Comment("In seconds")
     public int balloonAge = 15;
