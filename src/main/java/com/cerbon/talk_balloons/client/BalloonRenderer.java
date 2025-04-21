@@ -4,6 +4,7 @@ import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.mixin.GuiGraphicsAccessor;
 import com.cerbon.talk_balloons.util.HistoricalData;
 import com.cerbon.talk_balloons.util.TBConstants;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.fabricmc.api.EnvType;
@@ -59,6 +60,7 @@ public final class BalloonRenderer {
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 
             RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
             RenderSystem.enablePolygonOffset();
             RenderSystem.polygonOffset(3.0F, 3.0F);
