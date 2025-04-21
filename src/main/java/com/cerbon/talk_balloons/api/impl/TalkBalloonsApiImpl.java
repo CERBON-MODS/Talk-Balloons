@@ -5,10 +5,11 @@ import com.cerbon.talk_balloons.api.TalkBalloonsApi;
 import com.cerbon.talk_balloons.util.mixin.ITalkBalloonsPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Collection;
-import java.util.List;
 
+@ApiStatus.Internal
 public class TalkBalloonsApiImpl implements TalkBalloonsApi {
     @Override
     public void createBalloonMessage(Player player, String text, int duration) {
