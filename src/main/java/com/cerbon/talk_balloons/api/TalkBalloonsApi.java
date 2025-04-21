@@ -4,6 +4,7 @@ import com.cerbon.talk_balloons.api.impl.TalkBalloonsApiImpl;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface TalkBalloonsApi {
@@ -11,5 +12,5 @@ public interface TalkBalloonsApi {
 
     void createBalloonMessage(Player player, String text, int duration);
     void createBalloonMessage(Player player, Component text, int duration);
-    List<Component> getBalloonMessages(Player player);
+    Collection<Component> getBalloonMessages(Player player);
 }

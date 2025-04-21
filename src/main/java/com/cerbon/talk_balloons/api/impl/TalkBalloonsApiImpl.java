@@ -6,6 +6,7 @@ import com.cerbon.talk_balloons.util.mixin.ITalkBalloonsPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.Collection;
 import java.util.List;
 
 public class TalkBalloonsApiImpl implements TalkBalloonsApi {
@@ -20,7 +21,7 @@ public class TalkBalloonsApiImpl implements TalkBalloonsApi {
     }
 
     @Override
-    public List<Component> getBalloonMessages(Player player) {
+    public Collection<Component> getBalloonMessages(Player player) {
         return ((ITalkBalloonsPlayer) player).talk_balloons$getBalloonMessages();
     }
 }
