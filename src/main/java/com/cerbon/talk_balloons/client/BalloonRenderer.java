@@ -107,7 +107,7 @@ public final class BalloonRenderer {
             RenderSystem.disablePolygonOffset();
 
             // Arrow
-            blit(poseStack, BALLOON_TEXTURE, -3, 9, 18, 6, 7, 4, 32, 32, 32, 32);
+            blit(poseStack, BALLOON_TEXTURE, -3, 9, 7, 4, 18, 6, 7, 4, 32, 32);
             RenderSystem.disableBlend();
 
             if (dividedMessage.size() > 1) {
