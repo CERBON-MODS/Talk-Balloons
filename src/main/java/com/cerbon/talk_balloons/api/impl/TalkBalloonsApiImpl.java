@@ -13,12 +13,12 @@ import java.util.Collection;
 public class TalkBalloonsApiImpl implements TalkBalloonsApi {
     @Override
     public void createBalloonMessage(Player player, String text, int duration) {
-        ((ITalkBalloonsPlayer) player).talk_balloons$createBalloonMessage(text, TalkBalloons.config.balloonAge * 20);
+        ((ITalkBalloonsPlayer) player).talk_balloons$createBalloonMessage(text, duration);
     }
 
     @Override
     public void createBalloonMessage(Player player, Component text, int duration) {
-        ((ITalkBalloonsPlayer) player).talk_balloons$createBalloonMessage(text, TalkBalloons.config.balloonAge * 20);
+        ((ITalkBalloonsPlayer) player).talk_balloons$createBalloonMessage(text, duration);
     }
 
     @Override
