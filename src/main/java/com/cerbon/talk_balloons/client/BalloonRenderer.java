@@ -3,6 +3,7 @@ package com.cerbon.talk_balloons.client;
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.mixin.GuiGraphicsAccessor;
 import com.cerbon.talk_balloons.util.HistoricalData;
+import com.cerbon.talk_balloons.util.SynchronizedConfigData;
 import com.cerbon.talk_balloons.util.TBConstants;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -36,9 +37,6 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public final class BalloonRenderer {
-    private static final int MIN_BALLOON_WIDTH = TalkBalloons.config.minBalloonWidth;
-    private static final int MAX_BALLOON_WIDTH = TalkBalloons.config.maxBalloonWidth;
-
     private static final Minecraft client = Minecraft.getInstance();
 
     public static void renderBalloons(PoseStack poseStack, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<Component> messages, float playerHeight) {
@@ -67,7 +65,7 @@ public final class BalloonRenderer {
             RenderSystem.enablePolygonOffset();
             RenderSystem.polygonOffset(3.0F, 3.0F);
 
-            List<FormattedCharSequence> dividedMessage = font.split(message, MAX_BALLOON_WIDTH);
+            List<FormattedCharSequence> dividedMessage = font.split(message, TalkBalloons.config.maxBalloonWidth);
 
             int greatestTextWidth = 0;
             for (FormattedCharSequence text : dividedMessage) {
@@ -77,7 +75,7 @@ public final class BalloonRenderer {
                     greatestTextWidth = textWidth;
             }
 
-            int balloonWidth = Mth.clamp(greatestTextWidth, MIN_BALLOON_WIDTH, MAX_BALLOON_WIDTH);
+            int balloonWidth = Mth.clamp(greatestTextWidth, TalkBalloons.config.minBalloonWidth, TalkBalloons.config.maxBalloonWidth);
             int balloonHeight = dividedMessage.size();
 
             if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow

@@ -1,10 +1,18 @@
 package com.cerbon.talk_balloons.mixin;
 
-//? if < 1.19 {
-/*import com.cerbon.talk_balloons.TalkBalloons;
-import com.cerbon.talk_balloons.util.mixin.ITalkBalloonsPlayer;
-import net.minecraft.client.Minecraft;
+import com.cerbon.talk_balloons.TalkBalloons;
+//? if < 1.20.6 {
 import net.minecraft.client.multiplayer.ClientPacketListener;
+//? } else {
+/*import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
+*///? }
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+//? if < 1.19 {
+/*import com.cerbon.talk_balloons.util.mixin.ITalkBalloonsPlayer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -12,15 +20,23 @@ import net.minecraft.network.protocol.game.ClientboundChatPacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPacketListener.class)
 *///?}
+
+@Mixin(
+    //? if < 1.20.6 {
+    ClientPacketListener.class
+    //? } else {
+    /*ClientCommonPacketListenerImpl.class
+    *///? }
+)
 public class ClientPacketListenerMixin {
+    @Inject(method = "handleDisconnect", at = @At("TAIL"))
+    private void talk_balloons$handleDisconnect(CallbackInfo ci) {
+
+    }
+
     //? if < 1.19 {
     /*@Shadow @Final private Minecraft minecraft;
 

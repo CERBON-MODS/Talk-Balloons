@@ -9,9 +9,8 @@
   "client": [
     //? if >= 1.19 {
     "ChatListenerMixin",
-    //?} else {
-    /*"ClientPacketListenerMixin",
-    *///?}
+    //? }
+    "ClientPacketListenerMixin",
     "PlayerRendererMixin",
 
     //? if >= 1.21.3
