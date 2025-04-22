@@ -4,6 +4,7 @@ import com.cerbon.talk_balloons.util.TBConstants;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.minecraft.resources.ResourceLocation;
 
 @Config(name = TBConstants.MOD_ID)
 public class TBConfig implements ConfigData {
@@ -19,6 +20,8 @@ public class TBConfig implements ConfigData {
 
     @Comment("In seconds")
     public int balloonAge = 15;
+
+    public BalloonStyle balloonStyle = BalloonStyle.ROUNDED;
 
     public int textColor = 1315860;
 

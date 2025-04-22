@@ -36,8 +36,6 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public final class BalloonRenderer {
-    private static final ResourceLocation BALLOON_TEXTURE = TalkBalloons.id("textures/gui/balloon.png");
-
     private static final int MIN_BALLOON_WIDTH = TalkBalloons.config.minBalloonWidth;
     private static final int MAX_BALLOON_WIDTH = TalkBalloons.config.maxBalloonWidth;
 
@@ -53,6 +51,7 @@ public final class BalloonRenderer {
         int balloonDistance = 0;
         int previousBalloonHeight = 0;
         int padding = TalkBalloons.config.balloonPadding;
+        ResourceLocation balloonTexture = TalkBalloons.config.balloonStyle.getTextureId();
 
         for (int i = 0; i < messages.size(); i++) {
             Component message = messages.get(i);
@@ -94,26 +93,26 @@ public final class BalloonRenderer {
             int baseY = (-balloonHeight - j * 7) - j;
 
             // Left
-            blit(poseStack, BALLOON_TEXTURE, -baseX - 3 - padding, baseY - balloonDistance - padding, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
-            blit(poseStack, BALLOON_TEXTURE, -baseX - 3 - padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 0.0F, 6.0F, 5, 1, 32, 32); // MID
-            blit(poseStack, BALLOON_TEXTURE, -baseX - 3 - padding, 5 - balloonDistance + padding, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(poseStack, balloonTexture, -baseX - 3 - padding, baseY - balloonDistance - padding, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(poseStack, balloonTexture, -baseX - 3 - padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 0.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(poseStack, balloonTexture, -baseX - 3 - padding, 5 - balloonDistance + padding, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Mid
-            blit(poseStack, BALLOON_TEXTURE, -baseX + 2 - padding, baseY - balloonDistance - padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
-            blit(poseStack, BALLOON_TEXTURE, -baseX + 2 - padding, baseY + 5 - balloonDistance - padding, balloonWidth - 4 + (padding * 2), balloonHeight + j * 8 + (padding * 2), 6.0F, 6.0F, 5, 1, 32, 32); // MID
-            blit(poseStack, BALLOON_TEXTURE, -baseX + 2 - padding, 5 - balloonDistance + padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(poseStack, balloonTexture, -baseX + 2 - padding, baseY - balloonDistance - padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(poseStack, balloonTexture, -baseX + 2 - padding, baseY + 5 - balloonDistance - padding, balloonWidth - 4 + (padding * 2), balloonHeight + j * 8 + (padding * 2), 6.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(poseStack, balloonTexture, -baseX + 2 - padding, 5 - balloonDistance + padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Right
-            blit(poseStack, BALLOON_TEXTURE, baseX - 1 + padding, baseY - balloonDistance - padding, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
-            blit(poseStack, BALLOON_TEXTURE, baseX - 1 + padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 12.0F, 6.0F, 5, 1, 32, 32); // MID
-            blit(poseStack, BALLOON_TEXTURE, baseX - 1 + padding, 5 - balloonDistance + padding, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(poseStack, balloonTexture, baseX - 1 + padding, baseY - balloonDistance - padding, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(poseStack, balloonTexture, baseX - 1 + padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 12.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(poseStack, balloonTexture, baseX - 1 + padding, 5 - balloonDistance + padding, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
 
             // Arrow
             if (i == 0)
-                blit(poseStack, BALLOON_TEXTURE, -3, 9 + padding, 7, 4, 18, 6, 7, 4, 32, 32);
+                blit(poseStack, balloonTexture, -3, 9 + padding, 7, 4, 18, 6, 7, 4, 32, 32);
 
             RenderSystem.disableBlend();
 
