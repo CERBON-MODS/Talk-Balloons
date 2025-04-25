@@ -37,8 +37,8 @@ public class TBClientEventsNeoForge {
         //? if > 1.20.4 {
         /*});
         *///?} else {
-        /*}));
-        */// }
+        }));
+        //?}
 
         TBConfig.ConfigGuiHandler.init();
     }
