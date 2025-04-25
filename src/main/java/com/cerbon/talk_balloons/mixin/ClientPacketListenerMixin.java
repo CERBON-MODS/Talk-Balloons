@@ -32,11 +32,6 @@ import org.spongepowered.asm.mixin.Shadow;
     *///?}
 )
 public class ClientPacketListenerMixin {
-    @Inject(method = "handleDisconnect", at = @At("TAIL"))
-    private void talk_balloons$handleDisconnect(CallbackInfo ci) {
-
-    }
-
     //? if < 1.19 {
     /*@Shadow @Final private Minecraft minecraft;
 
