@@ -31,7 +31,6 @@ dependencies {
 }
 
 java {
-    withSourcesJar()
     val java = if (stonecutter.eval(minecraftVersion, ">=1.20.5"))
         JavaVersion.VERSION_21 else JavaVersion.VERSION_17
     targetCompatibility = java

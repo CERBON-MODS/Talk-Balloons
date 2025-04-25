@@ -63,7 +63,6 @@ subprojects {
     }
 
     project.extensions.configure<JavaPluginExtension>("java") {
-        withSourcesJar()
         val java = if (sc.eval(mcVersion, ">=1.20.5"))
             JavaVersion.VERSION_21 else JavaVersion.VERSION_17
         targetCompatibility = java
