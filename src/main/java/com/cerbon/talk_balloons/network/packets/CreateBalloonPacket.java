@@ -28,7 +28,7 @@ public record CreateBalloonPacket(
 
     public int getBalloonAge() {
         if (this.balloonAge() == -1) {
-            return TalkBalloons.config.balloonAge;
+            return TalkBalloons.config.balloonAge * 20;
         }
 
         return this.balloonAge();
