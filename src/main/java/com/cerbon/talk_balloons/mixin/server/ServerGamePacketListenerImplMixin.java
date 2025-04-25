@@ -7,7 +7,8 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+//? if < 1.19
+/*import net.minecraft.network.chat.TextComponent;*/
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 //? if >= 1.19.2

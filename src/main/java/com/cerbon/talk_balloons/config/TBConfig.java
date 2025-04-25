@@ -52,15 +52,15 @@ public class TBConfig implements ConfigData {
                 try {
                     return Collections.singletonList(new ColorEntry(
                         //? if < 1.19 {
-                        /*Component.translatable(key),
+                        /*new TranslatableComponent(key),
                         *///?} else {
-                        new TranslatableComponent(key),
+                        Component.translatable(key),
                         //}
                         field.getInt(config),
                         //? if < 1.19 {
-                        /*Component.translatable("text.cloth-config.reset_value"),
+                        /*new TranslatableComponent("text.cloth-config.reset_value"),
                         *///?} else {
-                        new TranslatableComponent("text.cloth-config.reset_value"),
+                        Component.translatable("text.cloth-config.reset_value"),
                         //?}
                         () -> {
                             try {
