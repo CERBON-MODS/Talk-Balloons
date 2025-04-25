@@ -42,9 +42,15 @@ public class TBConfig implements ConfigData {
             registry.registerAnnotationProvider((key, field, config, defaults, $) -> {
                 try {
                     return Collections.singletonList(new ColorEntry(Component.translatable(key),
-                        (int) field.get(config),
+                        field.getInt(config),
                         Component.empty(),
-                        () -> (int) defaults,
+                        () -> {
+                            try {
+                                return field.getInt(defaults);
+                            } catch (IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }
+                        },
                         newValue -> {
                             try {
                                 field.set(config, newValue);
