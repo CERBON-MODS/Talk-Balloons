@@ -12,7 +12,17 @@ public class TBClientPacketHandler {
         var registry = TBPackets.REGISTRY;
 
         registry.addClientboundHandler(TBPackets.CREATE_BALLOON, (packet, ctx) -> {
-            TalkBalloonsApi.INSTANCE.createBalloonMessage(ctx.getPlayer(), packet.message(), packet.getBalloonAge());
+            var level = ctx.getClient().level;
+
+            if (level == null)
+                return;
+
+            var player = level.getPlayerByUUID(packet.uuid());
+
+            if (player == null)
+                return;
+
+            TalkBalloonsApi.INSTANCE.createBalloonMessage(player, packet.message(), packet.getBalloonAge());
         });
 
         registry.addClientboundHandler(TBPackets.STATUS, (packet, ctx) -> {

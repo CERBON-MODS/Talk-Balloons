@@ -26,6 +26,8 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 { */ ext
     //? if <= 1.20.1
     /*@Shadow @Final private MinecraftServer server;*/
 
+    @Shadow public ServerPlayer player;
+
     //? if >= 1.20.2 {
     public ServerGamePacketListenerImplMixin(MinecraftServer server, Connection connection, CommonListenerCookie cookie) {
         super(server, connection, cookie);
@@ -43,7 +45,7 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 { */ ext
         Optional optional,
         CallbackInfo ci
     ) {
-        var balloonPacket = new CreateBalloonPacket(Component.literal(packet.message()), -1);
+        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), Component.literal(packet.message()), -1);
 
         for (ServerPlayer player : this.server.getPlayerList().getPlayers()) {
             if (TalkBalloons.playerHasSupport(player.getUUID())) {

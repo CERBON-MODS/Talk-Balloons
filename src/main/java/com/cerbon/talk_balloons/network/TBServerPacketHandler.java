@@ -1,6 +1,9 @@
 package com.cerbon.talk_balloons.network;
 
 import com.cerbon.talk_balloons.TalkBalloons;
+import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigToPlayerPacket;
+import net.minecraft.server.level.ServerPlayer;
+import xyz.bluspring.modernnetworking.api.minecraft.VanillaPacketSender;
 
 public class TBServerPacketHandler {
     public static void init() {
@@ -9,6 +12,14 @@ public class TBServerPacketHandler {
         registry.addServerboundHandler(TBPackets.STATUS, (packet, ctx) -> {
             if (packet.protocolVersion() <= TBPackets.PROTOCOL_VERSION) {
                 TalkBalloons.addSupportedPlayer(ctx.getPlayer().getUUID());
+
+                for (ServerPlayer player : ctx.getServer().getPlayerList().getPlayers()) {
+                    var config = TalkBalloons.serverSyncedConfigs.getSetPlayerConfig(player.getUUID());
+
+                    if (config != null) {
+                        VanillaPacketSender.sendToPlayer(ctx.getPlayer(), new SyncBalloonConfigToPlayerPacket(player.getUUID(), config));
+                    }
+                }
             }
         });
 

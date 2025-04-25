@@ -13,6 +13,13 @@ public class SyncedConfigManager {
         });
     }
 
+    public SynchronizedConfigData getSetPlayerConfig(UUID uuid) {
+        if (defaultConfigDatas.contains(uuid))
+            return null;
+
+        return configDatas.get(uuid);
+    }
+
     public void setPlayerConfig(UUID uuid, SynchronizedConfigData configData) {
         configDatas.put(uuid, configData);
         defaultConfigDatas.remove(uuid);
