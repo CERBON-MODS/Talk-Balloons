@@ -29,6 +29,8 @@ public class TBClientPacketHandler {
     }
 
     public static void syncBalloonConfig() {
-        VanillaPacketSender.sendToServer(new SyncBalloonConfigPacket(SynchronizedConfigData.getDefault()));
+        TalkBalloonsClient.syncedConfigs.resetDefault();
+        if (TalkBalloonsClient.hasServerSupport())
+            VanillaPacketSender.sendToServer(new SyncBalloonConfigPacket(SynchronizedConfigData.getDefault()));
     }
 }

@@ -29,6 +29,12 @@ public class SyncedConfigManager {
     }
 
     public void resetDefault() {
+        synchronized (defaultConfigDatas) {
+            for (UUID uuid : defaultConfigDatas) {
+                configDatas.remove(uuid);
+            }
+        }
+
         defaultConfigDatas.clear();
     }
 }

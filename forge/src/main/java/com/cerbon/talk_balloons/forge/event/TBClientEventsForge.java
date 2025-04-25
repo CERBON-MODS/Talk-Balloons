@@ -42,7 +42,7 @@ public class TBClientEventsForge {
     public static class TBForgeClientEvents {
         @SubscribeEvent
         public static void onScreenClose(ScreenEvent.Closing event) {
-            if (configScreenToHandle != null && TalkBalloonsClient.hasServerSupport() && event.getScreen() == configScreenToHandle) {
+            if (configScreenToHandle != null && event.getScreen() == configScreenToHandle) {
                 TBClientPacketHandler.syncBalloonConfig();
             }
         }

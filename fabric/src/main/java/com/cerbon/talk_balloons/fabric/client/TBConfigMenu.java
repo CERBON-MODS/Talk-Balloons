@@ -17,9 +17,7 @@ public class TBConfigMenu implements ModMenuApi {
             ScreenEvents.AFTER_INIT.register((client, screen1, scaledWidth, scaledHeight) -> {
                 if (screen1 == screen) {
                     ScreenEvents.remove(screen).register($ -> {
-                        if (TalkBalloonsClient.hasServerSupport()) {
-                            TBClientPacketHandler.syncBalloonConfig();
-                        }
+                        TBClientPacketHandler.syncBalloonConfig();
                     });
                 }
             });
