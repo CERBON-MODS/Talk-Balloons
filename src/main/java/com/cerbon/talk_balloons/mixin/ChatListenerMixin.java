@@ -4,7 +4,6 @@ package com.cerbon.talk_balloons.mixin;
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.api.TalkBalloonsApi;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-//? if >= 1.20
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.GuiMessageTag;

@@ -9,10 +9,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
-//? if > 1.20.4 {
-/*import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
+//? if > 1.20.4 {
+/*import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 *///?} else {
 import net.neoforged.fml.common.Mod.EventBusSubscriber;
@@ -43,7 +43,13 @@ public class TBClientEventsNeoForge {
         TBConfig.ConfigGuiHandler.init();
     }
 
-    @EventBusSubscriber(modid = TBConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = TBConstants.MOD_ID,
+        //? if <= 1.20.4 {
+        bus = EventBusSubscriber.Bus.FORGE,
+        //?} else {
+        /*bus = EventBusSubscriber.Bus.GAME,
+        *///?}
+        value = Dist.CLIENT)
     public static class TBNeoForgeClientEvents {
         @SubscribeEvent
         public static void onScreenClose(ScreenEvent.Closing event) {

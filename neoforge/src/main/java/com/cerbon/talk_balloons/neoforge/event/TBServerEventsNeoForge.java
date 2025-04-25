@@ -11,7 +11,13 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.fml.common.Mod.EventBusSubscriber;
 //?}
 
-@EventBusSubscriber(modid = TBConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = TBConstants.MOD_ID,
+    //? if <= 1.20.4 {
+    bus = EventBusSubscriber.Bus.FORGE
+    //?} else {
+    /*bus = EventBusSubscriber.Bus.GAME
+    *///?}
+)
 public class TBServerEventsNeoForge {
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {

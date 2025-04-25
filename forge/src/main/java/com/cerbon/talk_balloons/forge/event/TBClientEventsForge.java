@@ -5,10 +5,12 @@ import com.cerbon.talk_balloons.config.TBConfig;
 import com.cerbon.talk_balloons.network.TBClientPacketHandler;
 import com.cerbon.talk_balloons.util.TBConstants;
 import me.shedaniel.autoconfig.AutoConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 //? if <= 1.18.2 {
 /*import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.client.event.ScreenOpenEvent;
 *///?} else {
 import net.minecraftforge.client.ConfigScreenHandler;
 //?}
@@ -41,14 +43,14 @@ public class TBClientEventsForge {
     @Mod.EventBusSubscriber(modid = TBConstants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
     public static class TBForgeClientEvents {
         @SubscribeEvent
-        public static void onScreenClose(ScreenEvent.Closing event) {
-            if (configScreenToHandle != null && event.getScreen() == configScreenToHandle) {
+        public static void onScreenClose(/*? if <= 1.18.2 {*//*ScreenOpenEvent*//*?} else {*/ScreenEvent.Closing/*?}*/ event) {
+            if (configScreenToHandle != null && /*? if <= 1.18.2 {*//*Minecraft.getInstance().screen*//*?} else {*/event.getScreen()/*?}*/ == configScreenToHandle) {
                 TBClientPacketHandler.syncBalloonConfig();
             }
         }
 
         @SubscribeEvent
-        public static void onPlayerDisconnect(ClientPlayerNetworkEvent.LoggingOut event) {
+        public static void onPlayerDisconnect(/*? if <= 1.18.2 {*//*ClientPlayerNetworkEvent.LoggedOutEvent*//*?} else {*/ClientPlayerNetworkEvent.LoggingOut/*?}*/ event) {
             TalkBalloonsClient.onClientDisconnect();
         }
     }
