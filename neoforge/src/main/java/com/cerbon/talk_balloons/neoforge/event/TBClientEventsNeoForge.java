@@ -34,7 +34,11 @@ public class TBClientEventsNeoForge {
             var screen = AutoConfig.getConfigScreen(TBConfig.class, parent).get();
             configScreenToHandle = screen;
             return screen;
-        });
+        //? if > 1.20.4 {
+        /*});
+        *///?} else {
+        /*}));
+        */// }
 
         TBConfig.ConfigGuiHandler.init();
     }

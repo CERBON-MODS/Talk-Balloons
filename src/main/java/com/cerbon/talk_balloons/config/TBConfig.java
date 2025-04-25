@@ -55,7 +55,7 @@ public class TBConfig implements ConfigData {
                         /*new TranslatableComponent(key),
                         *///?} else {
                         Component.translatable(key),
-                        //}
+                        //?}
                         field.getInt(config),
                         //? if < 1.19 {
                         /*new TranslatableComponent("text.cloth-config.reset_value"),
