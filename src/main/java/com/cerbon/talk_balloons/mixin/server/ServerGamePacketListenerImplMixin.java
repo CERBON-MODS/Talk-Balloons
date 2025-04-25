@@ -43,11 +43,9 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ exte
     //?}
 
     //? if >= 1.19.2 {
-    @Inject(method = "method_45064", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"), cancellable = true)
-    private void talk_balloons$sendBalloonToPlayers(
-        CallbackInfo ci, @Local(ordinal = 1) PlayerChatMessage chatMessage
-    ) {
-        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), chatMessage.unsignedContent(), -1);
+    @WrapWithCondition(method = "method_45064", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"))
+    private boolean talk_balloons$sendBalloonToPlayers(ServerGamePacketListenerImpl instance, PlayerChatMessage message, @Local(argsOnly = true) Component component) {
+        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), component, -1);
 
         for (ServerPlayer player : this.server.getPlayerList().getPlayers()) {
             if (TalkBalloons.playerHasSupport(player.getUUID())) {
@@ -56,8 +54,10 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ exte
         }
 
         if (TalkBalloons.serverSyncedConfigs.getPlayerConfig(this.player.getUUID()).onlyDisplayBalloons()) {
-            ci.cancel();
+            return false;
         }
+
+        return true;
     }
     //?} else {
     /*@WrapWithCondition(method = "handleChat(Lnet/minecraft/server/network/TextFilter$FilteredText;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Ljava/util/function/Function;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
