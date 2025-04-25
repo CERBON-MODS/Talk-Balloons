@@ -15,7 +15,7 @@ public enum BalloonStyle implements StringRepresentable {
     CIRCULAR("circular", TalkBalloons.id("textures/gui/circular.png"));
     // TODO: support custom balloons?
 
-    public static final Codec<BalloonStyle> CODEC = StringRepresentable.fromEnum(BalloonStyle::values);
+    public static final Codec<BalloonStyle> CODEC = StringRepresentable.fromEnum(BalloonStyle::values/*? if < 1.19 {*//*, BalloonStyle::valueOf*//*?}*/);
     public static final NetworkCodec<BalloonStyle, ByteBuf> NETWORK_CODEC = NetworkCodecs.enumCodec(BalloonStyle.class);
 
     private final String serializedName;

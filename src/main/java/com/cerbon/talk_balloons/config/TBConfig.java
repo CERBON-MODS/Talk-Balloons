@@ -8,6 +8,9 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import me.shedaniel.clothconfig2.gui.entries.ColorEntry;
 import net.minecraft.network.chat.Component;
+//? if < 1.19 {
+/*import net.minecraft.network.chat.TranslatableComponent;
+*///?}
 
 import java.util.Collections;
 import java.util.Optional;
@@ -47,9 +50,18 @@ public class TBConfig implements ConfigData {
             var registry = AutoConfig.getGuiRegistry(TBConfig.class);
             registry.registerAnnotationProvider((key, field, config, defaults, $) -> {
                 try {
-                    return Collections.singletonList(new ColorEntry(Component.translatable(key),
+                    return Collections.singletonList(new ColorEntry(
+                        //? if < 1.19 {
+                        /*Component.translatable(key),
+                        *///?} else {
+                        new TranslatableComponent(key),
+                        //}
                         field.getInt(config),
-                        Component.empty(),
+                        //? if < 1.19 {
+                        /*Component.translatable("text.cloth-config.reset_value"),
+                        *///?} else {
+                        new TranslatableComponent("text.cloth-config.reset_value"),
+                        //?}
                         () -> {
                             try {
                                 return field.getInt(defaults);

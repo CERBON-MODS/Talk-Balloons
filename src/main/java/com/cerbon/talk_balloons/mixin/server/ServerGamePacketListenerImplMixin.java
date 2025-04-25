@@ -7,6 +7,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 //? if >= 1.19.2
@@ -17,6 +18,7 @@ import net.minecraft.server.network.FilteredText;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 *///?}
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.server.network.TextFilter;
 import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -57,8 +59,8 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ /*ex
     }
     //?} else {
     /*@WrapWithCondition(method = "handleChat(Lnet/minecraft/server/network/TextFilter$FilteredText;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Ljava/util/function/Function;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
-    private boolean talk_balloons$sendBalloonToPlayers(PlayerList instance, Component text, Function<ServerPlayer, Component> serverPlayerComponentFunction, ChatType message, UUID filter) {
-        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), text, -1);
+    private boolean talk_balloons$sendBalloonToPlayers(PlayerList instance, Component fakeText, Function<ServerPlayer, Component> serverPlayerComponentFunction, ChatType message, UUID filter, @Local(argsOnly = true) TextFilter.FilteredText text) {
+        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), new TextComponent(text.getRaw()), -1);
 
         for (ServerPlayer player : instance.getPlayers()) {
             if (TalkBalloons.playerHasSupport(player.getUUID())) {
