@@ -5,7 +5,7 @@ import com.cerbon.talk_balloons.network.TBPackets;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 //? if >= 1.20.6
-import net.minecraft.network.RegistryFriendlyByteBuf;
+/*import net.minecraft.network.RegistryFriendlyByteBuf;*/
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import xyz.bluspring.modernnetworking.api.*;
@@ -18,7 +18,7 @@ public record CreateBalloonPacket(
     Component message,
     int balloonAge // If -1, use the client config's balloon age.
 ) implements NetworkPacket {
-    public static final NetworkCodec<CreateBalloonPacket, /*? if >= 1.20.4 {*/RegistryFriendlyByteBuf/*?} else {*//*FriendlyByteBuf*//*?}*/> CODEC = CompositeCodecs.composite(
+    public static final NetworkCodec<CreateBalloonPacket, /*? if >= 1.20.4 {*//*RegistryFriendlyByteBuf*//*?} else {*/FriendlyByteBuf/*?}*/> CODEC = CompositeCodecs.composite(
         NetworkCodecs.UUID, CreateBalloonPacket::uuid,
         VanillaCodecs.COMPONENT, CreateBalloonPacket::message,
         NetworkCodecs.VAR_INT, CreateBalloonPacket::balloonAge,

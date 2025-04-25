@@ -42,7 +42,7 @@ public record SynchronizedConfigData(
         NetworkCodecs.VAR_INT, SynchronizedConfigData::textColor,
         NetworkCodecs.VAR_INT, SynchronizedConfigData::balloonTint,
         NetworkCodecs.VAR_INT, SynchronizedConfigData::balloonPadding,
-        CustomCodecs.BOOLEAN, SynchronizedConfigData::onlyDisplayBalloons,
+        NetworkCodecs.BOOL, SynchronizedConfigData::onlyDisplayBalloons,
         SynchronizedConfigData::new
     );
 

@@ -6,10 +6,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 //? if > 1.20.4 {
-import net.neoforged.fml.common.EventBusSubscriber;
-//?} else {
-/*import net.neoforged.fml.common.Mod.EventBusSubscriber;
-*///?}
+/*import net.neoforged.fml.common.EventBusSubscriber;
+*///?} else {
+import net.neoforged.fml.common.Mod.EventBusSubscriber;
+//?}
 
 @EventBusSubscriber(modid = TBConstants.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class TBServerEventsNeoForge {
