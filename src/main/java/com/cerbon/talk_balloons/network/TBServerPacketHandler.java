@@ -28,7 +28,9 @@ public class TBServerPacketHandler {
 
             var newPacket = new SyncBalloonConfigToPlayerPacket(ctx.getPlayer().getUUID(), packet.data());
             for (ServerPlayer player : ctx.getServer().getPlayerList().getPlayers()) {
-                VanillaPacketSender.sendToPlayer(player, newPacket);
+                if (TalkBalloons.playerHasSupport(player.getUUID())) {
+                    VanillaPacketSender.sendToPlayer(player, newPacket);
+                }
             }
         });
     }
