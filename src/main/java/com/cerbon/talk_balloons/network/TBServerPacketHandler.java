@@ -25,6 +25,11 @@ public class TBServerPacketHandler {
 
         registry.addServerboundHandler(TBPackets.SYNC_BALLOON_CONFIG, (packet, ctx) -> {
             TalkBalloons.serverSyncedConfigs.setPlayerConfig(ctx.getPlayer().getUUID(), packet.data());
+
+            var newPacket = new SyncBalloonConfigToPlayerPacket(ctx.getPlayer().getUUID(), packet.data());
+            for (ServerPlayer player : ctx.getServer().getPlayerList().getPlayers()) {
+                VanillaPacketSender.sendToPlayer(player, newPacket);
+            }
         });
     }
 }
