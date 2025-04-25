@@ -13,9 +13,14 @@ public class TBConfigMenu implements ModMenuApi {
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> {
             var screen = AutoConfig.getConfigScreen(TBConfig.class, parent).get();
-            ScreenEvents.remove(screen).register($ -> {
-                if (TalkBalloonsClient.hasServerSupport()) {
-                    TBClientPacketHandler.syncBalloonConfig();
+
+            ScreenEvents.AFTER_INIT.register((client, screen1, scaledWidth, scaledHeight) -> {
+                if (screen1 == screen) {
+                    ScreenEvents.remove(screen).register($ -> {
+                        if (TalkBalloonsClient.hasServerSupport()) {
+                            TBClientPacketHandler.syncBalloonConfig();
+                        }
+                    });
                 }
             });
 
