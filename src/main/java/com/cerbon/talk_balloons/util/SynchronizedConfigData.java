@@ -6,16 +6,15 @@ import com.cerbon.talk_balloons.network.CustomCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import xyz.bluspring.modernnetworking.api.CompositeCodecs;
 import xyz.bluspring.modernnetworking.api.NetworkCodec;
 import xyz.bluspring.modernnetworking.api.NetworkCodecs;
-import xyz.bluspring.modernnetworking.api.minecraft.VanillaCodecs;
 
 public record SynchronizedConfigData(
     BalloonStyle balloonStyle,
     int textColor, int balloonTint,
-    int balloonPadding
+    int balloonPadding,
+    boolean onlyDisplayBalloons
 ) {
     public static final Codec<SynchronizedConfigData> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
@@ -30,7 +29,10 @@ public record SynchronizedConfigData(
                 .forGetter(SynchronizedConfigData::balloonTint),
             Codec.INT
                 .optionalFieldOf("balloonPadding", TalkBalloons.config.balloonPadding)
-                .forGetter(SynchronizedConfigData::balloonPadding)
+                .forGetter(SynchronizedConfigData::balloonPadding),
+            Codec.BOOL
+                .optionalFieldOf("onlyDisplayBalloons", TalkBalloons.config.onlyDisplayBalloons)
+                .forGetter(SynchronizedConfigData::onlyDisplayBalloons)
         )
             .apply(instance, SynchronizedConfigData::new)
     );
@@ -40,6 +42,7 @@ public record SynchronizedConfigData(
         NetworkCodecs.VAR_INT, SynchronizedConfigData::textColor,
         NetworkCodecs.VAR_INT, SynchronizedConfigData::balloonTint,
         NetworkCodecs.VAR_INT, SynchronizedConfigData::balloonPadding,
+        CustomCodecs.BOOLEAN, SynchronizedConfigData::onlyDisplayBalloons,
         SynchronizedConfigData::new
     );
 
@@ -48,7 +51,8 @@ public record SynchronizedConfigData(
             TalkBalloons.config.balloonStyle,
             TalkBalloons.config.textColor,
             TalkBalloons.config.balloonTint,
-            TalkBalloons.config.balloonPadding
+            TalkBalloons.config.balloonPadding,
+            TalkBalloons.config.onlyDisplayBalloons
         );
     }
 }

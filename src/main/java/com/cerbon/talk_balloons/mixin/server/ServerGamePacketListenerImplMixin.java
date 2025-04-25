@@ -2,15 +2,22 @@ package com.cerbon.talk_balloons.mixin.server;
 
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.network.packets.CreateBalloonPacket;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.network.Connection;
+import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+//? if >= 1.19.2
+import net.minecraft.network.chat.PlayerChatMessage;
+//? if >= 1.20.2 {
 import net.minecraft.server.network.CommonListenerCookie;
-//? if >= 1.20.2
+import net.minecraft.server.network.FilteredText;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
+//?}
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,10 +26,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.bluspring.modernnetworking.api.minecraft.VanillaPacketSender;
 
-import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
 
 @Mixin(ServerGamePacketListenerImpl.class)
-public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 { */ extends ServerCommonPacketListenerImpl/*? }*/ {
+public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ extends ServerCommonPacketListenerImpl/*?}*/ {
     //? if <= 1.20.1
     /*@Shadow @Final private MinecraftServer server;*/
 
@@ -34,23 +42,39 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 { */ ext
     }
     //?}
 
-    //? if <= 1.20.4 {
-    /*@Inject(method = "handleChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;submit(Ljava/lang/Runnable;)Ljava/util/concurrent/CompletableFuture;"))
-    *///? } else {
-    @Inject(method = "method_44900", at = @At("TAIL"))
-    //? }
-    private void talk_balloons$sendChatMessageToPlayers(
-        ServerboundChatPacket packet,
-        //? if >= 1.20.4
-        Optional optional,
-        CallbackInfo ci
+    //? if >= 1.19.2 {
+    @Inject(method = "method_45064", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"), cancellable = true)
+    private void talk_balloons$sendBalloonToPlayers(
+        CallbackInfo ci, @Local(ordinal = 1) PlayerChatMessage chatMessage
     ) {
-        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), Component.literal(packet.message()), -1);
+        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), chatMessage.unsignedContent(), -1);
 
         for (ServerPlayer player : this.server.getPlayerList().getPlayers()) {
             if (TalkBalloons.playerHasSupport(player.getUUID())) {
                 VanillaPacketSender.sendToPlayer(player, balloonPacket);
             }
         }
+
+        if (TalkBalloons.serverSyncedConfigs.getPlayerConfig(this.player.getUUID()).onlyDisplayBalloons()) {
+            ci.cancel();
+        }
     }
+    //?} else {
+    /*@WrapWithCondition(method = "handleChat(Lnet/minecraft/server/network/TextFilter$FilteredText;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Ljava/util/function/Function;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
+    private boolean talk_balloons$sendBalloonToPlayers(PlayerList instance, Component text, Function<ServerPlayer, Component> serverPlayerComponentFunction, ChatType message, UUID filter) {
+        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), text, -1);
+
+        for (ServerPlayer player : instance.getPlayers()) {
+            if (TalkBalloons.playerHasSupport(player.getUUID())) {
+                VanillaPacketSender.sendToPlayer(player, balloonPacket);
+            }
+        }
+
+        if (TalkBalloons.serverSyncedConfigs.getPlayerConfig(this.player.getUUID()).onlyDisplayBalloons()) {
+            return false;
+        }
+
+        return true;
+    }
+    *///?}
 }

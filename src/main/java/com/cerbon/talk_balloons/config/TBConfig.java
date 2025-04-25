@@ -8,7 +8,6 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import me.shedaniel.clothconfig2.gui.entries.ColorEntry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -41,6 +40,7 @@ public class TBConfig implements ConfigData {
     public int balloonTint = 0xF1F6F8; // RGB-encoded
 
     public boolean showOwnBalloon = true;
+    public boolean onlyDisplayBalloons = false;
 
     public static class ConfigGuiHandler {
         public static void init() {

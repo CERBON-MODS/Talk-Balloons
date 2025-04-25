@@ -12,6 +12,12 @@ public class CustomCodecs {
         return Unit.INSTANCE;
     }, FriendlyByteBuf::readResourceLocation);
 
+    // how did I forget a boolean.
+    public static final NetworkCodec<Boolean, ByteBuf> BOOLEAN = new NetworkCodec<>((buf, value) -> {
+        buf.writeBoolean(value);
+        return Unit.INSTANCE;
+    }, ByteBuf::readBoolean);
+
     public static <T, B extends ByteBuf> NetworkCodec<T, B> createNullable(NetworkCodec<T, B> original) {
         return new NetworkCodec<>((buf, value) -> {
             buf.writeBoolean(value != null);

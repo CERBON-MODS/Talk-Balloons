@@ -160,7 +160,11 @@ public final class BalloonRenderer {
         Screen.blit(poseStack, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
         *///?} else {
         var guiGraphics = getContext(poseStack);
-        guiGraphics.blit(/*? if >= 1.21.3 {*//*RenderType::guiTextured, *//*?}*/location, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
+        //? if >= 1.21.3 {
+        /*guiGraphics.blit(RenderType::guiTextured, location, x, y, uOffset, vOffset, width, height, uWidth, vHeight, textureWidth, textureHeight);
+        *///?} else {
+        guiGraphics.blit(location, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
+        //?}
         //?}
     }
 

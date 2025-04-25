@@ -18,7 +18,7 @@ public record CreateBalloonPacket(
     Component message,
     int balloonAge // If -1, use the client config's balloon age.
 ) implements NetworkPacket {
-    public static final NetworkCodec<CreateBalloonPacket, /*? if >= 1.20.4 { */RegistryFriendlyByteBuf/*? } else { *//*FriendlyByteBuf*//*? }*/> CODEC = CompositeCodecs.composite(
+    public static final NetworkCodec<CreateBalloonPacket, /*? if >= 1.20.4 {*/RegistryFriendlyByteBuf/*?} else {*//*FriendlyByteBuf*//*?}*/> CODEC = CompositeCodecs.composite(
         NetworkCodecs.UUID, CreateBalloonPacket::uuid,
         VanillaCodecs.COMPONENT, CreateBalloonPacket::message,
         NetworkCodecs.VAR_INT, CreateBalloonPacket::balloonAge,

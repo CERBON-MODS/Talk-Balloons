@@ -14,7 +14,7 @@ plugins {
     id("me.modmuss50.mod-publish-plugin") version "0.7.+" apply false
 }
 
-stonecutter active "1.20.6" /* [SC] DO NOT EDIT */
+stonecutter active "1.21.1" /* [SC] DO NOT EDIT */
 stonecutter.automaticPlatformConstants = true
 
 allprojects {

@@ -46,9 +46,9 @@ public class TalkBalloons {
 
 	public static ResourceLocation id(String path) {
 		//? if < 1.21 {
-		return new ResourceLocation(TBConstants.MOD_ID, path);
-		//?} else {
-		/*return ResourceLocation.fromNamespaceAndPath(TBConstants.MOD_ID, path);
-		*///?}
+		/*return new ResourceLocation(TBConstants.MOD_ID, path);
+		*///?} else {
+		return ResourceLocation.fromNamespaceAndPath(TBConstants.MOD_ID, path);
+		//?}
 	}
 }

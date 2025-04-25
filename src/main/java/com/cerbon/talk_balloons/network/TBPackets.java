@@ -22,7 +22,7 @@ public class TBPackets {
     public static final PacketDefinition<SyncBalloonConfigPacket, FriendlyByteBuf> SYNC_BALLOON_CONFIG = REGISTRY.registerServerbound("sync_balloon_config", SyncBalloonConfigPacket.CODEC);
 
     // Clientbound (S -> C) packets
-    public static final PacketDefinition<CreateBalloonPacket, /*? if >= 1.20.6 { */RegistryFriendlyByteBuf/*? } else { *//*FriendlyByteBuf*//*? }*/> CREATE_BALLOON = REGISTRY.registerClientbound("create_balloon", CreateBalloonPacket.CODEC);
+    public static final PacketDefinition<CreateBalloonPacket, /*? if >= 1.20.6 {*/RegistryFriendlyByteBuf/*?} else {*//*FriendlyByteBuf*//*?}*/> CREATE_BALLOON = REGISTRY.registerClientbound("create_balloon", CreateBalloonPacket.CODEC);
     public static final PacketDefinition<SyncBalloonConfigToPlayerPacket, FriendlyByteBuf> SYNC_CONFIG_TO_PLAYER = REGISTRY.registerClientbound("sync_balloon_config", SyncBalloonConfigToPlayerPacket.CODEC);
 
     public static void init() {
