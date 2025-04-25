@@ -2,10 +2,10 @@ package com.cerbon.talk_balloons.mixin;
 
 import com.cerbon.talk_balloons.TalkBalloons;
 //? if < 1.20.6 {
-import net.minecraft.client.multiplayer.ClientPacketListener;
-//? } else {
-/*import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
-*///? }
+/*import net.minecraft.client.multiplayer.ClientPacketListener;
+*///?} else {
+import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
+//?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,10 +26,10 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(
     //? if < 1.20.6 {
-    ClientPacketListener.class
-    //? } else {
-    /*ClientCommonPacketListenerImpl.class
-    *///? }
+    /*ClientPacketListener.class
+    *///?} else {
+    ClientCommonPacketListenerImpl.class
+    //?}
 )
 public class ClientPacketListenerMixin {
     @Inject(method = "handleDisconnect", at = @At("TAIL"))

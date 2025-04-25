@@ -24,14 +24,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 //? if >= 1.20 {
-/*import com.mojang.math.Axis;
+import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-*///?} else {
-import com.mojang.math.Quaternion;
+//?} else {
+/*import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-//?}
+*///?}
 
 import java.util.List;
 
@@ -39,17 +39,21 @@ import java.util.List;
 public final class BalloonRenderer {
     private static final Minecraft client = Minecraft.getInstance();
 
-    public static void renderBalloons(PoseStack poseStack, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<Component> messages, float playerHeight) {
+    public static void renderBalloons(PoseStack poseStack, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<Component> messages, float playerHeight, SynchronizedConfigData configData) {
         //? if >= 1.20 {
-        /*Quaternionf rotation = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y);
-        *///?} else {
-        var rotation = Vector3f.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y());
-        //?}
+        Quaternionf rotation = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y);
+        //?} else {
+        /*var rotation = Vector3f.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y());
+        *///?}
 
         int balloonDistance = 0;
         int previousBalloonHeight = 0;
-        int padding = TalkBalloons.config.balloonPadding;
-        ResourceLocation balloonTexture = TalkBalloons.config.balloonStyle.getTextureId();
+        int padding = configData.balloonPadding();
+        ResourceLocation balloonTexture = configData.balloonStyle().getTextureId();
+
+        var r = (configData.balloonTint() >> 16) & 255;
+        var g = (configData.balloonTint() >> 8) & 255;
+        var b = configData.balloonTint() & 255;
 
         for (int i = 0; i < messages.size(); i++) {
             Component message = messages.get(i);
@@ -64,6 +68,7 @@ public final class BalloonRenderer {
             RenderSystem.enableDepthTest();
             RenderSystem.enablePolygonOffset();
             RenderSystem.polygonOffset(3.0F, 3.0F);
+            RenderSystem.setShaderColor(r / 255f, g / 255f, b / 255f, 1f);
 
             List<FormattedCharSequence> dividedMessage = font.split(message, TalkBalloons.config.maxBalloonWidth);
 
@@ -113,16 +118,17 @@ public final class BalloonRenderer {
                 blit(poseStack, balloonTexture, -3, 9 + padding, 7, 4, 18, 6, 7, 4, 32, 32);
 
             RenderSystem.disableBlend();
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
             if (dividedMessage.size() > 1) {
                 int textDistance = 0;
 
                 for (FormattedCharSequence text : dividedMessage) {
-                    drawString(poseStack, font, text, -font.width(text) / 2 + 1, -(9 * balloonHeight - 10) - balloonDistance + textDistance, TalkBalloons.config.textColor, false);
+                    drawString(poseStack, font, text, -font.width(text) / 2 + 1, -(9 * balloonHeight - 10) - balloonDistance + textDistance, configData.textColor(), false);
                     textDistance += 9;
                 }
             } else
-                drawString(poseStack, font, message.getVisualOrderText(), -greatestTextWidth / 2 + 1, balloonHeight - balloonDistance, TalkBalloons.config.textColor, false);
+                drawString(poseStack, font, message.getVisualOrderText(), -greatestTextWidth / 2 + 1, balloonHeight - balloonDistance, configData.textColor(), false);
 
             poseStack.popPose();
         }
@@ -130,14 +136,14 @@ public final class BalloonRenderer {
 
     private static void drawString(PoseStack poseStack, Font font, FormattedCharSequence text, int x, int y, int color, boolean dropShadow) {
         //? if >= 1.20 {
-        /*font.drawInBatch(text, (float) x, (float) y, color, dropShadow, poseStack.last().pose(), client.renderBuffers().bufferSource(), Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
-        *///?} else {
-        font.drawInBatch(text, (float) x, (float) y, color, dropShadow, poseStack.last().pose(), client.renderBuffers().bufferSource(), false, 0, LightTexture.FULL_BRIGHT);
-        //?}
+        font.drawInBatch(text, (float) x, (float) y, color, dropShadow, poseStack.last().pose(), client.renderBuffers().bufferSource(), Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
+        //?} else {
+        /*font.drawInBatch(text, (float) x, (float) y, color, dropShadow, poseStack.last().pose(), client.renderBuffers().bufferSource(), false, 0, LightTexture.FULL_BRIGHT);
+        *///?}
     }
 
     //? if >= 1.20 {
-    /*private static GuiGraphics currentContext;
+    private static GuiGraphics currentContext;
     private static GuiGraphics getContext(PoseStack stack) {
         if (currentContext == null || currentContext.pose() != stack) {
             currentContext = new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource());
@@ -146,32 +152,32 @@ public final class BalloonRenderer {
 
         return currentContext;
     }
-    *///?}
+    //?}
 
     private static void blit(PoseStack poseStack, ResourceLocation location, int x, int y, int width, int height, float uOffset, float vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight) {
         //? if < 1.20 {
-        RenderSystem.setShaderTexture(0, location);
+        /*RenderSystem.setShaderTexture(0, location);
         Screen.blit(poseStack, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
-        //?} else {
-        /*var guiGraphics = getContext(poseStack);
-        guiGraphics.blit(/^? if >= 1.21.3 {^//^RenderType::guiTextured, ^//^?}^/location, x, y, uOffset, vOffset, width, height, textureWidth, textureHeight);
-        *///?}
+        *///?} else {
+        var guiGraphics = getContext(poseStack);
+        guiGraphics.blit(/*? if >= 1.21.3 {*//*RenderType::guiTextured, *//*?}*/location, x, y, uOffset, vOffset, width, height, textureWidth, textureHeight);
+        //?}
     }
 
-    private static Vector3f toEulerXyz(/*? if >= 1.20 {*//*Quaternionf*//*?} else {*/Quaternion/*?}*/ quaternionf) {
+    private static Vector3f toEulerXyz(/*? if >= 1.20 {*/Quaternionf/*?} else {*//*Quaternion*//*?}*/ quaternionf) {
         //? if >= 1.20 {
         
-        /*var w = quaternionf.w();
+        var w = quaternionf.w();
         var x = quaternionf.x();
         var y = quaternionf.y();
         var z = quaternionf.z();
-        *///?} else {
-        // Mojang why
+        //?} else {
+        /*// Mojang why
         var w = quaternionf.r();
         var x = quaternionf.i();
         var y = quaternionf.j();
         var z = quaternionf.k();
-        //?}
+        *///?}
 
         float f = w * x;
         float g = x * x;
@@ -187,7 +193,7 @@ public final class BalloonRenderer {
         return new Vector3f(l, (float) Math.atan2(2.0f * x * z + 2.0f * y * w, f - g - h + i), (float) Math.atan2(2.0f * x * y + 2.0f * w * z, f - g + h - i));
     }
 
-    private static Vector3f toEulerXyzDegrees(/*? if >= 1.20 {*//*Quaternionf*//*?} else {*/Quaternion/*?}*/ quaternionf) {
+    private static Vector3f toEulerXyzDegrees(/*? if >= 1.20 {*/Quaternionf/*?} else {*//*Quaternion*//*?}*/ quaternionf) {
         Vector3f vec3f = BalloonRenderer.toEulerXyz(quaternionf);
         return new Vector3f((float) Math.toDegrees(vec3f.x()), (float) Math.toDegrees(vec3f.y()), (float) Math.toDegrees(vec3f.z()));
     }

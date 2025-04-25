@@ -1,5 +1,6 @@
 package com.cerbon.talk_balloons.mixin;
 
+import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.cerbon.talk_balloons.util.mixin.ITalkBalloonsPlayer;
 //? if <= 1.21.1 {
 import com.cerbon.talk_balloons.client.BalloonRenderer;
@@ -43,7 +44,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<
         ITalkBalloonsPlayer playerMixin = (ITalkBalloonsPlayer) player;
         if (playerMixin.talk_balloons$getBalloonMessages() == null || playerMixin.talk_balloons$getBalloonMessages().isEmpty()) return;
 
-        BalloonRenderer.renderBalloons(poseStack, this.entityRenderDispatcher, this.getFont(), playerMixin.talk_balloons$getBalloonMessages(), player.getBbHeight());
+        BalloonRenderer.renderBalloons(poseStack, this.entityRenderDispatcher, this.getFont(), playerMixin.talk_balloons$getBalloonMessages(), player.getBbHeight(), TalkBalloonsClient.syncedConfigs.getPlayerConfig(player.getUUID()));
     }
     //?} else if >= 1.21.3 {
 
@@ -51,12 +52,14 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<
     private void tb_setupBalloonRenderState(AbstractClientPlayer player, PlayerRenderState reusedState, float partialTick, CallbackInfo ci) {
         ITalkBalloonsPlayer playerMixin = (ITalkBalloonsPlayer) player;
         IPlayerRenderState stateMixin = (IPlayerRenderState) reusedState;
+
         if (playerMixin.talk_balloons$getBalloonMessages() == null || playerMixin.talk_balloons$getBalloonMessages().isEmpty()) {
             stateMixin.tb_setBalloons(null);
             return;
         }
 
         ((IPlayerRenderState) reusedState).tb_setBalloons(playerMixin.talk_balloons$getBalloonMessages());
+        ((IPlayerRenderState) reusedState).tb_setPlayerConfigData(TalkBalloonsClient.syncedConfigs.getPlayerConfig(player.getUUID()));
     }
     *///?}
 }

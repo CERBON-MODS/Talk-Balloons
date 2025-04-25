@@ -4,7 +4,8 @@ package com.cerbon.talk_balloons.mixin;
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.api.TalkBalloonsApi;
 //? if >= 1.20
-/*import com.mojang.authlib.GameProfile;*/
+import com.mojang.authlib.GameProfile;
+import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.multiplayer.chat.ChatListener;
@@ -30,6 +31,9 @@ public class ChatListenerMixin {
     // Try to extract the player from the sent message, to workaround an incompatibility with No Chat Reports.
     @Inject(method = "handleSystemMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;)V"))
     private void tryGetChatMessageNCR(Component component, boolean isOverlay, CallbackInfo ci) {
+        if (TalkBalloonsClient.hasServerSupport())
+            return;
+
         if (!(component.getContents() instanceof TranslatableContents contents))
             return;
 
@@ -78,22 +82,25 @@ public class ChatListenerMixin {
     @Inject(method = "showMessageToPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getChat()Lnet/minecraft/client/gui/components/ChatComponent;", ordinal = 0))
     private void getChatMessage(ChatType.Bound boundChatType, PlayerChatMessage chatMessage, Component decoratedServerContent,
                                 //? if >= 1.20 {
-                                /*GameProfile gameProfile,
-                                *///?} else {
-                                PlayerInfo gameProfile,
-                                //?}
+                                GameProfile gameProfile,
+                                //?} else {
+                                /*PlayerInfo gameProfile,
+                                *///?}
                                 boolean onlyShowSecureChat, Instant timestamp, CallbackInfoReturnable<Boolean> cir) {
+        if (TalkBalloonsClient.hasServerSupport())
+            return;
+
         Minecraft minecraft = Minecraft.getInstance();
         Level level = minecraft.level;
         if (level == null) return;
 
         Player thisClientPlayer = minecraft.player;
-        if (thisClientPlayer != null && thisClientPlayer.getUUID() == chatMessage/*? if <= 1.19.2 {*/.signedHeader()/*?}*/.sender() && !TalkBalloons.config.showOwnBalloon) return;
+        if (thisClientPlayer != null && thisClientPlayer.getUUID() == chatMessage/*? if <= 1.19.2 {*//*.signedHeader()*//*?}*/.sender() && !TalkBalloons.config.showOwnBalloon) return;
 
-        Player player = level.getPlayerByUUID(chatMessage/*? if <= 1.19.2 {*/.signedHeader()/*?}*/.sender());
+        Player player = level.getPlayerByUUID(chatMessage/*? if <= 1.19.2 {*//*.signedHeader()*//*?}*/.sender());
         if (player == null) return;
 
-        TalkBalloonsApi.INSTANCE.createBalloonMessage(player, chatMessage/*? if <= 1.19.2 {*/.signedContent().plain()/*?} else {*//*.decoratedContent()*//*?}*/, TalkBalloons.config.balloonAge * 20);
+        TalkBalloonsApi.INSTANCE.createBalloonMessage(player, chatMessage/*? if <= 1.19.2 {*//*.signedContent().plain()*//*?} else {*/.decoratedContent()/*?}*/, TalkBalloons.config.balloonAge * 20);
     }
     //?}
 }

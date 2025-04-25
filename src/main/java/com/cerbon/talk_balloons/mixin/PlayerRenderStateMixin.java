@@ -1,6 +1,7 @@
 package com.cerbon.talk_balloons.mixin;
 
 import com.cerbon.talk_balloons.util.HistoricalData;
+import com.cerbon.talk_balloons.util.SynchronizedConfigData;
 import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
 //? if >= 1.21.3
 /*import net.minecraft.client.renderer.entity.state.PlayerRenderState;*/
@@ -12,6 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 /*@Mixin(PlayerRenderState.class)*/
 public abstract class PlayerRenderStateMixin implements IPlayerRenderState {
     @Unique private HistoricalData<Component> tb_balloons;
+    @Unique private SynchronizedConfigData tb_configData;
 
     @Override
     public HistoricalData<Component> tb_getBalloons() {
@@ -21,5 +23,15 @@ public abstract class PlayerRenderStateMixin implements IPlayerRenderState {
     @Override
     public void tb_setBalloons(HistoricalData<Component> balloons) {
         this.tb_balloons = balloons;
+    }
+
+    @Override
+    public SynchronizedConfigData tb_getPlayerConfigData() {
+        return tb_configData;
+    }
+
+    @Override
+    public void tb_setPlayerConfigData(SynchronizedConfigData configData) {
+        this.tb_configData = configData;
     }
 }

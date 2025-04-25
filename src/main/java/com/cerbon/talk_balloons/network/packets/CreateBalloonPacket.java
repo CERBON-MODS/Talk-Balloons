@@ -1,5 +1,6 @@
 package com.cerbon.talk_balloons.network.packets;
 
+import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.network.TBPackets;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,7 +11,7 @@ import xyz.bluspring.modernnetworking.api.minecraft.VanillaCodecs;
 
 public record CreateBalloonPacket(
     Component message,
-    int balloonAge
+    int balloonAge // If -1, use the client config's balloon age.
 ) implements NetworkPacket {
     public static final NetworkCodec<CreateBalloonPacket, FriendlyByteBuf> CODEC = CompositeCodecs.composite(
         VanillaCodecs.COMPONENT, CreateBalloonPacket::message,
@@ -21,5 +22,13 @@ public record CreateBalloonPacket(
     @Override
     public @NotNull PacketDefinition<? extends NetworkPacket, ? extends ByteBuf> getDefinition() {
         return TBPackets.CREATE_BALLOON;
+    }
+
+    public int getBalloonAge() {
+        if (this.balloonAge() == -1) {
+            return TalkBalloons.config.balloonAge;
+        }
+
+        return this.balloonAge();
     }
 }

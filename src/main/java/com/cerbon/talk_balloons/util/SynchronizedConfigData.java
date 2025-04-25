@@ -14,7 +14,8 @@ import xyz.bluspring.modernnetworking.api.minecraft.VanillaCodecs;
 
 public record SynchronizedConfigData(
     BalloonStyle balloonStyle,
-    int textColor, int balloonPadding
+    int textColor, int balloonTint,
+    int balloonPadding
 ) {
     public static final Codec<SynchronizedConfigData> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
@@ -25,6 +26,9 @@ public record SynchronizedConfigData(
                 .optionalFieldOf("textColor", TalkBalloons.config.textColor)
                 .forGetter(SynchronizedConfigData::textColor),
             Codec.INT
+                .optionalFieldOf("balloonTint", TalkBalloons.config.balloonTint)
+                .forGetter(SynchronizedConfigData::balloonTint),
+            Codec.INT
                 .optionalFieldOf("balloonPadding", TalkBalloons.config.balloonPadding)
                 .forGetter(SynchronizedConfigData::balloonPadding)
         )
@@ -34,7 +38,17 @@ public record SynchronizedConfigData(
     public static final NetworkCodec<SynchronizedConfigData, FriendlyByteBuf> NETWORK_CODEC = CompositeCodecs.composite(
         BalloonStyle.NETWORK_CODEC, SynchronizedConfigData::balloonStyle,
         NetworkCodecs.VAR_INT, SynchronizedConfigData::textColor,
+        NetworkCodecs.VAR_INT, SynchronizedConfigData::balloonTint,
         NetworkCodecs.VAR_INT, SynchronizedConfigData::balloonPadding,
         SynchronizedConfigData::new
     );
+
+    public static SynchronizedConfigData getDefault() {
+        return new SynchronizedConfigData(
+            TalkBalloons.config.balloonStyle,
+            TalkBalloons.config.textColor,
+            TalkBalloons.config.balloonTint,
+            TalkBalloons.config.balloonPadding
+        );
+    }
 }
