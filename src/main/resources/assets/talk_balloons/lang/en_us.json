@@ -6,6 +6,10 @@
   "text.autoconfig.talk_balloons.option.maxBalloonWidth": "Max balloon width",
   "text.autoconfig.talk_balloons.option.balloonAge": "Balloon age",
   "text.autoconfig.talk_balloons.option.textColor": "Text color",
+  "text.autoconfig.talk_balloons.option.balloonTint": "Balloon tint",
+  "text.autoconfig.talk_balloons.option.balloonStyle": "Balloon style",
   "text.autoconfig.talk_balloons.option.showOwnBalloon": "Show own balloon",
+  "text.autoconfig.talk_balloons.option.onlyDisplayBalloons": "Only display balloons",
+  "text.autoconfig.talk_balloons.option.onlyDisplayBalloons.tooltip": "Only displays balloons instead of chat messages for yourself.",
   "text.autoconfig.talk_balloons.option.balloonPadding": "Balloon padding"
 }
