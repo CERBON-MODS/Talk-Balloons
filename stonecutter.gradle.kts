@@ -107,11 +107,16 @@ subprojects {
                 projectId = rootProject.property("publishing.modrinth").toString()
                 accessToken = providers.environmentVariable("MODRINTH_TOKEN")
                 minecraftVersions.addAll(common.mod.prop("supported_versions").split(","))
-                requires {
-                    slug = "fabric-api"
+                if (project.property("loom.platform") == "fabric") {
+                    requires {
+                        slug = "fabric-api"
+                    }
                 }
                 requires {
                     slug = "cloth-config"
+                }
+                requires {
+                    slug = "modernnetworking"
                 }
             }
 
@@ -119,11 +124,16 @@ subprojects {
                 projectId = rootProject.property("publishing.curseforge").toString()
                 accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
                 minecraftVersions.addAll(common.mod.prop("supported_versions").split(","))
-                requires {
-                    slug = "fabric-api"
+                if (project.property("loom.platform") == "fabric") {
+                    requires {
+                        slug = "fabric-api"
+                    }
                 }
                 requires {
                     slug = "cloth-config"
+                }
+                requires {
+                    slug = "modernnetworking"
                 }
             }
         }

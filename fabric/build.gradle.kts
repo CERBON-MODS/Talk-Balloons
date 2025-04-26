@@ -53,7 +53,7 @@ dependencies {
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionFabric")) { isTransitive = false }
 
-    include(modImplementation("xyz.bluspring.modernnetworking:modernnetworking-fabric:${common.mod.dep("modernnetworking")}+${common.mod.dep("modernnetworking_mc")}")!!)
+    modImplementation("xyz.bluspring.modernnetworking:modernnetworking-fabric:${common.mod.dep("modernnetworking")}+${common.mod.dep("modernnetworking_mc")}")!!
     modImplementation("net.fabricmc:fabric-language-kotlin:${common.mod.dep("fabric_kotlin")}")
 }
 
