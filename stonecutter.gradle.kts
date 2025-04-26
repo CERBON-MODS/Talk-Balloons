@@ -93,7 +93,7 @@ subprojects {
         project.extensions.configure<ModPublishExtension>("publishMods") {
             file = tasks.named<RemapJarTask>("remapJar").get().archiveFile
             displayName = "TalkBalloons ${project.property("mod.version")}+${mcVersion} ($properLoaderName)"
-            version = project.property("mod.version").toString()
+            version = "${project.property("mod.version")}+${mcVersion}-${project.prop("loom.platform")}"
             changelog = rootProject.file("CHANGELOG.md").readText()
             type = ReleaseType.BETA
             modLoaders.add(project.property("loom.platform").toString())
