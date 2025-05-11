@@ -95,8 +95,10 @@ public final class BalloonRenderer {
         for (int i = 0; i < messages.size(); i++) {
             //? if >= 1.21.5 {
             /*var builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            *///?} else if >= 1.21.1 {
+            /*var builder = bufferSource.getBuffer(RenderType.guiTextured(balloonTexture));
             *///?} else {
-            var builder = bufferSource.getBuffer(RenderType.guiTextured(balloonTexture));
+            var builder = bufferSource.getBuffer(RenderType.entityTranslucent(balloonTexture));
             //?}
 
             Component message = messages.get(i);
@@ -219,7 +221,7 @@ public final class BalloonRenderer {
         var minV = vOffset / textureHeight;
         var maxV = (vOffset + vHeight) / textureHeight;
 
-        //? if >= 1.21 {
+        //? if >= 1.20.6 {
         /*consumer.addVertex(matrix, (float) x, (float) y, 0f)
             .setUv(minU, minV)
             .setColor(-1);
@@ -235,7 +237,27 @@ public final class BalloonRenderer {
         consumer.addVertex(matrix, (float) x2, (float) y, 0f)
             .setUv(maxU, minV)
             .setColor(-1);
-        *///?}
+        *///?} else {
+        consumer.vertex(matrix, (float) x, (float) y, 0f)
+            .uv(minU, minV)
+            .color(-1)
+            .endVertex();
+
+        consumer.vertex(matrix, (float) x, (float) y2, 0f)
+            .uv(minU, maxV)
+            .color(-1)
+            .endVertex();
+
+        consumer.vertex(matrix, (float) x2, (float) y2, 0f)
+            .uv(maxU, maxV)
+            .color(-1)
+            .endVertex();
+
+        consumer.vertex(matrix, (float) x2, (float) y, 0f)
+            .uv(maxU, minV)
+            .color(-1)
+            .endVertex();
+        //?}
     }
 
     private static Vector3f toEulerXyz(/*? if >= 1.20 {*/Quaternionf/*?} else {*//*Quaternion*//*?}*/ quaternionf) {
