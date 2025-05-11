@@ -55,7 +55,8 @@ dependencies {
         include(it)
     }
 
-    modImplementation("me.shedaniel.cloth:cloth-config-forge:${common.mod.dep("cloth_config")}")
+    if (mod.dep("cloth_config") != "[UNSUPPORTED]")
+        modImplementation("me.shedaniel.cloth:cloth-config-forge:${common.mod.dep("cloth_config")}")
 
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionForge")) { isTransitive = false }

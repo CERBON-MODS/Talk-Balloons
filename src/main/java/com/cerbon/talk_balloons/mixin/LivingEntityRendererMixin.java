@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
         if (stateMixin.tb_getBalloons() == null)
             return;
 
-        BalloonRenderer.renderBalloons(poseStack, this.entityRenderDispatcher, this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight, stateMixin.tb_getPlayerConfigData());
+        BalloonRenderer.renderBalloons(poseStack, bufferSource, this.entityRenderDispatcher, this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight, stateMixin.tb_getPlayerConfigData());
     }
 }
 *///?} else {

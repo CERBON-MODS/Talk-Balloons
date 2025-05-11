@@ -51,15 +51,19 @@ public class ChatListenerMixin {
         if (mutableComponent.getStyle().getHoverEvent() == null)
             return true;
 
-        if (mutableComponent.getStyle().getHoverEvent().getAction() != HoverEvent.Action.SHOW_ENTITY)
+        if (mutableComponent.getStyle().getHoverEvent()/*? if <= 1.21.4 {*/.getAction()/*?} else {*//*.action()*//*?}*/ != HoverEvent.Action.SHOW_ENTITY)
             return true;
 
+        //? if <= 1.21.4 {
         var value = mutableComponent.getStyle().getHoverEvent().getValue(HoverEvent.Action.SHOW_ENTITY);
+        //?} else {
+        /*var value = ((HoverEvent.ShowEntity) mutableComponent.getStyle().getHoverEvent()).entity();
+        *///?}
 
         if (value == null || value.type != EntityType.PLAYER)
             return true;
 
-        UUID uuid = value.id;
+        UUID uuid = value/*? if <= 1.21.4 {*/.id/*?} else {*//*.uuid*//*?}*/;
         Minecraft minecraft = Minecraft.getInstance();
         Level level = minecraft.level;
         var config = TalkBalloonsClient.syncedConfigs.getPlayerConfig(uuid);

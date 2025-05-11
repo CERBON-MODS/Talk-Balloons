@@ -1,11 +1,16 @@
 package com.cerbon.talk_balloons.client;
 
 import com.cerbon.talk_balloons.TalkBalloons;
-import com.cerbon.talk_balloons.mixin.GuiGraphicsAccessor;
 import com.cerbon.talk_balloons.util.HistoricalData;
 import com.cerbon.talk_balloons.util.SynchronizedConfigData;
 import com.cerbon.talk_balloons.util.TBConstants;
-import com.mojang.blaze3d.platform.GlStateManager;
+//? if >= 1.21.5 {
+/*import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.shaders.UniformType;
+import com.mojang.blaze3d.systems.RenderPass;
+*///?}
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.fabricmc.api.EnvType;
@@ -13,9 +18,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -25,7 +28,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 //? if >= 1.20 {
 import com.mojang.math.Axis;
-import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 //?} else {
@@ -34,12 +36,42 @@ import com.mojang.math.Vector3f;
 *///?}
 
 import java.util.List;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 @Environment(EnvType.CLIENT)
 public final class BalloonRenderer {
     private static final Minecraft client = Minecraft.getInstance();
 
-    public static void renderBalloons(PoseStack poseStack, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<Component> messages, float playerHeight, SynchronizedConfigData configData) {
+    //? if >= 1.21.5 {
+    /*private static final RenderPipeline.Snippet BALLOON_SNIPPET = RenderPipeline.builder()
+        .withUniform("ModelViewMat", UniformType.MATRIX4X4) // Matrices snippet
+        .withUniform("ProjMat", UniformType.MATRIX4X4)
+        .withUniform("ColorModulator", UniformType.VEC4) // Matrices Color snippet
+        .withVertexShader("core/position_tex_color") // guiTextured defaults
+        .withFragmentShader("core/position_tex_color")
+        .withSampler("Sampler0")
+        .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
+        .withDepthTestFunction(DepthTestFunction.LEQUAL_DEPTH_TEST) // enableDepthTest
+        .buildSnippet();
+
+    private static final RenderPipeline MAIN_BALLOON_PIPELINE = RenderPipeline.builder(BALLOON_SNIPPET)
+        .withLocation("pipeline/gui_textured")
+        .withDepthBias(3.0f, 3.0f) // polygonOffset
+        .withBlend(BlendFunction.PANORAMA) // enableBlend + defaultBlendFunc
+        .build();
+
+    private static final RenderPipeline BALLOON_ARROW_PIPELINE = RenderPipeline.builder(BALLOON_SNIPPET)
+        .withLocation("pipeline/gui_textured")
+        .withDepthBias(0.0f, 0.0f) // disablePolygonOffset
+        .withBlend(BlendFunction.PANORAMA) // enableBlend + defaultBlendFunc
+        .build();
+    *///?}
+
+    public static void renderBalloons(PoseStack poseStack, MultiBufferSource bufferSource, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<Component> messages, float playerHeight, SynchronizedConfigData configData) {
+        if (messages.isEmpty())
+            return;
+
         //? if >= 1.20 {
         Quaternionf rotation = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y /*? if >= 1.21.1 {*/ /*+ 180f*//*?}*/);
         //?} else {
@@ -50,12 +82,23 @@ public final class BalloonRenderer {
         int previousBalloonHeight = 0;
         int padding = configData.balloonPadding();
         ResourceLocation balloonTexture = configData.balloonStyle().getTextureId();
+        //? if >= 1.21.5 {
+        /*var balloonGpuTexture = client.getTextureManager().getTexture(balloonTexture).getTexture();
+        var renderTarget = client.getMainRenderTarget();
+        var encoder = RenderSystem.getDevice().createCommandEncoder();
+        *///?}
 
         var r = (configData.balloonTint() >> 16) & 255;
         var g = (configData.balloonTint() >> 8) & 255;
         var b = configData.balloonTint() & 255;
 
         for (int i = 0; i < messages.size(); i++) {
+            //? if >= 1.21.5 {
+            /*var builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            *///?} else {
+            var builder = bufferSource.getBuffer(RenderType.guiTextured(balloonTexture));
+            //?}
+
             Component message = messages.get(i);
             poseStack.pushPose();
 
@@ -63,11 +106,13 @@ public final class BalloonRenderer {
             poseStack.mulPose(rotation);
             poseStack.scale(-0.025F, -0.025F, 0.025F);
 
+            //? if < 1.21.5 {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
             RenderSystem.enablePolygonOffset();
             RenderSystem.polygonOffset(3.0F, 3.0F);
+            //?}
             RenderSystem.setShaderColor(r / 255f, g / 255f, b / 255f, 1f);
 
             List<FormattedCharSequence> dividedMessage = font.split(message, TalkBalloons.config.maxBalloonWidth);
@@ -96,28 +141,50 @@ public final class BalloonRenderer {
             int baseY = (-balloonHeight - j * 7) - j;
 
             // Left
-            blit(poseStack, balloonTexture, -baseX - 3 - padding, baseY - balloonDistance - padding, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
-            blit(poseStack, balloonTexture, -baseX - 3 - padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 0.0F, 6.0F, 5, 1, 32, 32); // MID
-            blit(poseStack, balloonTexture, -baseX - 3 - padding, 5 - balloonDistance + padding, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(poseStack, builder, -baseX - 3 - padding, baseY - balloonDistance - padding, 5, 5, 0.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(poseStack, builder, -baseX - 3 - padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 0.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(poseStack, builder, -baseX - 3 - padding, 5 - balloonDistance + padding, 5, 5, 0.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Mid
-            blit(poseStack, balloonTexture, -baseX + 2 - padding, baseY - balloonDistance - padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
-            blit(poseStack, balloonTexture, -baseX + 2 - padding, baseY + 5 - balloonDistance - padding, balloonWidth - 4 + (padding * 2), balloonHeight + j * 8 + (padding * 2), 6.0F, 6.0F, 5, 1, 32, 32); // MID
-            blit(poseStack, balloonTexture, -baseX + 2 - padding, 5 - balloonDistance + padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(poseStack, builder, -baseX + 2 - padding, baseY - balloonDistance - padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(poseStack, builder, -baseX + 2 - padding, baseY + 5 - balloonDistance - padding, balloonWidth - 4 + (padding * 2), balloonHeight + j * 8 + (padding * 2), 6.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(poseStack, builder, -baseX + 2 - padding, 5 - balloonDistance + padding, balloonWidth - 4 + (padding * 2), 5, 6.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
             // Right
-            blit(poseStack, balloonTexture, baseX - 1 + padding, baseY - balloonDistance - padding, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
-            blit(poseStack, balloonTexture, baseX - 1 + padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 12.0F, 6.0F, 5, 1, 32, 32); // MID
-            blit(poseStack, balloonTexture, baseX - 1 + padding, 5 - balloonDistance + padding, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
+            blit(poseStack, builder, baseX - 1 + padding, baseY - balloonDistance - padding, 5, 5, 12.0F, 0.0F, 5, 5, 32, 32); // TOP
+            blit(poseStack, builder, baseX - 1 + padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 12.0F, 6.0F, 5, 1, 32, 32); // MID
+            blit(poseStack, builder, baseX - 1 + padding, 5 - balloonDistance + padding, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
+            //? if < 1.21.5 {
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
+            //?}
 
             // Arrow
             if (i == 0)
-                blit(poseStack, balloonTexture, -3, 9 + padding, 7, 4, 18, 6, 7, 4, 32, 32);
+                blit(poseStack, builder, -3, 9 + padding, 7, 4, 18, 6, 7, 4, 32, 32);
 
+            //? if < 1.21.5 {
             RenderSystem.disableBlend();
+            //?} else {
+            /*try (MeshData meshData = builder.buildOrThrow()) {
+                var vertexBuffer = DefaultVertexFormat.POSITION_TEX_COLOR.uploadImmediateVertexBuffer(meshData.vertexBuffer());
+                var indexBufferStorage = RenderSystem.getSequentialBuffer(meshData.drawState().mode());
+                var indexBuffer = indexBufferStorage.getBuffer(meshData.drawState().indexCount());
+                var indexType = indexBufferStorage.type();
+
+                try (RenderPass pass = encoder.createRenderPass(renderTarget.getColorTexture(), OptionalInt.empty(), renderTarget.getDepthTexture(), OptionalDouble.empty())) {
+                    pass.bindSampler("Sampler0", balloonGpuTexture);
+                    pass.setVertexBuffer(0, vertexBuffer);
+                    pass.setIndexBuffer(indexBuffer, indexType);
+
+                    pass.setPipeline(MAIN_BALLOON_PIPELINE);
+                    pass.drawIndexed(0, 6 * 3 * 3);
+                    pass.setPipeline(BALLOON_ARROW_PIPELINE);
+                    pass.drawIndexed(6 * 3 * 3, 6);
+                }
+            }
+            *///?}
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
             if (dividedMessage.size() > 1) {
@@ -142,30 +209,33 @@ public final class BalloonRenderer {
         *///?}
     }
 
-    //? if >= 1.20 {
-    private static GuiGraphics currentContext;
-    private static GuiGraphics getContext(PoseStack stack) {
-        if (currentContext == null || currentContext.pose() != stack) {
-            currentContext = new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource());
-            ((GuiGraphicsAccessor) currentContext).setPose(stack);
-        }
+    private static void blit(PoseStack poseStack, VertexConsumer consumer, int x, int y, int width, int height, float uOffset, float vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight) {
+        var matrix = poseStack.last().pose();
 
-        return currentContext;
-    }
-    //?}
+        var x2 = x + width;
+        var y2 = y + height;
+        var minU = uOffset / textureWidth;
+        var maxU = (uOffset + uWidth) / textureWidth;
+        var minV = vOffset / textureHeight;
+        var maxV = (vOffset + vHeight) / textureHeight;
 
-    private static void blit(PoseStack poseStack, ResourceLocation location, int x, int y, int width, int height, float uOffset, float vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight) {
-        //? if < 1.20 {
-        /*RenderSystem.setShaderTexture(0, location);
-        Screen.blit(poseStack, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
-        *///?} else {
-        var guiGraphics = getContext(poseStack);
-        //? if >= 1.21.3 {
-        /*guiGraphics.blit(RenderType::guiTextured, location, x, y, uOffset, vOffset, width, height, uWidth, vHeight, textureWidth, textureHeight);
-        *///?} else {
-        guiGraphics.blit(location, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
-        //?}
-        //?}
+        //? if >= 1.21 {
+        /*consumer.addVertex(matrix, (float) x, (float) y, 0f)
+            .setUv(minU, minV)
+            .setColor(-1);
+
+        consumer.addVertex(matrix, (float) x, (float) y2, 0f)
+            .setUv(minU, maxV)
+            .setColor(-1);
+
+        consumer.addVertex(matrix, (float) x2, (float) y2, 0f)
+            .setUv(maxU, maxV)
+            .setColor(-1);
+
+        consumer.addVertex(matrix, (float) x2, (float) y, 0f)
+            .setUv(maxU, minV)
+            .setColor(-1);
+        *///?}
     }
 
     private static Vector3f toEulerXyz(/*? if >= 1.20 {*/Quaternionf/*?} else {*//*Quaternion*//*?}*/ quaternionf) {
