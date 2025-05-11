@@ -86,7 +86,7 @@ tasks.processResources {
         "mod_description" to mod.prop("description"),
         "mod_authors" to mod.prop("authors"),
         "minecraft_version_range" to common.mod.prop("mc_dep_forgelike"),
-        "forge_version" to mod.dep("forge_loader"),
+        "forge_version" to common.mod.dep("forge_loader"),
         "cloth_config_version" to common.mod.dep("cloth_config")
     )
 }
