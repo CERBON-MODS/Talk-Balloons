@@ -55,7 +55,9 @@ dependencies {
         include(it)
     }
 
-    if (mod.dep("cloth_config") != "[UNSUPPORTED]")
+    if (mod.dep("cloth_config") != "[VERSIONED]")
+        modImplementation("me.shedaniel.cloth:cloth-config-forge:${mod.dep("cloth_config")}")
+    else
         modImplementation("me.shedaniel.cloth:cloth-config-forge:${common.mod.dep("cloth_config")}")
 
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
