@@ -93,12 +93,24 @@ public final class BalloonRenderer {
         var b = configData.balloonTint() & 255;
 
         for (int i = 0; i < messages.size(); i++) {
-            //? if >= 1.21.5 {
+            //? if >= 1.21.1 {
             /*var builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-            *///?} else if >= 1.21.1 {
-            /*var builder = bufferSource.getBuffer(RenderType.guiTextured(balloonTexture));
+
+            //? if < 1.21.3 {
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            //?} else if < 1.21.5 {
+            /^RenderSystem.setShader(CoreShaders.POSITION_TEX_COLOR);
+            ^///?}
+
+            //? if < 1.21.5 {
+            RenderSystem.setShaderTexture(0, balloonTexture);
+            //?}
+
             *///?} else {
-            var builder = bufferSource.getBuffer(RenderType.entityTranslucent(balloonTexture));
+            var builder = Tesselator.getInstance().getBuilder();
+            builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            RenderSystem.setShaderTexture(0, balloonTexture);
             //?}
 
             Component message = messages.get(i);
@@ -157,6 +169,26 @@ public final class BalloonRenderer {
             blit(poseStack, builder, baseX - 1 + padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 12.0F, 6.0F, 5, 1, 32, 32); // MID
             blit(poseStack, builder, baseX - 1 + padding, 5 - balloonDistance + padding, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
+            //? if < 1.21.4 {
+            //? if >= 1.19.2 {
+            BufferUploader.drawWithShader(
+                //? if < 1.21 {
+                builder.end()
+                //?} else {
+                /*builder.buildOrThrow()
+                *///?}
+            );
+            //?} else {
+            /*Tesselator.getInstance().end();
+            *///?}
+
+            //? if < 1.21 {
+            builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            //?} else {
+            /*builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            *///?}
+            //?}
+
             //? if < 1.21.5 {
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
@@ -165,6 +197,20 @@ public final class BalloonRenderer {
             // Arrow
             if (i == 0)
                 blit(poseStack, builder, -3, 9 + padding, 7, 4, 18, 6, 7, 4, 32, 32);
+
+            //? if < 1.21.4 {
+            //? if >= 1.19.2 {
+            BufferUploader.drawWithShader(
+                //? if < 1.21 {
+                builder.end()
+                 //?} else {
+                /*builder.buildOrThrow()
+                *///?}
+            );
+            //?} else {
+            /*Tesselator.getInstance().end();
+            *///?}
+            //?}
 
             //? if < 1.21.5 {
             RenderSystem.disableBlend();
@@ -221,7 +267,7 @@ public final class BalloonRenderer {
         var minV = vOffset / textureHeight;
         var maxV = (vOffset + vHeight) / textureHeight;
 
-        //? if >= 1.20.6 {
+        //? if >= 1.21 {
         /*consumer.addVertex(matrix, (float) x, (float) y, 0f)
             .setUv(minU, minV)
             .setColor(-1);
