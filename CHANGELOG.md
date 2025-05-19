@@ -5,32 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.5] - 2025-03-12
-
-- Add support for transparency in balloons
-
-## [1.1.4] - 2025-03-09
-
-- Workaround NoChatReports incompatibility
-- Backport to 1.18.2 and 1.19.2
-
-## [1.1.3] - 2025-02-16
-
-- Fix mixin refmaps not being loaded
-
-## [1.1.2] - 2025-01-26
-
-- (1.20.1, 1.20.4) Fix mixin crash on Forge
-
-## [1.1.1] - 2024-12-24
-
-- Fix mod JARs not getting compiled correctly
-
-## [1.1.0] - 2024-12-23
-
-- Remove dependency on CERBON's API
-- Update up to 1.21.4 (Fabric, Forge, NeoForge)
-
-## [1.0.0] - 2024-03-26
-
-- Initial release
+## [1.2.0] - 2025-05-20
+- Add padding option to Talk Balloons ([#8](https://github.com/CERBON-MODS/Talk-Balloons/issues/8))
+- Add per-player customizable Talk Balloons ([#7](https://github.com/CERBON-MODS/Talk-Balloons/issues/7))
+- Added balloon styles (circular, rounded, and squared)
+  - **BREAKING!** The old `balloons.png` texture has been replaced with `rounded.png`, please update your resource packs
+    to fit in with this change! 
+- Add ability to have only balloons appear instead of with chat ([#7](https://github.com/CERBON-MODS/Talk-Balloons/issues/7))
+- Add an API for adding custom balloons
+  - **BREAKING!** This renames `IAbstractClientPlayer` to `ITalkBalloonsPlayer`, which will break other mods.
+    Please use the API for guaranteed stability.
+- Added dependency on [ModernNetworking](https://modrinth.com/plugin/modernnetworking)
+- Migrated codebase to Stonecutter for improved multiversion.

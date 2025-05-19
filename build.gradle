@@ -1,9 +1,0 @@
-tasks.register("remapAllVersions", Task) {
-    dependsOn(gradle.includedBuilds*.task(":fabric:remapJar"))
-    dependsOn(gradle.includedBuilds*.task(":forge:remapJar"))
-    // TODO: add NeoForge?
-}
-
-tasks.register("publishAllVersions", Task) {
-    dependsOn(gradle.includedBuilds*.task(":publishAllCurseforgeAndModrinth"))
-}
