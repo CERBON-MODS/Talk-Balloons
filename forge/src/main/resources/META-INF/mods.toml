@@ -11,7 +11,7 @@ displayURL="https://www.curseforge.com/minecraft/mc-mods/talk-balloons"
 logoFile="logo.png"
 authors="${mod_authors}"
 description='''${mod_description}'''
-displayTest="IGNORE_ALL_VERSION"
+displayTest="MATCH_VERSION"
 
 [[dependencies.${mod_id}]]
 modId="forge"
@@ -26,6 +26,13 @@ mandatory = true
 versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "modernnetworking"
+mandatory = true
+versionRange = "[${modernnetworking_version},)"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId="cloth_config"

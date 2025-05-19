@@ -79,7 +79,8 @@ tasks.processResources {
         "mod_authors" to mod.prop("authors"),
         "minecraft_version_range" to common.mod.prop("mc_dep_forgelike"),
         "neoforge_version" to common.mod.dep("neoforge_loader"),
-        "cloth_config_version" to common.mod.dep("cloth_config")
+        "cloth_config_version" to common.mod.dep("cloth_config"),
+        "modernnetworking_version" to common.mod.dep("modernnetworking")
     )
 }
 
