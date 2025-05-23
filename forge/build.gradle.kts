@@ -23,6 +23,7 @@ architectury {
 
 loom {
     forge {
+        convertAccessWideners = true
         mixinConfigs("${mod.id}-common.mixins.json")
         mixinConfigs("${mod.id}.mixins.json")
     }
@@ -65,14 +66,6 @@ dependencies {
 
     modImplementation("xyz.bluspring.modernnetworking:modernnetworking-forge:${common.mod.dep("modernnetworking")}+${common.mod.dep("modernnetworking_mc")}")!!
     implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1")!!)
-}
-
-loom {
-    forge.convertAccessWideners = true
-    forge.mixinConfigs(
-        "template-common.mixins.json",
-        "template-forge.mixins.json",
-    )
 }
 
 tasks.shadowJar {
