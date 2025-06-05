@@ -182,35 +182,36 @@ public final class BalloonRenderer {
             /*Tesselator.getInstance().end();
             *///?}
 
-            //? if < 1.21 {
-            builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-            //?} else {
-            /*builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-            *///?}
-            //?}
-
             //? if < 1.21.5 {
             RenderSystem.polygonOffset(0.0F, 0.0F);
             RenderSystem.disablePolygonOffset();
             //?}
 
             // Arrow
-            if (i == 0)
+            if (i == 0) {
+                //? if < 1.21 {
+                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+                 //?} else {
+                /*builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+                *///?}
+                //?}
+
                 blit(poseStack, builder, -3, 9 + padding, 7, 4, 18, 6, 7, 4, 32, 32);
 
-            //? if < 1.21.4 {
-            //? if >= 1.19.2 {
-            BufferUploader.drawWithShader(
-                //? if < 1.21 {
-                builder.end()
-                 //?} else {
-                /*builder.buildOrThrow()
-                *///?}
-            );
-            //?} else {
-            /*Tesselator.getInstance().end();
-            *///?}
-            //?}
+                //? if < 1.21.4 {
+                //? if >= 1.19.2 {
+                BufferUploader.drawWithShader(
+                    //? if < 1.21 {
+                    builder.end()
+                     //?} else {
+                    /*builder.buildOrThrow()
+                    *///?}
+                );
+                //?} else {
+                /*Tesselator.getInstance().end();
+                 *///?}
+                //?}
+            }
 
             //? if < 1.21.5 {
             RenderSystem.disableBlend();
