@@ -210,8 +210,8 @@ public final class BalloonRenderer {
                 //?} else {
                 /*Tesselator.getInstance().end();
                  *///?}
-                //?}
             }
+            //?}
 
             //? if < 1.21.5 {
             RenderSystem.disableBlend();
