@@ -105,7 +105,7 @@ subprojects {
             modrinth {
                 projectId = rootProject.property("publishing.modrinth").toString()
                 accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-                //minecraftVersions.addAll(common.mod.prop("supported_versions").split(","))
+                minecraftVersions.addAll(common.project.mod.prop("supported_versions").split(","))
                 if (project.property("loom.platform") == "fabric") {
                     requires {
                         slug = "fabric-api"
@@ -122,7 +122,7 @@ subprojects {
             curseforge {
                 projectId = rootProject.property("publishing.curseforge").toString()
                 accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
-                //minecraftVersions.addAll(common.mod.prop("supported_versions").split(","))
+                minecraftVersions.addAll(common.project.mod.prop("supported_versions").split(","))
                 if (project.property("loom.platform") == "fabric") {
                     requires {
                         slug = "fabric-api"
@@ -165,8 +165,8 @@ for (it in stonecutter.tree.nodes) {
     if (it.metadata != stonecutter.current || it.branch.id.isEmpty()) continue
     val types = listOf("Client", "Server")
     val loader = it.branch.id.upperCaseFirst()
-    /*for (type in types) it.tasks.register("runActive$type$loader") {
+    for (type in types) it.project.tasks.register("runActive$type$loader") {
         group = "project"
         dependsOn("run$type")
-    }*/
+    }
 }
