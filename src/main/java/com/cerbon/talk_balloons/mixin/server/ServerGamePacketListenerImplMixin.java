@@ -1,6 +1,7 @@
 package com.cerbon.talk_balloons.mixin.server;
 
 import com.cerbon.talk_balloons.TalkBalloons;
+import com.cerbon.talk_balloons.api.TalkBalloonsApi;
 import com.cerbon.talk_balloons.network.packets.CreateBalloonPacket;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -45,31 +46,24 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ /*ex
     }
     *///?}
 
-    //? if >= 1.19.2 {
-    @WrapWithCondition(method = {"method_45064", "lambda$handleChat$8", "lambda$handleChat$6", "lambda$handleChat$5"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"))
-    private boolean talk_balloons$sendBalloonToPlayers(ServerGamePacketListenerImpl instance, PlayerChatMessage message) {
-        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), /*? if <= 1.19.2 {*//*Component.literal(message.signedContent().plain())*//*?} else {*/message.decoratedContent()/*?}*/, -1);
+    @Shadow public abstract ServerPlayer getPlayer();
 
-        for (ServerPlayer player : this.server.getPlayerList().getPlayers()) {
-            if (TalkBalloons.playerHasSupport(player.getUUID())) {
-                VanillaPacketSender.sendToPlayer(player, balloonPacket);
-            }
-        }
+    //? if fabric {
+    //? if >= 1.19.2 {
+    @WrapWithCondition(method = {"method_45064"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"))
+    private boolean talk_balloons$sendBalloonToPlayers(ServerGamePacketListenerImpl instance, PlayerChatMessage message) {
+        var text = /*? if <= 1.19.2 {*//*Component.literal(message.signedContent().plain())*//*?} else {*/message.decoratedContent()/*?}*/;
+        TalkBalloonsApi.INSTANCE.broadcastBalloonMessage(this.getPlayer(), text);
 
         return true;
     }
     //?} else {
     /*@WrapWithCondition(method = "handleChat(Lnet/minecraft/server/network/TextFilter$FilteredText;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Ljava/util/function/Function;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     private boolean talk_balloons$sendBalloonToPlayers(PlayerList instance, Component fakeText, Function<ServerPlayer, Component> serverPlayerComponentFunction, ChatType message, UUID filter, @Local(argsOnly = true) TextFilter.FilteredText text) {
-        var balloonPacket = new CreateBalloonPacket(this.player.getUUID(), new TextComponent(text.getRaw()), -1);
-
-        for (ServerPlayer player : instance.getPlayers()) {
-            if (TalkBalloons.playerHasSupport(player.getUUID())) {
-                VanillaPacketSender.sendToPlayer(player, balloonPacket);
-            }
-        }
+        TalkBalloonsApi.INSTANCE.broadcastBalloonMessage(this.getPlayer(), text.getRaw());
 
         return true;
     }
     *///?}
+    //?}
 }

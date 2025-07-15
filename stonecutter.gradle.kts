@@ -31,6 +31,10 @@ subprojects {
     if (project.extensions.findByName("stonecutter") == null)
         return@subprojects
 
+    project.extensions.configure(StonecutterBuildExtension::class.java) {
+        constants.match(project.findProperty("loom.platform") as? String ?: "fabric", "fabric", "neoforge", "forge")
+    }
+
     if (parent == rootProject)
         return@subprojects
 
@@ -42,7 +46,7 @@ subprojects {
     apply(plugin = "dev.architectury.loom")
     apply(plugin = "com.gradleup.shadow")
 
-    val mcVersion = sc.current?.version ?: throw IllegalStateException("Failed to get Minecraft version from current project!")
+    val mcVersion = sc.current.version
     val loom = project.extensions.getByName<LoomGradleExtensionAPI>("loom")
 
     loom.silentMojangMappingsLicense()
