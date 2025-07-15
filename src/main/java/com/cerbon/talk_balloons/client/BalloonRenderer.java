@@ -26,7 +26,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ARGB;
+//? if >= 1.21.6 {
+/*import net.minecraft.util.ARGB;
+*///?}
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 //? if >= 1.20 {
@@ -106,9 +108,9 @@ public final class BalloonRenderer {
 
         //? if >= 1.21.6 {
         /*var balloonGpuTexture = client.getTextureManager().getTexture(balloonTexture).getTextureView();
-        *///?} else {
-        var balloonGpuTexture = client.getTextureManager().getTexture(balloonTexture).getTexture();
-        //?}
+        *///?} else if >= 1.21.5 {
+        /*var balloonGpuTexture = client.getTextureManager().getTexture(balloonTexture).getTexture();
+        *///?}
 
         //? if >= 1.21.5 {
         /*var renderTarget = client.getMainRenderTarget();
@@ -209,11 +211,15 @@ public final class BalloonRenderer {
 
             //? if < 1.21.4 {
             //? if >= 1.19.2 {
+            //? if >= 1.21 {
+            /*var meshData = builder.build();
+
+            if (meshData != null)*///?}
             BufferUploader.drawWithShader(
                 //? if < 1.21 {
                 builder.end()
                 //?} else {
-                /*builder.buildOrThrow()
+                /*meshData
                 *///?}
             );
             //?} else {
@@ -238,11 +244,15 @@ public final class BalloonRenderer {
 
                 //? if < 1.21.4 {
                 //? if >= 1.19.2 {
+                //? if >= 1.21 {
+                /*meshData = builder.build();
+
+                if (meshData != null)*///?}
                 BufferUploader.drawWithShader(
                     //? if < 1.21 {
                     builder.end()
                      //?} else {
-                    /*builder.buildOrThrow()
+                    /*meshData
                     *///?}
                 );
                 //?} else {
