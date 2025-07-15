@@ -280,16 +280,16 @@ public final class BalloonRenderer {
                     pass.setIndexBuffer(indexBuffer, indexType);
 
                     //? if < 1.21.6 {
-                    /^pass.setPipeline(MAIN_BALLOON_PIPELINE);
+                    pass.setPipeline(MAIN_BALLOON_PIPELINE);
                     pass.drawIndexed(0, 6 * 3 * 3);
                     pass.setPipeline(BALLOON_ARROW_PIPELINE);
                     pass.drawIndexed(6 * 3 * 3, 6);
-                    ^///?} else {
-                    pass.setPipeline(MAIN_BALLOON_PIPELINE);
+                    //?} else {
+                    /^pass.setPipeline(MAIN_BALLOON_PIPELINE);
                     pass.drawIndexed(0, 0, 6 * 3 * 3, 0);
                     pass.setPipeline(BALLOON_ARROW_PIPELINE);
                     pass.drawIndexed(0, 6 * 3 * 3, 6, 0);
-                    //?}
+                    ^///?}
                 }
             }
             *///?}

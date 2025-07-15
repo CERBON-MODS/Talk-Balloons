@@ -20,7 +20,11 @@ import net.neoforged.neoforge.client.ConfigScreenHandler;
 *///?}
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
-@EventBusSubscriber(modid = TBConstants.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = TBConstants.MOD_ID,
+    //? if < 1.21.6 {
+    /*bus = EventBusSubscriber.Bus.MOD,
+    *///? }
+    value = Dist.CLIENT)
 public class TBClientEventsNeoForge {
     private static Screen configScreenToHandle;
 
@@ -46,9 +50,9 @@ public class TBClientEventsNeoForge {
     @EventBusSubscriber(modid = TBConstants.MOD_ID,
         //? if <= 1.20.4 {
         /*bus = EventBusSubscriber.Bus.FORGE,
-        *///?} else {
-        bus = EventBusSubscriber.Bus.GAME,
-        //?}
+        *///?} else if < 1.21.6 {
+        /*bus = EventBusSubscriber.Bus.GAME,
+        *///?}
         value = Dist.CLIENT)
     public static class TBNeoForgeClientEvents {
         @SubscribeEvent

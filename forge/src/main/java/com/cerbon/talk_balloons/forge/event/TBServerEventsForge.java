@@ -7,8 +7,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+//? if < 1.21.6 {
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+//?} else {
+/*import net.minecraftforge.eventbus.api.listener.Priority;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+*///?}
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = TBConstants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -25,7 +30,7 @@ public class TBServerEventsForge {
             TalkBalloons.onPlayerDisconnect(player.getUUID());
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = /*? if < 1.21.6 {*/EventPriority/*?} else {*//*Priority*//*?}*/.HIGHEST)
     public static void onPlayerChat(ServerChatEvent event) {
         TalkBalloonsApi.INSTANCE.broadcastBalloonMessage(event.getPlayer(),
             //? if >= 1.19.2 {

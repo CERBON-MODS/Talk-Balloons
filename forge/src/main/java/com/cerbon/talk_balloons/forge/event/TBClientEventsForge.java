@@ -16,7 +16,11 @@ import net.minecraftforge.client.ConfigScreenHandler;
 //?}
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.ScreenEvent;
+//? if < 1.21.6 {
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+//?} else {
+/*import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+*///?}
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;

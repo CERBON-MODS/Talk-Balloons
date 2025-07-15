@@ -14,12 +14,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 /*import net.neoforged.fml.common.Mod.EventBusSubscriber;
 *///?}
 
-@EventBusSubscriber(modid = TBConstants.MOD_ID,
+@EventBusSubscriber(modid = TBConstants.MOD_ID
     //? if <= 1.20.4 {
-    /*bus = EventBusSubscriber.Bus.FORGE
+    /*, bus = EventBusSubscriber.Bus.FORGE
     *///?} else if <= 1.21.5 {
-    bus = EventBusSubscriber.Bus.GAME
-    //?}
+    /*, bus = EventBusSubscriber.Bus.GAME
+    *///?}
 )
 public class TBServerEventsNeoForge {
     @SubscribeEvent
