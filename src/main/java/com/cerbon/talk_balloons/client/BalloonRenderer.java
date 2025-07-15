@@ -279,7 +279,7 @@ public final class BalloonRenderer {
                     pass.setVertexBuffer(0, vertexBuffer);
                     pass.setIndexBuffer(indexBuffer, indexType);
 
-                    //? if >= 1.21.6 {
+                    //? if < 1.21.6 {
                     /^pass.setPipeline(MAIN_BALLOON_PIPELINE);
                     pass.drawIndexed(0, 6 * 3 * 3);
                     pass.setPipeline(BALLOON_ARROW_PIPELINE);
