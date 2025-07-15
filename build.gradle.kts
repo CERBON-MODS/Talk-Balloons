@@ -20,7 +20,8 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings(loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-$minecraftVersion:${mod.prop("parchment_snapshot")}")
+        val parchmentVersion = mod.prop("parchment_version", minecraftVersion)
+        parchment("org.parchmentmc.data:parchment-$parchmentVersion:${mod.prop("parchment_snapshot")}")
     })
 
     modImplementation("net.fabricmc:fabric-loader:${mod.dep("fabric_loader")}")

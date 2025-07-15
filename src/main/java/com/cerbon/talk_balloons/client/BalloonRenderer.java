@@ -8,6 +8,8 @@ import com.cerbon.talk_balloons.util.TBConstants;
 /*import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.platform.DestFactor;
+import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.shaders.UniformType;
 import com.mojang.blaze3d.systems.RenderPass;
 *///?}
@@ -24,12 +26,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 //? if >= 1.20 {
 import com.mojang.math.Axis;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 //?} else {
 /*import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -43,11 +47,20 @@ import java.util.OptionalInt;
 public final class BalloonRenderer {
     private static final Minecraft client = Minecraft.getInstance();
 
+    //? if >= 1.21.6 {
+    /*private static final BlendFunction BALLOON_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+    *///?}
+
     //? if >= 1.21.5 {
     /*private static final RenderPipeline.Snippet BALLOON_SNIPPET = RenderPipeline.builder()
+        //? if >= 1.21.6 {
+        /^.withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
+        .withUniform("Projection", UniformType.UNIFORM_BUFFER)
+        ^///?} else {
         .withUniform("ModelViewMat", UniformType.MATRIX4X4) // Matrices snippet
         .withUniform("ProjMat", UniformType.MATRIX4X4)
         .withUniform("ColorModulator", UniformType.VEC4) // Matrices Color snippet
+        //?}
         .withVertexShader("core/position_tex_color") // guiTextured defaults
         .withFragmentShader("core/position_tex_color")
         .withSampler("Sampler0")
@@ -58,13 +71,21 @@ public final class BalloonRenderer {
     private static final RenderPipeline MAIN_BALLOON_PIPELINE = RenderPipeline.builder(BALLOON_SNIPPET)
         .withLocation("pipeline/gui_textured")
         .withDepthBias(3.0f, 3.0f) // polygonOffset
+        //? if >= 1.21.6 {
+        /^.withBlend(BALLOON_BLEND)
+        ^///?} else {
         .withBlend(BlendFunction.PANORAMA) // enableBlend + defaultBlendFunc
+        //?}
         .build();
 
     private static final RenderPipeline BALLOON_ARROW_PIPELINE = RenderPipeline.builder(BALLOON_SNIPPET)
         .withLocation("pipeline/gui_textured")
         .withDepthBias(0.0f, 0.0f) // disablePolygonOffset
+        //? if >= 1.21.6 {
+        /^.withBlend(BALLOON_BLEND)
+        ^///?} else {
         .withBlend(BlendFunction.PANORAMA) // enableBlend + defaultBlendFunc
+         //?}
         .build();
     *///?}
 
@@ -82,9 +103,15 @@ public final class BalloonRenderer {
         int previousBalloonHeight = 0;
         int padding = configData.balloonPadding();
         ResourceLocation balloonTexture = configData.balloonStyle().getTextureId();
+
+        //? if >= 1.21.6 {
+        /*var balloonGpuTexture = client.getTextureManager().getTexture(balloonTexture).getTextureView();
+        *///?} else {
+        var balloonGpuTexture = client.getTextureManager().getTexture(balloonTexture).getTexture();
+        //?}
+
         //? if >= 1.21.5 {
-        /*var balloonGpuTexture = client.getTextureManager().getTexture(balloonTexture).getTexture();
-        var renderTarget = client.getMainRenderTarget();
+        /*var renderTarget = client.getMainRenderTarget();
         var encoder = RenderSystem.getDevice().createCommandEncoder();
         *///?}
 
@@ -127,7 +154,18 @@ public final class BalloonRenderer {
             RenderSystem.enablePolygonOffset();
             RenderSystem.polygonOffset(3.0F, 3.0F);
             //?}
+            //? if >= 1.21.6 {
+            /*RenderSystem.getDynamicUniforms()
+                .writeTransform(
+                    RenderSystem.getModelViewMatrix(),
+                    new Vector4f(r / 255f, g / 255f, b / 255f, 1f),
+                    RenderSystem.getModelOffset(),
+                    RenderSystem.getTextureMatrix(),
+                    RenderSystem.getShaderLineWidth()
+                );
+            *///?} else {
             RenderSystem.setShaderColor(r / 255f, g / 255f, b / 255f, 1f);
+            //?}
 
             List<FormattedCharSequence> dividedMessage = font.split(message, TalkBalloons.config.maxBalloonWidth);
 
@@ -222,29 +260,58 @@ public final class BalloonRenderer {
                 var indexBuffer = indexBufferStorage.getBuffer(meshData.drawState().indexCount());
                 var indexType = indexBufferStorage.type();
 
+                //? if >= 1.21.6 {
+                /^try (RenderPass pass = encoder.createRenderPass(() -> "Render Balloons", renderTarget.getColorTextureView(), OptionalInt.empty(), renderTarget.getDepthTextureView(), OptionalDouble.empty())) {
+                ^///?} else {
                 try (RenderPass pass = encoder.createRenderPass(renderTarget.getColorTexture(), OptionalInt.empty(), renderTarget.getDepthTexture(), OptionalDouble.empty())) {
+                //?}
                     pass.bindSampler("Sampler0", balloonGpuTexture);
                     pass.setVertexBuffer(0, vertexBuffer);
                     pass.setIndexBuffer(indexBuffer, indexType);
 
-                    pass.setPipeline(MAIN_BALLOON_PIPELINE);
+                    //? if >= 1.21.6 {
+                    /^pass.setPipeline(MAIN_BALLOON_PIPELINE);
                     pass.drawIndexed(0, 6 * 3 * 3);
                     pass.setPipeline(BALLOON_ARROW_PIPELINE);
                     pass.drawIndexed(6 * 3 * 3, 6);
+                    ^///?} else {
+                    pass.setPipeline(MAIN_BALLOON_PIPELINE);
+                    pass.drawIndexed(0, 0, 6 * 3 * 3, 0);
+                    pass.setPipeline(BALLOON_ARROW_PIPELINE);
+                    pass.drawIndexed(0, 6 * 3 * 3, 6, 0);
+                    //?}
                 }
             }
             *///?}
+
+            //? if >= 1.21.6 {
+            /*RenderSystem.getDynamicUniforms()
+                .writeTransform(
+                    RenderSystem.getModelViewMatrix(),
+                    new Vector4f(1f, 1f, 1f, 1f),
+                    RenderSystem.getModelOffset(),
+                    RenderSystem.getTextureMatrix(),
+                    RenderSystem.getShaderLineWidth()
+                );
+            *///?} else {
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            //?}
+
+            //? if >= 1.21.6 {
+            /*var textColor = ARGB.opaque(configData.textColor());
+            *///?} else {
+            var textColor = configData.textColor();
+            //?}
 
             if (dividedMessage.size() > 1) {
                 int textDistance = 0;
 
                 for (FormattedCharSequence text : dividedMessage) {
-                    drawString(poseStack, font, text, -font.width(text) / 2 + 1, -(9 * balloonHeight - 10) - balloonDistance + textDistance, configData.textColor(), false);
+                    drawString(poseStack, font, text, -font.width(text) / 2 + 1, -(9 * balloonHeight - 10) - balloonDistance + textDistance, textColor, false);
                     textDistance += 9;
                 }
             } else
-                drawString(poseStack, font, message.getVisualOrderText(), -greatestTextWidth / 2 + 1, balloonHeight - balloonDistance, configData.textColor(), false);
+                drawString(poseStack, font, message.getVisualOrderText(), -greatestTextWidth / 2 + 1, balloonHeight - balloonDistance, textColor, false);
 
             poseStack.popPose();
         }

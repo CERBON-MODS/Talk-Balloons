@@ -1,4 +1,5 @@
-import dev.kikugie.stonecutter.build.StonecutterBuild
+import dev.kikugie.stonecutter.build.StonecutterBuildExtension
+import dev.kikugie.stonecutter.controller.StonecutterControllerExtension
 import me.modmuss50.mpp.ModPublishExtension
 import me.modmuss50.mpp.ReleaseType
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
@@ -33,7 +34,7 @@ subprojects {
     if (parent == rootProject)
         return@subprojects
 
-    val sc = (project.extensions.getByName("stonecutter") as StonecutterBuild)
+    val sc = project.extensions.getByType<StonecutterBuildExtension>()
     val common = sc.node.sibling("")
 
     apply(plugin = "java")
@@ -41,7 +42,7 @@ subprojects {
     apply(plugin = "dev.architectury.loom")
     apply(plugin = "com.gradleup.shadow")
 
-    val mcVersion = sc.current.version
+    val mcVersion = sc.current?.version ?: throw IllegalStateException("Failed to get Minecraft version from current project!")
     val loom = project.extensions.getByName<LoomGradleExtensionAPI>("loom")
 
     loom.silentMojangMappingsLicense()
@@ -57,7 +58,8 @@ subprojects {
         "minecraft"("com.mojang:minecraft:$mcVersion")
         "mappings"(loom.layered() {
             officialMojangMappings()
-            //parchment("org.parchmentmc.data:parchment-$mcVersion:${common?.mod?.prop("parchment_snapshot") ?: mod.prop("parchment_snapshot")}")
+            val parchmentVersion = common?.project?.mod?.prop("parchment_version", mod.prop("parchment_version", mcVersion)) ?: mod.prop("parchment_version", mcVersion)
+            parchment("org.parchmentmc.data:parchment-$parchmentVersion:${common?.project?.mod?.prop("parchment_snapshot") ?: mod.prop("parchment_snapshot")}")
         })
     }
 
@@ -136,27 +138,6 @@ subprojects {
                 }
             }
         }
-    }
-}
-
-stonecutter registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) { 
-    group = "project"
-    ofTask("buildAndCollect")
-}
-
-stonecutter registerChiseled tasks.register("chiseledPublishMods", stonecutter.chiseled) {
-    group = "project"
-    ofTask("publishMods")
-}
-
-// Builds loader-specific versions into `build/libs/{mod.version}/{loader}`
-for (it in stonecutter.tree.branches) {
-    if (it.id.isEmpty()) continue
-    val loader = it.id.upperCaseFirst()
-    stonecutter registerChiseled tasks.register("chiseledBuild$loader", stonecutter.chiseled) {
-        group = "project"
-        versions { branch, _ -> branch == it.id }
-        ofTask("buildAndCollect")
     }
 }
 
