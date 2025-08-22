@@ -96,7 +96,7 @@ public final class BalloonRenderer {
             return;
 
         //? if >= 1.20 {
-        Quaternionf rotation = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y /*? if >= 1.21.1 {*/ /*+ 180f*//*?}*/);
+        Quaternionf rotation = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y /*? if >= 1.21.1 {*/ /*- 180f*//*?}*/);
         //?} else {
         /*var rotation = Vector3f.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y());
         *///?}
