@@ -4,6 +4,7 @@
   "package": "com.cerbon.talk_balloons.fabric.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ServerGamePacketListenerImplMixin"
   ],
   "client": [
   ],

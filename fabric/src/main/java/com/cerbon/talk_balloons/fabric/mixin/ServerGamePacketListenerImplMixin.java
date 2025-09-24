@@ -1,4 +1,4 @@
-package com.cerbon.talk_balloons.mixin.server;
+package com.cerbon.talk_balloons.fabric.mixin;
 
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.api.TalkBalloonsApi;
@@ -48,7 +48,6 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ /*ex
 
     @Shadow public abstract ServerPlayer getPlayer();
 
-    //? if fabric {
     //? if >= 1.19.2 {
     @WrapWithCondition(method = {"method_45064"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"))
     private boolean talk_balloons$sendBalloonToPlayers(ServerGamePacketListenerImpl instance, PlayerChatMessage message) {
@@ -65,5 +64,4 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ /*ex
         return true;
     }
     *///?}
-    //?}
 }
