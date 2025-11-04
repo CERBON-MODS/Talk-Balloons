@@ -49,6 +49,13 @@ repositories {
     maven("https://maven.minecraftforge.net")
 }
 
+private fun overridableModDep(dep: String): String {
+    return if (mod.dep(dep) != "[VERSIONED]")
+        mod.dep(dep)
+    else
+        common.mod.dep(dep)
+}
+
 dependencies {
     "forge"("net.minecraftforge:forge:$minecraft-${common.mod.dep("forge_loader")}")
     "io.github.llamalad7:mixinextras-forge:${mod.dep("mixin_extras")}".let {
@@ -56,15 +63,15 @@ dependencies {
         include(it)
     }
 
-    if (mod.dep("cloth_config") != "[VERSIONED]")
-        modImplementation("me.shedaniel.cloth:cloth-config-forge:${mod.dep("cloth_config")}")
-    else
-        modImplementation("me.shedaniel.cloth:cloth-config-forge:${common.mod.dep("cloth_config")}")
+
+    modImplementation("me.shedaniel.cloth:cloth-config-forge:${overridableModDep("cloth_config")}")
 
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionForge")) { isTransitive = false }
 
-    modImplementation("xyz.bluspring.modernnetworking:modernnetworking-forge:${common.mod.dep("modernnetworking")}+${common.mod.dep("modernnetworking_mc")}")!!
+    modImplementation("xyz.bluspring.modernnetworking:modernnetworking-forge:${overridableModDep("modernnetworking")}+${overridableModDep("modernnetworking_mc")}")!!
+    modImplementation("thedarkcolour:kotlinforforge:${common.mod.dep("kotlinforforge")}")
+
     implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1")!!)
 }
 

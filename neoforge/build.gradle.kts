@@ -53,6 +53,7 @@ dependencies {
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionNeoForge")) { isTransitive = false }
 
+    modImplementation("thedarkcolour:kotlinforforge-neoforge:${common.mod.dep("kotlinforforge")}")
     modImplementation("xyz.bluspring.modernnetworking:modernnetworking-neoforge:${common.mod.dep("modernnetworking")}+${common.mod.dep("modernnetworking_mc")}")!!
 }
 

@@ -24,6 +24,7 @@ allprojects {
         maven("https://maven.shedaniel.me/")
         maven("https://mvn.devos.one/releases")
         maven("https://mvn.devos.one/snapshots")
+        maven("https://thedarkcolour.github.io/KotlinForForge/")
     }
 }
 
