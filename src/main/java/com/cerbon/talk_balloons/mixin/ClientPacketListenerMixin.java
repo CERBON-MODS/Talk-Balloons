@@ -3,7 +3,9 @@ package com.cerbon.talk_balloons.mixin;
 import com.cerbon.talk_balloons.TalkBalloons;
 //? if < 1.20.6 {
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
+import com.cerbon.talk_balloons.util.ChatUtils;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import net.minecraft.Util;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 //?} else {
@@ -42,22 +44,19 @@ public class ClientPacketListenerMixin {
         if (sender == null || chatType != ChatType.CHAT)
             return true;
 
-        if (!(component instanceof TranslatableComponent translatable))
-            return true;
+        ChatUtils.MessageContents contents = ChatUtils.tryExtractContents(component);
+        String message;
 
-        if (!translatable.getKey().equals("chat.type.text"))
-            return true;
-
-        if (translatable.getArgs().length < 2)
-            return true;
+        if (contents != null && sender == Util.NIL_UUID) {
+            sender = contents.sender();
+            message = contents.contents();
+        } else {
+            message = component.getString();
+        }
 
         var config = TalkBalloonsClient.syncedConfigs.getPlayerConfig(sender);
         if (TalkBalloonsClient.hasServerSupport())
             return !config.onlyDisplayBalloons();
-
-        // Extract the message from the translation key
-        var arg2 = translatable.getArgs()[1];
-        var message = arg2 instanceof Component component1 ? component1.getString() : arg2.toString();
 
         Level level = this.minecraft.level;
         if (level == null)

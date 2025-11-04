@@ -9,7 +9,7 @@ import org.gradle.kotlin.dsl.named
 
 plugins {
     id("dev.kikugie.stonecutter")
-    id("dev.architectury.loom") version "1.10-SNAPSHOT" apply false
+    id("dev.architectury.loom") version "1.13-SNAPSHOT" apply false
     id("architectury-plugin") version "3.4-SNAPSHOT" apply false
     id("com.gradleup.shadow") version "8.3.5" apply false
     id("me.modmuss50.mod-publish-plugin") version "0.7.+" apply false
