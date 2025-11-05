@@ -209,22 +209,28 @@ public final class BalloonRenderer {
             blit(poseStack, builder, baseX - 1 + padding, baseY + 5 - balloonDistance - padding, 5, balloonHeight + j * 8 + (padding * 2), 12.0F, 6.0F, 5, 1, 32, 32); // MID
             blit(poseStack, builder, baseX - 1 + padding, 5 - balloonDistance + padding, 5, 5, 12.0F, 8.0F, 5, 5, 32, 32); // BOTTOM
 
-            //? if < 1.21.4 {
+            //? if <= 1.21.4 {
+
             //? if >= 1.19.2 {
             //? if >= 1.21 {
             /*var meshData = builder.build();
 
-            if (meshData != null)*///?}
-            BufferUploader.drawWithShader(
-                //? if < 1.21 {
-                builder.end()
-                //?} else {
-                /*meshData
-                *///?}
-            );
+            if (meshData != null)
+            *///?}
+            {
+                BufferUploader.drawWithShader(
+                    //? if < 1.21 {
+                    builder.end()
+                     //?} else {
+                    /*meshData
+                    *///?}
+                );
+            }
             //?} else {
             /*Tesselator.getInstance().end();
             *///?}
+
+            //?}
 
             //? if < 1.21.5 {
             RenderSystem.polygonOffset(0.0F, 0.0F);
@@ -238,28 +244,30 @@ public final class BalloonRenderer {
                  //?} else {
                 /*builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
                 *///?}
-                //?}
 
                 blit(poseStack, builder, -3, 9 + padding, 7, 4, 18, 6, 7, 4, 32, 32);
 
-                //? if < 1.21.4 {
+                //? if <= 1.21.4 {
                 //? if >= 1.19.2 {
                 //? if >= 1.21 {
                 /*meshData = builder.build();
 
-                if (meshData != null)*///?}
-                BufferUploader.drawWithShader(
-                    //? if < 1.21 {
-                    builder.end()
-                     //?} else {
-                    /*meshData
-                    *///?}
-                );
+                if (meshData != null)
+                *///?}
+                {
+                    BufferUploader.drawWithShader(
+                        //? if < 1.21 {
+                        builder.end()
+                         //?} else {
+                        /*meshData
+                        *///?}
+                    );
+                }
                 //?} else {
                 /*Tesselator.getInstance().end();
                  *///?}
+                //?}
             }
-            //?}
 
             //? if < 1.21.5 {
             RenderSystem.disableBlend();
