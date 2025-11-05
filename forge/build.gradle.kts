@@ -69,10 +69,8 @@ dependencies {
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionForge")) { isTransitive = false }
 
-    modImplementation("xyz.bluspring.modernnetworking:modernnetworking-forge:${overridableModDep("modernnetworking")}+${overridableModDep("modernnetworking_mc")}")!!
     modImplementation("thedarkcolour:kotlinforforge:${common.mod.dep("kotlinforforge")}")
-
-    implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1")!!)
+    modImplementation("xyz.bluspring.modernnetworking:modernnetworking-forge:${overridableModDep("modernnetworking")}+${overridableModDep("modernnetworking_mc")}")!!
 }
 
 tasks.shadowJar {
