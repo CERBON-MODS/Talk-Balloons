@@ -9,7 +9,11 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+//? if >= 1.19.2 {
 import net.minecraft.network.chat.contents.TranslatableContents;
+//?} else {
+/*import net.minecraft.network.chat.TranslatableComponent;
+*///?}
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -21,7 +25,13 @@ public class ChatUtils {
     public record MessageContents(UUID sender, String contents) {}
 
     public static @Nullable MessageContents tryExtractContents(Component component) {
-        if (component.getContents() instanceof TranslatableContents contents && contents.getKey().equals("chat.type.text") && contents.getArgs().length >= 2) {
+        if (
+            //? if >= 1.19.2 {
+            component.getContents() instanceof TranslatableContents contents
+            //?} else {
+            /*component instanceof TranslatableComponent contents
+            *///?}
+            && contents.getKey().equals("chat.type.text") && contents.getArgs().length >= 2) {
             var arg = contents.getArgs()[0];
             var arg2 = contents.getArgs()[1];
 
