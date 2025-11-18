@@ -91,14 +91,14 @@ public final class BalloonRenderer {
         .build();
     *///?}
 
-    public static void renderBalloons(PoseStack poseStack, MultiBufferSource bufferSource, EntityRenderDispatcher entityRenderDispatcher, Font font, HistoricalData<Component> messages, float playerHeight, SynchronizedConfigData configData) {
+    public static void renderBalloons(PoseStack poseStack, MultiBufferSource bufferSource, Vector3f eulerCameraOrientation, Font font, HistoricalData<Component> messages, float playerHeight, SynchronizedConfigData configData) {
         if (messages.isEmpty())
             return;
 
         //? if >= 1.20 {
-        Quaternionf rotation = Axis.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y /*? if >= 1.21.1 {*/ /*- 180f*//*?}*/);
+        Quaternionf rotation = Axis.YP.rotationDegrees(eulerCameraOrientation.y /*? if >= 1.21.1 {*/ /*- 180f*//*?}*/);
         //?} else {
-        /*var rotation = Vector3f.YP.rotationDegrees(toEulerXyzDegrees(entityRenderDispatcher.cameraOrientation()).y());
+        /*var rotation = Vector3f.YP.rotationDegrees(eulerCameraOrientation.y());
         *///?}
 
         int balloonDistance = 0;
@@ -161,7 +161,7 @@ public final class BalloonRenderer {
                 .writeTransform(
                     RenderSystem.getModelViewMatrix(),
                     new Vector4f(r / 255f, g / 255f, b / 255f, 1f),
-                    RenderSystem.getModelOffset(),
+                    new Vector3f(),
                     RenderSystem.getTextureMatrix(),
                     RenderSystem.getShaderLineWidth()
                 );
@@ -307,7 +307,7 @@ public final class BalloonRenderer {
                 .writeTransform(
                     RenderSystem.getModelViewMatrix(),
                     new Vector4f(1f, 1f, 1f, 1f),
-                    RenderSystem.getModelOffset(),
+                    new Vector3f(),
                     RenderSystem.getTextureMatrix(),
                     RenderSystem.getShaderLineWidth()
                 );
@@ -421,7 +421,7 @@ public final class BalloonRenderer {
         return new Vector3f(l, (float) Math.atan2(2.0f * x * z + 2.0f * y * w, f - g - h + i), (float) Math.atan2(2.0f * x * y + 2.0f * w * z, f - g + h - i));
     }
 
-    private static Vector3f toEulerXyzDegrees(/*? if >= 1.20 {*/Quaternionf/*?} else {*//*Quaternion*//*?}*/ quaternionf) {
+    public static Vector3f toEulerXyzDegrees(/*? if >= 1.20 {*/Quaternionf/*?} else {*//*Quaternion*//*?}*/ quaternionf) {
         Vector3f vec3f = BalloonRenderer.toEulerXyz(quaternionf);
         return new Vector3f((float) Math.toDegrees(vec3f.x()), (float) Math.toDegrees(vec3f.y()), (float) Math.toDegrees(vec3f.z()));
     }

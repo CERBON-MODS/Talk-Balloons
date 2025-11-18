@@ -17,18 +17,30 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+*///?}
+
+//? if >= 1.21.9 {
+/*import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.world.entity.Avatar;
+*///?} else if >= 1.21.3 {
+/*import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 *///?}
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+//? if >= 1.21.9 {
+/*@Mixin(AvatarRenderer.class)
+*///?} else {
 @Mixin(PlayerRenderer.class)
+//?}
 public abstract class PlayerRendererMixin extends LivingEntityRenderer<
     AbstractClientPlayer,
-    /*? if >= 1.21.3 {*//*PlayerRenderState,
+    /*? if >= 1.21.9 {*/ /*AvatarRenderState, *//*?} else if >= 1.21.3 {*//*PlayerRenderState,
     *//*?}*/ PlayerModel/*? if < 1.21.3 {*/<AbstractClientPlayer>/*?}*/
 > {
 
@@ -44,13 +56,20 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<
         ITalkBalloonsPlayer playerMixin = (ITalkBalloonsPlayer) player;
         if (playerMixin.talk_balloons$getBalloonMessages() == null || playerMixin.talk_balloons$getBalloonMessages().isEmpty()) return;
 
-        BalloonRenderer.renderBalloons(poseStack, buffer, this.entityRenderDispatcher, this.getFont(), playerMixin.talk_balloons$getBalloonMessages(), player.getBbHeight(), TalkBalloonsClient.syncedConfigs.getPlayerConfig(player.getUUID()));
+        BalloonRenderer.renderBalloons(poseStack, buffer, BalloonRenderer.toEulerXyzDegrees(this.entityRenderDispatcher.cameraOrientation()), this.getFont(), playerMixin.talk_balloons$getBalloonMessages(), player.getBbHeight(), TalkBalloonsClient.syncedConfigs.getPlayerConfig(player.getUUID()));
     }
     //?} else if >= 1.21.3 {
 
-    /*@Inject(method = "extractRenderState(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;F)V", at = @At("TAIL"))
+    /*//? if >= 1.21.9 {
+    /^@Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
+    private void tb_setupBalloonRenderState(Avatar player, AvatarRenderState reusedState, float partialTick, CallbackInfo ci) {
+    ^///?} else {
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;F)V", at = @At("TAIL"))
     private void tb_setupBalloonRenderState(AbstractClientPlayer player, PlayerRenderState reusedState, float partialTick, CallbackInfo ci) {
-        ITalkBalloonsPlayer playerMixin = (ITalkBalloonsPlayer) player;
+    //?}
+        if (!(player instanceof ITalkBalloonsPlayer playerMixin))
+            return;
+
         IPlayerRenderState stateMixin = (IPlayerRenderState) reusedState;
 
         if (playerMixin.talk_balloons$getBalloonMessages() == null || playerMixin.talk_balloons$getBalloonMessages().isEmpty()) {

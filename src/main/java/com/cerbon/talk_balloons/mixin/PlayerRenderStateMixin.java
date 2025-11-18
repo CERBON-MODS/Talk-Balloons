@@ -3,14 +3,20 @@ package com.cerbon.talk_balloons.mixin;
 import com.cerbon.talk_balloons.util.HistoricalData;
 import com.cerbon.talk_balloons.util.SynchronizedConfigData;
 import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
-//? if >= 1.21.3
-/*import net.minecraft.client.renderer.entity.state.PlayerRenderState;*/
+//? if >= 1.21.9 {
+/*import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+*///?} else if >= 1.21.3 {
+/*import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+*///?}
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-//? if >= 1.21.3
-/*@Mixin(PlayerRenderState.class)*/
+//? if >= 1.21.9 {
+/*@Mixin(AvatarRenderState.class)
+*///?} else if >= 1.21.3 {
+/*@Mixin(PlayerRenderState.class)
+*///?}
 public abstract class PlayerRenderStateMixin implements IPlayerRenderState {
     @Unique private HistoricalData<Component> tb_balloons;
     @Unique private SynchronizedConfigData tb_configData;

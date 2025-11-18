@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 //? if < 1.19 {
 /*import net.minecraft.network.chat.TextComponent;
  *///?}
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
@@ -54,7 +55,13 @@ public class TalkBalloonsApiImpl implements TalkBalloonsApi {
     public void broadcastBalloonMessage(ServerPlayer source, Component text, int duration) {
         var balloonPacket = new CreateBalloonPacket(source.getUUID(), text, duration);
 
-        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+        MinecraftServer server = //? if >= 1.21.9 {
+            /*source.level().getServer();
+            *///?} else {
+            source.getServer();
+            //?}
+
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (TalkBalloons.playerHasSupport(player.getUUID())) {
                 VanillaPacketSender.sendToPlayer(player, balloonPacket);
             }

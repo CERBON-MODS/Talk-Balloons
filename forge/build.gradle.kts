@@ -68,15 +68,7 @@ dependencies {
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionForge")) { isTransitive = false }
 
-    modImplementation("thedarkcolour:kotlinforforge:${common.mod.dep("kotlinforforge")}")
-
-    if (stonecutter.eval(minecraft, ">=1.20")) {
-        // i'm not kidding when I say this was the only way it would run in my dev env. wtf.
-        modRuntimeOnly("thedarkcolour:kfflib:${common.mod.dep("kotlinforforge")}")
-        modRuntimeOnly("thedarkcolour:kffmod:${common.mod.dep("kotlinforforge")}")
-        modRuntimeOnly("thedarkcolour:kfflang:${common.mod.dep("kotlinforforge")}")
-    }
-
+    modImplementation("dev.nyon:KotlinLangForge:${common.mod.dep("kotlinlangforge")}-${common.mod.dep("kotlinlangforge_loader")}+neoforge")
     modImplementation("xyz.bluspring.modernnetworking:modernnetworking-forge:${overridableModDep("modernnetworking")}+${overridableModDep("modernnetworking_mc")}")!!
 }
 
