@@ -5,7 +5,9 @@ import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+//? if < 1.21.11 {
 import net.minecraft.client.renderer.RenderType;
+//?}
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;

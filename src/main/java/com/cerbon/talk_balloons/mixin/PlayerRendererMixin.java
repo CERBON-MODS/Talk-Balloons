@@ -13,10 +13,15 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 //?} else if >= 1.21.3 {
 /*import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+*///?}
+
+//? if >= 1.21.11 {
+/*import net.minecraft.client.model.player.PlayerModel;
+*///?} else if >= 1.21.3 {
+/*import net.minecraft.client.model.PlayerModel;
 *///?}
 
 //? if >= 1.21.9 {

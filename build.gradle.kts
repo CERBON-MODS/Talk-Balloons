@@ -1,7 +1,9 @@
+import dev.kikugie.fletching_table.extension.FletchingTableExtension
+
 plugins {
     id("architectury-plugin")
     id("dev.architectury.loom")
-    id("dev.kikugie.j52j") version "2.0"
+    id("dev.kikugie.fletching-table")
 }
 
 val minecraftVersion = stonecutter.current.version
@@ -36,6 +38,12 @@ java {
         JavaVersion.VERSION_21 else JavaVersion.VERSION_17
     targetCompatibility = java
     sourceCompatibility = java
+}
+
+project.extensions.configure<FletchingTableExtension>("fletchingTable") {
+    j52j.register("main") {
+        extension("json", "*.mixins.json5")
+    }
 }
 
 tasks.build {

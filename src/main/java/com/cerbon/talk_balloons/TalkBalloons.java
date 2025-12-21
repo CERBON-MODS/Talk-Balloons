@@ -8,7 +8,11 @@ import com.cerbon.talk_balloons.util.SynchronizedConfigData;
 import com.cerbon.talk_balloons.util.TBConstants;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+//? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation;
+ //?} else {
+/*import net.minecraft.resources.Identifier;
+*///?}
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import xyz.bluspring.modernnetworking.api.minecraft.VanillaPacketSender;
@@ -44,11 +48,11 @@ public class TalkBalloons {
 		return playersWithSupport.contains(uuid);
 	}
 
-	public static ResourceLocation id(String path) {
+	public static /*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/ id(String path) {
 		//? if < 1.21 {
 		return new ResourceLocation(TBConstants.MOD_ID, path);
 		//?} else {
-		/*return ResourceLocation.fromNamespaceAndPath(TBConstants.MOD_ID, path);
+		/*return /^? if < 1.21.11 {^/ResourceLocation/^?} else {^//^Identifier^//^?}^/.fromNamespaceAndPath(TBConstants.MOD_ID, path);
 		*///?}
 	}
 }

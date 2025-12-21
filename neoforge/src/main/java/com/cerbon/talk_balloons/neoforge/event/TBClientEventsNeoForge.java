@@ -4,7 +4,11 @@ import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.cerbon.talk_balloons.config.TBConfig;
 import com.cerbon.talk_balloons.network.TBClientPacketHandler;
 import com.cerbon.talk_balloons.util.TBConstants;
-import me.shedaniel.autoconfig.AutoConfig;
+//? if >= 1.21.11 {
+import me.shedaniel.autoconfig.AutoConfigClient;
+//? } else {
+/*import me.shedaniel.autoconfig.AutoConfig;
+*///? }
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -35,7 +39,11 @@ public class TBClientEventsNeoForge {
         //?} else {
         /*ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> {
         *///?}
-            var screen = AutoConfig.getConfigScreen(TBConfig.class, parent).get();
+            //? if >= 1.21.11 {
+            var screen = AutoConfigClient.getConfigScreen(TBConfig.class, parent).get();
+            //? } else {
+            /*var screen = AutoConfig.getConfigScreen(TBConfig.class, parent).get();
+            *///? }
             configScreenToHandle = screen;
             return screen;
         //? if > 1.20.4 {

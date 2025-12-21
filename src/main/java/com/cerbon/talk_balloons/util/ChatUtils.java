@@ -2,7 +2,11 @@ package com.cerbon.talk_balloons.util;
 
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
+//? if < 1.21.11 {
 import net.minecraft.Util;
+//?} else {
+/*import net.minecraft.util.Util;
+*///?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;

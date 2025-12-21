@@ -5,6 +5,7 @@ pluginManagement {
         maven("https://maven.minecraftforge.net/")
         maven("https://maven.neoforged.net/releases/")
         maven("https://maven.kikugie.dev/releases")
+        maven("https://maven.kikugie.dev/snapshots")
         gradlePluginPortal()
     }
 }
@@ -17,7 +18,7 @@ stonecutter {
     centralScript = "build.gradle.kts"
     kotlinController = true
 
-    val versions = listOf("1.18.2", "1.19.2", "1.20.1", "1.20.4", "1.21.1", "1.21.3", "1.21.4", "1.21.5", "1.21.6", "1.21.10")
+    val versions = listOf("1.18.2", "1.19.2", "1.20.1", "1.20.4", "1.21.1", "1.21.3", "1.21.4", "1.21.5", "1.21.6", "1.21.10", "1.21.11")
 
     create(rootProject) {
         versions(versions)

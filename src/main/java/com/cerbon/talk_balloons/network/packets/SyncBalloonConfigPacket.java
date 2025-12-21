@@ -5,7 +5,6 @@ import com.cerbon.talk_balloons.network.TBPackets;
 import com.cerbon.talk_balloons.util.SynchronizedConfigData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import xyz.bluspring.modernnetworking.api.*;
 
