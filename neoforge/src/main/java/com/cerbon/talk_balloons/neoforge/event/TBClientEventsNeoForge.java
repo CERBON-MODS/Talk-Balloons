@@ -1,14 +1,13 @@
 package com.cerbon.talk_balloons.neoforge.event;
 
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
-import com.cerbon.talk_balloons.config.TBConfig;
 import com.cerbon.talk_balloons.network.TBClientPacketHandler;
 import com.cerbon.talk_balloons.util.TBConstants;
 //? if >= 1.21.11 {
-import me.shedaniel.autoconfig.AutoConfigClient;
-//? } else {
-/*import me.shedaniel.autoconfig.AutoConfig;
-*///? }
+/*import me.shedaniel.autoconfig.AutoConfigClient;
+*///? } else {
+import me.shedaniel.autoconfig.AutoConfig;
+//? }
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -26,8 +25,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 @EventBusSubscriber(modid = TBConstants.MOD_ID,
     //? if < 1.21.6 {
-    /*bus = EventBusSubscriber.Bus.MOD,
-    *///?}
+    bus = EventBusSubscriber.Bus.MOD,
+    //?}
     value = Dist.CLIENT)
 public class TBClientEventsNeoForge {
     private static Screen configScreenToHandle;
@@ -40,10 +39,10 @@ public class TBClientEventsNeoForge {
         /*ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> {
         *///?}
             //? if >= 1.21.11 {
-            var screen = AutoConfigClient.getConfigScreen(TBConfig.class, parent).get();
-            //? } else {
-            /*var screen = AutoConfig.getConfigScreen(TBConfig.class, parent).get();
-            *///? }
+            /*var screen = AutoConfigClient.getConfigScreen(TBConfig.class, parent).get();
+            *///? } else {
+            var screen = AutoConfig.getConfigScreen(TBConfig.class, parent).get();
+            //? }
             configScreenToHandle = screen;
             return screen;
         //? if > 1.20.4 {
@@ -59,8 +58,8 @@ public class TBClientEventsNeoForge {
         //? if <= 1.20.4 {
         /*bus = EventBusSubscriber.Bus.FORGE,
         *///?} else if < 1.21.6 {
-        /*bus = EventBusSubscriber.Bus.GAME,
-        *///?}
+        bus = EventBusSubscriber.Bus.GAME,
+        //?}
         value = Dist.CLIENT)
     public static class TBNeoForgeClientEvents {
         @SubscribeEvent

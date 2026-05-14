@@ -23,21 +23,14 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="minecraft"
 type = "required"
-versionRange="${minecraft_version_range}"
+versionRange="${minecraft_version_range_forge}"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
-modId="cloth_config"
+modId = "klf"
 type = "required"
-versionRange="[${cloth_config_version},)"
-ordering="NONE"
-side="CLIENT"
-
-[[dependencies.${mod_id}]]
-modId = "modernnetworking"
-type = "required"
-versionRange = "[${modernnetworking_version},)"
+versionRange = "[1,)"
 ordering = "NONE"
 side = "BOTH"
 

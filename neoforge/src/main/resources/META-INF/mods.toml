@@ -23,23 +23,16 @@ issueTrackerURL="https://github.com/CERBON-MODS/Talk-Balloons/issues"
 [[dependencies.${mod_id}]]
    modId="minecraft"
    type = "required"
-   versionRange="${minecraft_version_range}"
+   versionRange="${minecraft_version_range_forge}"
    ordering="NONE"
    side="BOTH"
 
 [[dependencies.${mod_id}]]
-   modId="cloth_config"
-   type = "required"
-   versionRange="[${cloth_config_version},)"
-   ordering="NONE"
-   side="CLIENT"
-
-[[dependencies.${mod_id}]]
-   modId = "modernnetworking"
-   type = "required"
-   versionRange = "[${modernnetworking_version},)"
-   ordering = "NONE"
-   side = "BOTH"
+    modId = "klf"
+    type = "required"
+    versionRange = "[1,)"
+    ordering = "NONE"
+    side = "BOTH"
 
 [[mixins]]
    config = "${mod_id}.mixins.json"
