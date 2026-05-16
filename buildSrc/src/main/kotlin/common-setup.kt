@@ -38,6 +38,20 @@ fun Project.setupCommon(module: String) {
             "implementation"(commonProj.extensions.getByName<SourceSetContainer>("sourceSets").named("main").get().output)
         }
 
+        /*
+        // this is horrible lmao but it works
+        project.extensions.getByName<SourceSetContainer>("sourceSets").named("main").configure {
+            java {
+                srcDir(commonProj.buildDir.toPath().resolve("generated/stonecutter/main/java"))
+                srcDir(commonProj.buildDir.toPath().resolve("generated/stonecutter/main/kotlin"))
+            }
+
+            resources {
+                srcDir(commonProj.buildDir.toPath().resolve("generated/stonecutter/main/resources"))
+            }
+        }
+         */
+
         val properLoaderName = when (module) {
             "fabric" -> "Fabric"
             "forge" -> "Forge"

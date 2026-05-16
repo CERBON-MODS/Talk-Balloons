@@ -1,6 +1,5 @@
 package com.cerbon.talk_balloons.client.resources
 
-import com.cerbon.talk_balloons.TalkBalloons
 import com.cerbon.talk_balloons.config.TBConfig
 import com.google.gson.JsonParser
 import com.mojang.serialization.JsonOps
@@ -15,8 +14,9 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import kotlin.collections.iterator
 
-class BalloonStyleManager : SimplePreparableReloadListener<Map<Identifier, BalloonStyle>>() {
+class BalloonStyleManager : net.minecraft.server.packs.resources.SimplePreparableReloadListener<Map<Identifier, BalloonStyle>>() {
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(BalloonStyleManager::class.java)
         private val styles: MutableMap<Identifier, BalloonStyle> = mutableMapOf()
