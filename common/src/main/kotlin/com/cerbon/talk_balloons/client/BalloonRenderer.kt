@@ -66,11 +66,11 @@ object BalloonRenderer {
 
             if (dividedMessage.size > 1) {
                 for (text in dividedMessage) {
-                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, -(fontHeight * dividedMessage.size) - balloonDistance + textDistance, textColor, false)
+                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, -(fontHeight * dividedMessage.size) - balloonDistance + textDistance, textColor, false, light)
                     textDistance += fontHeight
                 }
             } else {
-                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, -(fontHeight * dividedMessage.size) - balloonDistance, textColor, false)
+                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, -(fontHeight * dividedMessage.size) - balloonDistance, textColor, false, light)
                 textDistance += fontHeight
             }
 
@@ -105,8 +105,8 @@ object BalloonRenderer {
         }
     }
 
-    private fun drawString(pose: PoseStack.Pose, font: Font, text: FormattedCharSequence, x: Float, y: Float, color: Int, dropShadow: Boolean) {
-        font.drawInBatch(text, x, y, color, dropShadow, pose.pose(), Minecraft.getInstance().renderBuffers().bufferSource(), Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT)
+    private fun drawString(pose: PoseStack.Pose, font: Font, text: FormattedCharSequence, x: Float, y: Float, color: Int, dropShadow: Boolean, light: Int) {
+        font.drawInBatch(text, x, y, color, dropShadow, pose.pose(), Minecraft.getInstance().renderBuffers().bufferSource(), Font.DisplayMode.NORMAL, 0, light)
     }
 
     private fun blitSprite(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, width: Int, height: Int, color: Int = -1, z: Float = 0f, light: Int) {
