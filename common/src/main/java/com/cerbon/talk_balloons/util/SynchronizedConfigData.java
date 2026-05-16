@@ -1,23 +1,26 @@
 package com.cerbon.talk_balloons.util;
 
 import com.cerbon.talk_balloons.TalkBalloons;
-import com.cerbon.talk_balloons.config.BalloonStyle;
-import com.cerbon.talk_balloons.network.CustomCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+//? if < 1.21.11 {
+import net.minecraft.resources.ResourceLocation;
+    //?} else {
+/*import net.minecraft.resources.Identifier;
+ *///?}
 
 public record SynchronizedConfigData(
-    BalloonStyle balloonStyle,
+    /*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/ balloonStyle,
     int textColor, int balloonTint,
     int balloonPadding,
     boolean onlyDisplayBalloons
 ) {
     public static final Codec<SynchronizedConfigData> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
-            BalloonStyle.CODEC
+                /*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/.CODEC
                 .optionalFieldOf("balloonStyle", TalkBalloons.config.getBalloonStyle())
                 .forGetter(SynchronizedConfigData::balloonStyle),
             Codec.INT
@@ -37,7 +40,7 @@ public record SynchronizedConfigData(
     );
 
     public static final StreamCodec<FriendlyByteBuf, SynchronizedConfigData> NETWORK_CODEC = StreamCodec.composite(
-        BalloonStyle.NETWORK_CODEC, SynchronizedConfigData::balloonStyle,
+        /*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/.STREAM_CODEC, SynchronizedConfigData::balloonStyle,
         ByteBufCodecs.VAR_INT, SynchronizedConfigData::textColor,
         ByteBufCodecs.VAR_INT, SynchronizedConfigData::balloonTint,
         ByteBufCodecs.VAR_INT, SynchronizedConfigData::balloonPadding,

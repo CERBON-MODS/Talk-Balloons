@@ -1,15 +1,7 @@
 package com.cerbon.talk_balloons.mixin;
 
-import com.cerbon.talk_balloons.client.BalloonRenderer;
-import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
 //? if < 1.21.11 {
-import net.minecraft.client.renderer.RenderType;
 //?}
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 //? if >= 1.21.3
 /*import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;*/
@@ -21,11 +13,7 @@ import net.minecraft.client.renderer.state.CameraRenderState;
 /*import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 *///?}
 
-import net.minecraft.world.entity.LivingEntity;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+    import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(LivingEntityRenderer.class)
 //? if >= 1.21.3 {
@@ -48,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
         if (stateMixin.tb_getBalloons() == null)
             return;
 
-        BalloonRenderer.renderBalloons(poseStack, null, BalloonRenderer.toEulerXyzDegrees(cameraRenderState.orientation), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData());
+        BalloonRenderer.renderBalloons(poseStack, cameraRenderState.yRot, this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData());
     }
     ^///?} else {
     @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"))
@@ -64,7 +52,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
         if (stateMixin.tb_getBalloons() == null)
             return;
 
-        BalloonRenderer.renderBalloons(poseStack, bufferSource, BalloonRenderer.toEulerXyzDegrees(this.entityRenderDispatcher.cameraOrientation()), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData());
+        BalloonRenderer.renderBalloons(poseStack, this.entityRenderDispatcher.camera.getYRot(), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData());
     }
     //?}
 }

@@ -1,6 +1,12 @@
 package com.cerbon.talk_balloons.config
 
+import com.cerbon.talk_balloons.TalkBalloons
 import com.mojang.serialization.Codec
+//? if < 1.21.11 {
+import net.minecraft.resources.ResourceLocation as Identifier
+//?} else {
+/*import net.minecraft.resources.Identifier
+ *///?}
 import xyz.bluspring.sunset.SunsetConfig
 import kotlin.io.path.Path
 
@@ -15,7 +21,11 @@ object TBConfigManager {
         integer("balloonPadding", 0, 64, TBConfig::balloonPadding)
         integer("balloonAge", 0, 120, TBConfig::balloonAge)
             .comment("In seconds")
-        value("balloonStyle", BalloonStyle.CODEC, TBConfig::balloonStyle)
+        value("balloonStyle", Codec.withAlternative(
+            Identifier.CODEC,
+            // convert old balloon style to new variant
+            Codec.STRING.xmap({ oldId -> TalkBalloons.id(oldId.lowercase()) }, Identifier::toString)
+        ), TBConfig::balloonStyle)
         integer("textColor", TBConfig::textColor)
         integer("balloonTint", TBConfig::balloonTint)
         value("showOwnBalloon", Codec.BOOL, TBConfig::showOwnBalloon)

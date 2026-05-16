@@ -1,5 +1,12 @@
 package com.cerbon.talk_balloons.config
 
+import com.cerbon.talk_balloons.client.resources.BalloonStyles
+//? if < 1.21.11 {
+import net.minecraft.resources.ResourceLocation as Identifier
+//?} else {
+/*import net.minecraft.resources.Identifier
+ *///?}
+
 object TBConfig {
     var balloonsHeightOffset: Float = 0.9f
     var distanceBetweenBalloons: Int = 3
@@ -11,7 +18,7 @@ object TBConfig {
 
     var balloonPadding: Int = 1
     var balloonAge: Int = 15
-    var balloonStyle: BalloonStyle = BalloonStyle.ROUNDED
+    var balloonStyle: Identifier = BalloonStyles.ROUNDED
 
     var textColor: Int = 0x141414 // RGB-encoded
     var balloonTint: Int = 0xF1F6F8 // RGB-encoded

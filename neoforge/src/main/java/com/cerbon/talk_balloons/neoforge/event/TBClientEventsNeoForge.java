@@ -1,18 +1,15 @@
 package com.cerbon.talk_balloons.neoforge.event;
 
+import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.cerbon.talk_balloons.network.TBClientPacketHandler;
 import com.cerbon.talk_balloons.util.TBConstants;
-//? if >= 1.21.11 {
-/*import me.shedaniel.autoconfig.AutoConfigClient;
-*///? } else {
-import me.shedaniel.autoconfig.AutoConfig;
-//? }
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 //? if > 1.20.4 {
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -22,6 +19,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.ConfigScreenHandler;
 *///?}
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 @EventBusSubscriber(modid = TBConstants.MOD_ID,
     //? if < 1.21.6 {
@@ -38,20 +36,17 @@ public class TBClientEventsNeoForge {
         //?} else {
         /*ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> {
         *///?}
-            //? if >= 1.21.11 {
-            /*var screen = AutoConfigClient.getConfigScreen(TBConfig.class, parent).get();
-            *///? } else {
-            var screen = AutoConfig.getConfigScreen(TBConfig.class, parent).get();
-            //? }
-            configScreenToHandle = screen;
-            return screen;
+            return null;
         //? if > 1.20.4 {
         });
         //?} else {
         /*}));
         *///?}
+    }
 
-        TBConfig.ConfigGuiHandler.init();
+    @SubscribeEvent
+    public static void onRegisterResourceReloaders(RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener(BalloonRenderer.SPRITE_MANAGER);
     }
 
     @EventBusSubscriber(modid = TBConstants.MOD_ID,
@@ -62,13 +57,6 @@ public class TBClientEventsNeoForge {
         //?}
         value = Dist.CLIENT)
     public static class TBNeoForgeClientEvents {
-        @SubscribeEvent
-        public static void onScreenClose(ScreenEvent.Closing event) {
-            if (configScreenToHandle != null && event.getScreen() == configScreenToHandle) {
-                TBClientPacketHandler.syncBalloonConfig();
-            }
-        }
-
         @SubscribeEvent
         public static void onPlayerDisconnect(ClientPlayerNetworkEvent.LoggingOut event) {
             TalkBalloonsClient.onClientDisconnect();
