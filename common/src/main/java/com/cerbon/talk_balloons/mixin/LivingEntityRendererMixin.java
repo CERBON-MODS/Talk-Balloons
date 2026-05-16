@@ -52,7 +52,7 @@ import net.minecraft.client.renderer.state.CameraRenderState;
         if (stateMixin.tb_getBalloons() == null)
             return;
 
-        BalloonRenderer.renderBalloons(poseStack, this.entityRenderDispatcher.camera.getYRot(), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData());
+        BalloonRenderer.renderBalloons(poseStack, this.entityRenderDispatcher.camera.getYRot(), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData(), packedLight);
     }
     //?}
 }

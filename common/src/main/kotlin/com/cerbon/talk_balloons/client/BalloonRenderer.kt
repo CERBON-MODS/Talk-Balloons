@@ -29,7 +29,7 @@ object BalloonRenderer {
     @JvmField val SPRITE_MANAGER = BalloonSpriteManager(Minecraft.getInstance().textureManager)
 
     @JvmStatic
-    fun renderBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, configData: SynchronizedConfigData) {
+    fun renderBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, configData: SynchronizedConfigData, light: Int) {
         if (messages.isEmpty())
             return
 
@@ -37,7 +37,7 @@ object BalloonRenderer {
         val balloonSprite = SPRITE_MANAGER.getSpriteAccess(style.balloon)
         val arrowSprite = SPRITE_MANAGER.getSpriteAccess(style.arrow)
 
-        val consumer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR)
+        val consumer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
 
         val padding = configData.balloonPadding
         val textColor = configData.textColor or (0xFF shl 24)
@@ -75,10 +75,10 @@ object BalloonRenderer {
             }
 
             val balloonHeight = textDistance + (padding * 2) + style.margins.verticalMargins - 2
-            blitSprite(poseStack.last(), consumer, balloonSprite, baseX, -balloonDistance - balloonHeight, actualBalloonWidth, balloonHeight, balloonTint)
+            blitSprite(poseStack.last(), consumer, balloonSprite, baseX, -balloonDistance - balloonHeight, actualBalloonWidth, balloonHeight, balloonTint, light = light)
 
             if (index == 0) {
-                blitSprite(poseStack.last(), consumer, arrowSprite, -(arrowSprite.contents().width() / 2f), -1f, arrowSprite.contents().width(), arrowSprite.contents().height(), balloonTint, 0.001f)
+                blitSprite(poseStack.last(), consumer, arrowSprite, -(arrowSprite.contents().width() / 2f), -1f, arrowSprite.contents().width(), arrowSprite.contents().height(), balloonTint, 0.001f, light)
             }
 
             balloonDistance += balloonHeight + TalkBalloons.config.distanceBetweenBalloons
@@ -94,8 +94,9 @@ object BalloonRenderer {
             RenderSystem.enablePolygonOffset()
             RenderSystem.polygonOffset(3f, 3f)
 
-            RenderSystem.setShader(GameRenderer::getPositionTexColorShader)
+            RenderSystem.setShader(GameRenderer::getParticleShader)
             RenderSystem.setShaderTexture(0, BalloonStyle.BALLOONS_SHEET)
+            Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer()
             BufferUploader.drawWithShader(meshData)
 
             RenderSystem.disableDepthTest()
@@ -108,13 +109,13 @@ object BalloonRenderer {
         font.drawInBatch(text, x, y, color, dropShadow, pose.pose(), Minecraft.getInstance().renderBuffers().bufferSource(), Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT)
     }
 
-    private fun blitSprite(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, width: Int, height: Int, color: Int = -1, z: Float = 0f) {
+    private fun blitSprite(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, width: Int, height: Int, color: Int = -1, z: Float = 0f, light: Int) {
         val scaling = SPRITE_MANAGER.getMetadata(sprite).scaling
 
         if (scaling is GuiSpriteScaling.Stretch) {
-            this.blitDirect(pose, consumer, x, y, width.toFloat(), height.toFloat(), sprite.u0, sprite.v0, sprite.u1, sprite.v1, color, z)
+            this.blitDirect(pose, consumer, x, y, width.toFloat(), height.toFloat(), sprite.u0, sprite.v0, sprite.u1, sprite.v1, color, z, light)
         } else if (scaling is GuiSpriteScaling.Tile) {
-            this.blitTiled(pose, consumer, sprite, x, y, width, height, 0f, 0f, scaling.width, scaling.height, scaling.width, scaling.height, color, z)
+            this.blitTiled(pose, consumer, sprite, x, y, width, height, 0f, 0f, scaling.width, scaling.height, scaling.width, scaling.height, color, z, light)
         } else if (scaling is GuiSpriteScaling.NineSlice) {
             val border = scaling.border
             val leftBorder = border.left.coerceAtMost(width / 2)
@@ -123,32 +124,32 @@ object BalloonRenderer {
             val bottomBorder = border.bottom.coerceAtMost(height / 2)
 
             if (width == scaling.width && height == scaling.height) {
-                this.blitFromSprite(pose, consumer, sprite, x, y, scaling.width, scaling.height, 0f, 0f, width.toFloat(), height.toFloat(), color, z)
+                this.blitFromSprite(pose, consumer, sprite, x, y, scaling.width, scaling.height, 0f, 0f, width.toFloat(), height.toFloat(), color, z, light)
             } else if (height == scaling.height()) {
-                this.blitFromSprite(pose, consumer, sprite, x, y, scaling.width(), scaling.height(), 0f, 0.toFloat(), leftBorder.toFloat(), height.toFloat(), color, z)
-                this.blitTiled(pose, consumer, sprite, x + leftBorder, y, width - rightBorder - leftBorder, height, leftBorder.toFloat(), 0.toFloat(), scaling.width() - rightBorder - leftBorder, scaling.height(), scaling.width(), scaling.height(), color, z)
-                this.blitFromSprite(pose, consumer, sprite, x + width - rightBorder, y, scaling.width(), scaling.height(), scaling.width() - rightBorder.toFloat(), 0.toFloat(), rightBorder.toFloat(), height.toFloat(), color, z)
+                this.blitFromSprite(pose, consumer, sprite, x, y, scaling.width(), scaling.height(), 0f, 0.toFloat(), leftBorder.toFloat(), height.toFloat(), color, z, light)
+                this.blitTiled(pose, consumer, sprite, x + leftBorder, y, width - rightBorder - leftBorder, height, leftBorder.toFloat(), 0.toFloat(), scaling.width() - rightBorder - leftBorder, scaling.height(), scaling.width(), scaling.height(), color, z, light)
+                this.blitFromSprite(pose, consumer, sprite, x + width - rightBorder, y, scaling.width(), scaling.height(), scaling.width() - rightBorder.toFloat(), 0.toFloat(), rightBorder.toFloat(), height.toFloat(), color, z, light)
             } else if (width == scaling.width()) {
-                this.blitFromSprite(pose, consumer, sprite, x, y, scaling.width(), scaling.height(), 0.toFloat(), 0.toFloat(), width.toFloat(), topBorder.toFloat(), color, z)
-                this.blitTiled(pose, consumer, sprite, x, y + topBorder, width, height - bottomBorder - topBorder, 0.toFloat(), topBorder.toFloat(), scaling.width(), scaling.height() - bottomBorder - topBorder, scaling.width(), scaling.height(), color, z)
-                this.blitFromSprite(pose, consumer, sprite, x, y + height - bottomBorder, scaling.width(), scaling.height(), 0.toFloat(), scaling.height() - bottomBorder.toFloat(), width.toFloat(), bottomBorder.toFloat(), color, z)
+                this.blitFromSprite(pose, consumer, sprite, x, y, scaling.width(), scaling.height(), 0.toFloat(), 0.toFloat(), width.toFloat(), topBorder.toFloat(), color, z, light)
+                this.blitTiled(pose, consumer, sprite, x, y + topBorder, width, height - bottomBorder - topBorder, 0.toFloat(), topBorder.toFloat(), scaling.width(), scaling.height() - bottomBorder - topBorder, scaling.width(), scaling.height(), color, z, light)
+                this.blitFromSprite(pose, consumer, sprite, x, y + height - bottomBorder, scaling.width(), scaling.height(), 0.toFloat(), scaling.height() - bottomBorder.toFloat(), width.toFloat(), bottomBorder.toFloat(), color, z, light)
             } else {
-                this.blitFromSprite(pose, consumer, sprite, x, y, scaling.width(), scaling.height(), 0.toFloat(), 0.toFloat(), leftBorder.toFloat(), topBorder.toFloat(), color, z)
-                this.blitTiled(pose, consumer, sprite, x + leftBorder, y, width - rightBorder - leftBorder, topBorder, leftBorder.toFloat(), 0f, scaling.width() - rightBorder - leftBorder, topBorder, scaling.width(), scaling.height(), color, z)
-                this.blitFromSprite(pose, consumer, sprite, x + width - rightBorder, y, scaling.width(), scaling.height(), scaling.width() - rightBorder.toFloat(), 0f, rightBorder.toFloat(), topBorder.toFloat(), color, z)
+                this.blitFromSprite(pose, consumer, sprite, x, y, scaling.width(), scaling.height(), 0.toFloat(), 0.toFloat(), leftBorder.toFloat(), topBorder.toFloat(), color, z, light)
+                this.blitTiled(pose, consumer, sprite, x + leftBorder, y, width - rightBorder - leftBorder, topBorder, leftBorder.toFloat(), 0f, scaling.width() - rightBorder - leftBorder, topBorder, scaling.width(), scaling.height(), color, z, light)
+                this.blitFromSprite(pose, consumer, sprite, x + width - rightBorder, y, scaling.width(), scaling.height(), scaling.width() - rightBorder.toFloat(), 0f, rightBorder.toFloat(), topBorder.toFloat(), color, z, light)
 
-                this.blitFromSprite(pose, consumer, sprite, x, y + height - bottomBorder, scaling.width(), scaling.height(), 0f, scaling.height() - bottomBorder.toFloat(), leftBorder.toFloat(), bottomBorder.toFloat(), color, z)
-                this.blitTiled(pose, consumer, sprite, x + leftBorder, y + height - bottomBorder, width - rightBorder - leftBorder, bottomBorder, leftBorder.toFloat(), scaling.height() - bottomBorder.toFloat(), scaling.width() - rightBorder - leftBorder, bottomBorder, scaling.width(), scaling.height(), color, z)
-                this.blitFromSprite(pose, consumer, sprite, x + width - rightBorder, y + height - bottomBorder, scaling.width(), scaling.height(), scaling.width() - rightBorder.toFloat(), scaling.height() - bottomBorder.toFloat(), rightBorder.toFloat(), bottomBorder.toFloat(), color, z)
+                this.blitFromSprite(pose, consumer, sprite, x, y + height - bottomBorder, scaling.width(), scaling.height(), 0f, scaling.height() - bottomBorder.toFloat(), leftBorder.toFloat(), bottomBorder.toFloat(), color, z, light)
+                this.blitTiled(pose, consumer, sprite, x + leftBorder, y + height - bottomBorder, width - rightBorder - leftBorder, bottomBorder, leftBorder.toFloat(), scaling.height() - bottomBorder.toFloat(), scaling.width() - rightBorder - leftBorder, bottomBorder, scaling.width(), scaling.height(), color, z, light)
+                this.blitFromSprite(pose, consumer, sprite, x + width - rightBorder, y + height - bottomBorder, scaling.width(), scaling.height(), scaling.width() - rightBorder.toFloat(), scaling.height() - bottomBorder.toFloat(), rightBorder.toFloat(), bottomBorder.toFloat(), color, z, light)
 
-                this.blitTiled(pose, consumer, sprite, x, y + topBorder, leftBorder, height - bottomBorder - topBorder, 0f, topBorder.toFloat(), leftBorder, scaling.height() - bottomBorder - topBorder, scaling.width(), scaling.height(), color, z)
-                this.blitTiled(pose, consumer, sprite, x + leftBorder, y + topBorder, width - rightBorder - leftBorder, height - bottomBorder - topBorder, leftBorder.toFloat(), topBorder.toFloat(), scaling.width() - rightBorder - leftBorder, scaling.height() - bottomBorder - topBorder, scaling.width(), scaling.height(), color, z)
-                this.blitTiled(pose, consumer, sprite, x + width - rightBorder, y + topBorder, leftBorder, height - bottomBorder - topBorder, scaling.width() - rightBorder.toFloat(), topBorder.toFloat(), rightBorder, scaling.height() - bottomBorder - topBorder, scaling.width(), scaling.height(), color, z)
+                this.blitTiled(pose, consumer, sprite, x, y + topBorder, leftBorder, height - bottomBorder - topBorder, 0f, topBorder.toFloat(), leftBorder, scaling.height() - bottomBorder - topBorder, scaling.width(), scaling.height(), color, z, light)
+                this.blitTiled(pose, consumer, sprite, x + leftBorder, y + topBorder, width - rightBorder - leftBorder, height - bottomBorder - topBorder, leftBorder.toFloat(), topBorder.toFloat(), scaling.width() - rightBorder - leftBorder, scaling.height() - bottomBorder - topBorder, scaling.width(), scaling.height(), color, z, light)
+                this.blitTiled(pose, consumer, sprite, x + width - rightBorder, y + topBorder, leftBorder, height - bottomBorder - topBorder, scaling.width() - rightBorder.toFloat(), topBorder.toFloat(), rightBorder, scaling.height() - bottomBorder - topBorder, scaling.width(), scaling.height(), color, z, light)
             }
         }
     }
 
-    private fun blitTiled(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, width: Int, height: Int, uOffset: Float, vOffset: Float, uWidth: Int, vHeight: Int, nineSliceWidth: Int, nineSliceHeight: Int, color: Int = -1, z: Float = 0f) {
+    private fun blitTiled(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, width: Int, height: Int, uOffset: Float, vOffset: Float, uWidth: Int, vHeight: Int, nineSliceWidth: Int, nineSliceHeight: Int, color: Int = -1, z: Float = 0f, light: Int) {
         if (width > 0 && height > 0) {
             if (uWidth <= 0 || vHeight <= 0)
                 throw IllegalArgumentException("Tiled sprite texture size must be positive, got ${uWidth}x${vHeight}")
@@ -160,7 +161,7 @@ object BalloonRenderer {
                 var k = 0
                 while (k < height) {
                     val l = min(vHeight, height - k)
-                    this.blitFromSprite(pose, consumer, sprite, x + i, y + k, nineSliceWidth, nineSliceHeight, uOffset, vOffset, j.toFloat(), l.toFloat(), color, z)
+                    this.blitFromSprite(pose, consumer, sprite, x + i, y + k, nineSliceWidth, nineSliceHeight, uOffset, vOffset, j.toFloat(), l.toFloat(), color, z, light)
                     k += vHeight
                 }
 
@@ -169,36 +170,40 @@ object BalloonRenderer {
         }
     }
 
-    private fun blitFromSprite(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, texWidth: Int, texHeight: Int, uOffset: Float, vOffset: Float, uWidth: Float, vHeight: Float, color: Int = -1, z: Float = 0f) {
+    private fun blitFromSprite(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, texWidth: Int, texHeight: Int, uOffset: Float, vOffset: Float, uWidth: Float, vHeight: Float, color: Int = -1, z: Float = 0f, light: Int) {
         this.blitDirect(pose, consumer, x, y, uWidth, vHeight,
             sprite.getU(uOffset / texWidth), sprite.getV(vOffset / texHeight),
             sprite.getU((uOffset + uWidth) / texWidth), sprite.getV((vOffset + vHeight) / texHeight),
-            color, z
+            color, z, light
         )
     }
 
-    private fun blit(pose: PoseStack.Pose, consumer: VertexConsumer, x: Float, y: Float, width: Int, height: Int, uOffset: Float, vOffset: Float, uWidth: Float, vHeight: Float, color: Int = -1, z: Float = 0f) {
-        this.blitDirect(pose, consumer, x, y, width.toFloat(), height.toFloat(), uOffset, vOffset, uOffset + uWidth, vOffset + vHeight, color, z)
+    private fun blit(pose: PoseStack.Pose, consumer: VertexConsumer, x: Float, y: Float, width: Int, height: Int, uOffset: Float, vOffset: Float, uWidth: Float, vHeight: Float, color: Int = -1, z: Float = 0f, light: Int) {
+        this.blitDirect(pose, consumer, x, y, width.toFloat(), height.toFloat(), uOffset, vOffset, uOffset + uWidth, vOffset + vHeight, color, z, light)
     }
 
-    private fun blitDirect(pose: PoseStack.Pose, consumer: VertexConsumer, x: Float, y: Float, width: Float, height: Float, u0: Float, v0: Float, u1: Float, v1: Float, color: Int = -1, z: Float = 0f) {
+    private fun blitDirect(pose: PoseStack.Pose, consumer: VertexConsumer, x: Float, y: Float, width: Float, height: Float, u0: Float, v0: Float, u1: Float, v1: Float, color: Int = -1, z: Float = 0f, light: Int) {
         val x2 = (x + width)
         val y2 = (y + height)
 
         consumer.addVertex(pose, x, y, z)
             .setUv(u0, v0)
             .setColor(color)
+            .setLight(light)
 
         consumer.addVertex(pose, x, y2, z)
             .setUv(u0, v1)
             .setColor(color)
+            .setLight(light)
 
         consumer.addVertex(pose, x2, y2, z)
             .setUv(u1, v1)
             .setColor(color)
+            .setLight(light)
 
         consumer.addVertex(pose, x2, y, z)
             .setUv(u1, v0)
             .setColor(color)
+            .setLight(light)
     }
 }
