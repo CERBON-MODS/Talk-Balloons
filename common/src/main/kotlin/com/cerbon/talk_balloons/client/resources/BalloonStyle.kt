@@ -15,9 +15,9 @@ data class BalloonStyle(
     val balloon: Identifier,
     val arrow: Identifier,
     val allowsTint: Boolean,
-    val padding: Padding,
+    val margins: Margins,
 ) {
-    data class Padding(
+    data class Margins(
         val top: Int,
         val bottom: Int,
         val left: Int,
@@ -27,18 +27,18 @@ data class BalloonStyle(
 
         companion object {
             @JvmField
-            val CODEC: Codec<Padding> = RecordCodecBuilder.create { instance ->
+            val CODEC: Codec<Margins> = RecordCodecBuilder.create { instance ->
                 instance.group(
                     Codec.INT.optionalFieldOf("top", 1)
-                        .forGetter(Padding::top),
+                        .forGetter(Margins::top),
                     Codec.INT.optionalFieldOf("bottom", 1)
-                        .forGetter(Padding::bottom),
+                        .forGetter(Margins::bottom),
                     Codec.INT.optionalFieldOf("left", 1)
-                        .forGetter(Padding::left),
+                        .forGetter(Margins::left),
                     Codec.INT.optionalFieldOf("right", 1)
-                        .forGetter(Padding::right)
+                        .forGetter(Margins::right)
                 )
-                    .apply(instance, ::Padding)
+                    .apply(instance, ::Margins)
             }
         }
     }
@@ -48,7 +48,7 @@ data class BalloonStyle(
         @JvmField val BALLOONS_ATLAS: Identifier = TalkBalloons.id("balloons")
 
         @JvmField val DEFAULT_ARROW: Identifier = TalkBalloons.id("arrow")
-        @JvmField val FALLBACK = BalloonStyle(BalloonStyles.ROUNDED, DEFAULT_ARROW, true, Padding(1))
+        @JvmField val FALLBACK = BalloonStyle(BalloonStyles.ROUNDED, DEFAULT_ARROW, true, Margins(1))
 
         @JvmField
         val CODEC: Codec<BalloonStyle> = RecordCodecBuilder.create { instance ->
@@ -60,13 +60,13 @@ data class BalloonStyle(
                 Codec.BOOL.optionalFieldOf("allows_tint", false)
                     .forGetter(BalloonStyle::allowsTint),
                 Codec.withAlternative(
-                    Padding.CODEC,
+                    Margins.CODEC,
                     Codec.withAlternative(
-                        Codec.INT.listOf(4, 4).xmap({ Padding(it[0], it[1], it[2], it[3]) }, { listOf(it.top, it.bottom, it.left, it.right) }),
-                        Codec.INT.xmap(::Padding, Padding::top)
+                        Codec.INT.listOf(4, 4).xmap({ Margins(it[0], it[1], it[2], it[3]) }, { listOf(it.top, it.bottom, it.left, it.right) }),
+                        Codec.INT.xmap(::Margins, Margins::top)
                     )
-                ).optionalFieldOf("padding", Padding(1))
-                    .forGetter(BalloonStyle::padding)
+                ).optionalFieldOf("margin", Margins(1))
+                    .forGetter(BalloonStyle::margins)
             )
                 .apply(instance, ::BalloonStyle)
         }

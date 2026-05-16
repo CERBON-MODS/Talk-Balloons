@@ -45,7 +45,7 @@ object BalloonRenderer {
             configData.balloonTint or (0xFF shl 24)
         else -1
         val fontHeight = 7 // TODO: how do we detect this
-        val doublePadding = (padding * 2) + style.padding.top + style.padding.bottom
+        val doublePadding = (padding * 2) + style.margins.top + style.margins.bottom
 
         var balloonDistance = 0f
         var previousLineCount = 0
@@ -72,11 +72,11 @@ object BalloonRenderer {
 
             previousLineCount = lineCount
 
-            val actualBalloonWidth = balloonWidth + (padding * 2) + style.padding.left + style.padding.right
+            val actualBalloonWidth = balloonWidth + (padding * 2) + style.margins.left + style.margins.right
             val baseX = -(actualBalloonWidth / 2f)
-            val baseY = -style.padding.bottom
+            val baseY = -style.margins.bottom
 
-            blitSprite(poseStack.last(), consumer, balloonSprite, baseX, baseY - balloonDistance - ((lineCount * actualFontHeight) + style.padding.bottom + padding), actualBalloonWidth, (lineCount * actualFontHeight) + doublePadding, balloonTint)
+            blitSprite(poseStack.last(), consumer, balloonSprite, baseX, baseY - balloonDistance - ((lineCount * actualFontHeight) + style.margins.bottom + padding), actualBalloonWidth, (lineCount * actualFontHeight) + doublePadding, balloonTint)
 
             if (index == 0) {
                 blitSprite(poseStack.last(), consumer, arrowSprite, -(arrowSprite.contents().width() / 2f), 0f, arrowSprite.contents().width(), arrowSprite.contents().height(), balloonTint, 0.001f)
@@ -85,11 +85,11 @@ object BalloonRenderer {
             if (dividedMessage.size > 1) {
                 var textDistance = 0
                 for (text in dividedMessage) {
-                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, -baseY - balloonDistance + textDistance - ((lineCount * actualFontHeight) + padding + style.padding.bottom), textColor, false)
+                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, -baseY - balloonDistance + textDistance - ((lineCount * actualFontHeight) + padding + style.margins.bottom), textColor, false)
                     textDistance += font.lineHeight
                 }
             } else {
-                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, -baseY - balloonDistance - ((lineCount * actualFontHeight) + padding + style.padding.bottom), textColor, false)
+                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, -baseY - balloonDistance - ((lineCount * actualFontHeight) + padding + style.margins.bottom), textColor, false)
             }
 
             poseStack.popPose()

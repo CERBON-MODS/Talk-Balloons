@@ -16,7 +16,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.collections.iterator
 
-class BalloonStyleManager : net.minecraft.server.packs.resources.SimplePreparableReloadListener<Map<Identifier, BalloonStyle>>() {
+class BalloonStyleManager : SimplePreparableReloadListener<Map<Identifier, BalloonStyle>>() {
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(BalloonStyleManager::class.java)
         private val styles: MutableMap<Identifier, BalloonStyle> = mutableMapOf()

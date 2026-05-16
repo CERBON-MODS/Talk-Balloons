@@ -2,5 +2,5 @@
     "arrow": "talk_balloons:arrow",
     "balloon": "talk_balloons:rounded_1px",
     "allows_tint": true,
-    "padding": 1
+    "margin": 1
 }
