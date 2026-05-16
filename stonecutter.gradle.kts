@@ -24,6 +24,7 @@ allprojects {
         maven("https://maven.fabricmc.net")
         maven("https://maven.terraformersmc.com/releases")
         maven("https://maven.nucleoid.xyz/")
+        maven("https://api.modrinth.com/maven")
     }
 
     group = mod.group

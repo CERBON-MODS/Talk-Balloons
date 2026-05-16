@@ -1,13 +1,16 @@
 package com.cerbon.talk_balloons.neoforge;
 
 import com.cerbon.talk_balloons.TalkBalloons;
+import com.cerbon.talk_balloons.compat.CompatHandler;
 import com.cerbon.talk_balloons.network.TBClientPacketHandler;
 import com.cerbon.talk_balloons.network.TBPackets;
 import com.cerbon.talk_balloons.network.TBServerPacketHandler;
 import com.cerbon.talk_balloons.util.TBConstants;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.LoadingModList;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 import net.minecraft.network.protocol.PacketFlow;
@@ -18,6 +21,11 @@ import net.minecraft.server.level.ServerPlayer;
 public class TalkBalloonsNeoForge {
     public TalkBalloonsNeoForge() {
         TalkBalloons.init();
+        CompatHandler.isIrisLoaded = isModLoaded("iris") || isModLoaded("oculus");
+    }
+
+    private boolean isModLoaded(String modId) {
+        return ModList.get().isLoaded(modId) || LoadingModList.get().getModFileById(modId) != null;
     }
 
     @SubscribeEvent

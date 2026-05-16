@@ -4,6 +4,8 @@ import com.cerbon.talk_balloons.TalkBalloons
 import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager
 import com.cerbon.talk_balloons.client.resources.BalloonStyle
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
+import com.cerbon.talk_balloons.compat.CompatHandler
+import com.cerbon.talk_balloons.compat.iris.IrisCompat
 import com.cerbon.talk_balloons.util.HistoricalData
 import com.cerbon.talk_balloons.util.SynchronizedConfigData
 import com.mojang.blaze3d.systems.RenderSystem
@@ -106,6 +108,10 @@ object BalloonRenderer {
     }
 
     private fun drawString(pose: PoseStack.Pose, font: Font, text: FormattedCharSequence, x: Float, y: Float, color: Int, dropShadow: Boolean, light: Int) {
+        // otherwise text looks wonk af
+        if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
+            return
+
         font.drawInBatch(text, x, y, color, dropShadow, pose.pose(), Minecraft.getInstance().renderBuffers().bufferSource(), Font.DisplayMode.NORMAL, 0, light)
     }
 

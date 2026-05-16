@@ -30,6 +30,9 @@ kotlinlangforge = "2.12.0-k2.3.21"
 # https://github.com/BluSpring/SunsetConfig/blob/main/build.gradle.kts#L23
 sunset = "1.2.0"
 
+# https://modrinth.com/mod/iris/versions?g=26.1.2
+iris = "1.7.6+1.20.1"
+
 [libraries]
 fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
 fabric-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-kotlin" }
@@ -39,6 +42,7 @@ mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", versio
 mixinextras-fabric = { module = "io.github.llamalad7:mixinextras-fabric", version.ref = "mixinextras" }
 mixinextras-forge = { module = "io.github.llamalad7:mixinextras-forge", version.ref = "mixinextras" }
 sunset = { module = "xyz.bluspring.sunset:sunset-config", version.ref = "sunset" }
+iris = { module = "maven.modrinth:iris", version.ref = "iris" }
 
 [plugins]
 moddevgradle = { id = "net.neoforged.moddev" }

@@ -36,4 +36,5 @@ dependencies {
 //    annotationProcessor(libs.mixinextras.common) // MixinExtras
     api(libs.mixinextras.common)
     api(libs.sunset)
+    compileOnly(libs.iris)
 }

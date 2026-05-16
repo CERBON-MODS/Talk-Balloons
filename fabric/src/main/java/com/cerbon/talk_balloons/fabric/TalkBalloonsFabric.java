@@ -6,6 +6,7 @@ import java.util.concurrent.Executor;
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.client.resources.BalloonStyle;
+import com.cerbon.talk_balloons.compat.CompatHandler;
 import com.cerbon.talk_balloons.fabric.event.TBClientEvents;
 import com.cerbon.talk_balloons.fabric.event.TBServerEvents;
 import com.cerbon.talk_balloons.fabric.network.FabricNetworkRegistry;
@@ -21,6 +22,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.AtlasSourceTypeRegistry;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer {
 
@@ -29,6 +31,7 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
         FabricNetworkRegistry.init();
         TalkBalloons.init();
         TBServerEvents.init();
+        CompatHandler.isIrisLoaded = FabricLoader.getInstance().isModLoaded("iris");
     }
 
     @Override
