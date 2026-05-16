@@ -44,11 +44,9 @@ object BalloonRenderer {
         val balloonTint = if (style.allowsTint)
             configData.balloonTint or (0xFF shl 24)
         else -1
-        val fontHeight = 7 // TODO: how do we detect this
-        val doublePadding = (padding * 2) + style.margins.top + style.margins.bottom
+        val fontHeight = font.lineHeight
 
         var balloonDistance = 0f
-        var previousLineCount = 0
 
         messages.asReversed().forEachIndexed { index, message ->
             poseStack.pushPose()
@@ -60,37 +58,30 @@ object BalloonRenderer {
             val dividedMessage = font.split(message, TalkBalloons.config.maxBalloonWidth)
             val greatestTextWidth = dividedMessage.maxOf { font.width(it) }
 
-            var balloonWidth = Mth.clamp(greatestTextWidth, TalkBalloons.config.minBalloonWidth, TalkBalloons.config.maxBalloonWidth)
-            val lineCount = dividedMessage.size
-            val actualFontHeight = fontHeight + (lineCount - 1)
+            var textDistance = 0
 
-            if (balloonWidth % 2 == 0) // Width should be odd to correctly center the arrow
-                balloonWidth--
-
-            if (previousLineCount != 0)
-                balloonDistance += (previousLineCount * actualFontHeight) + doublePadding + TalkBalloons.config.distanceBetweenBalloons
-
-            previousLineCount = lineCount
-
-            val actualBalloonWidth = balloonWidth + (padding * 2) + style.margins.left + style.margins.right
+            val balloonWidth = Mth.clamp(greatestTextWidth, TalkBalloons.config.minBalloonWidth, TalkBalloons.config.maxBalloonWidth)
+            val actualBalloonWidth = balloonWidth + (padding * 2) + style.margins.horizontalMargins
             val baseX = -(actualBalloonWidth / 2f)
-            val baseY = -style.margins.bottom
-
-            blitSprite(poseStack.last(), consumer, balloonSprite, baseX, baseY - balloonDistance - ((lineCount * actualFontHeight) + style.margins.bottom + padding), actualBalloonWidth, (lineCount * actualFontHeight) + doublePadding, balloonTint)
-
-            if (index == 0) {
-                blitSprite(poseStack.last(), consumer, arrowSprite, -(arrowSprite.contents().width() / 2f), 0f, arrowSprite.contents().width(), arrowSprite.contents().height(), balloonTint, 0.001f)
-            }
 
             if (dividedMessage.size > 1) {
-                var textDistance = 0
                 for (text in dividedMessage) {
-                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, -baseY - balloonDistance + textDistance - ((lineCount * actualFontHeight) + padding + style.margins.bottom), textColor, false)
-                    textDistance += font.lineHeight
+                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, -(fontHeight * dividedMessage.size) - balloonDistance + textDistance, textColor, false)
+                    textDistance += fontHeight
                 }
             } else {
-                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, -baseY - balloonDistance - ((lineCount * actualFontHeight) + padding + style.margins.bottom), textColor, false)
+                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, -(fontHeight * dividedMessage.size) - balloonDistance, textColor, false)
+                textDistance += fontHeight
             }
+
+            val balloonHeight = textDistance + (padding * 2) + style.margins.verticalMargins - 2
+            blitSprite(poseStack.last(), consumer, balloonSprite, baseX, -balloonDistance - balloonHeight, actualBalloonWidth, balloonHeight, balloonTint)
+
+            if (index == 0) {
+                blitSprite(poseStack.last(), consumer, arrowSprite, -(arrowSprite.contents().width() / 2f), -1f, arrowSprite.contents().width(), arrowSprite.contents().height(), balloonTint, 0.001f)
+            }
+
+            balloonDistance += balloonHeight + TalkBalloons.config.distanceBetweenBalloons
 
             poseStack.popPose()
         }

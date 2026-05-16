@@ -17,6 +17,7 @@ data class BalloonStyle(
     val allowsTint: Boolean,
     val margins: Margins,
 ) {
+    @JvmRecord
     data class Margins(
         val top: Int,
         val bottom: Int,
@@ -24,6 +25,12 @@ data class BalloonStyle(
         val right: Int
     ) {
         constructor(padding: Int) : this(padding, padding, padding, padding)
+
+        val horizontalMargins: Int
+            get() = left + right
+
+        val verticalMargins: Int
+            get() = top + bottom
 
         companion object {
             @JvmField
