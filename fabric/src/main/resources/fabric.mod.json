@@ -35,5 +35,8 @@
         "fabric-api": "*",
         "minecraft": "${minecraft_version_range_fabric}",
         "fabric-language-kotlin": "*"
+    },
+    "recommends": {
+        "modmenu": "*"
     }
 }

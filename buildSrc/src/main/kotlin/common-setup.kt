@@ -84,8 +84,13 @@ fun Project.setupCommon(module: String) {
                     requires {
                         slug = "fabric-api"
                     }
+
                     requires {
                         slug = "fabric-language-kotlin"
+                    }
+
+                    optional {
+                        slug = "modmenu"
                     }
                 } else if (project.path.contains("forge")) {
                     requires {
@@ -108,8 +113,13 @@ fun Project.setupCommon(module: String) {
                     requires {
                         slug = "fabric-api"
                     }
+
                     requires {
                         slug = "fabric-language-kotlin"
+                    }
+
+                    optional {
+                        slug = "modmenu"
                     }
                 } else if (module.contains("forge")) {
                     requires {
