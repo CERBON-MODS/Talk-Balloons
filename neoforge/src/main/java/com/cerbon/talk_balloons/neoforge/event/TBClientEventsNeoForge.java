@@ -88,7 +88,12 @@ public class TBClientEventsNeoForge {
         }
 
         @SubscribeEvent
-        public static void onRenderEntities(RenderLevelStageEvent.AfterEntities event) {
+        //? if >= 1.21.8 {
+        /*public static void onRenderEntities(RenderLevelStageEvent.AfterEntities event) {
+        *///? } else {
+        public static void onRenderEntities(RenderLevelStageEvent event) {
+            if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) return;
+        //? }
             BalloonRenderer.renderBalloons();
         }
     }

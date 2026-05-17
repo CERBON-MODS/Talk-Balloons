@@ -71,8 +71,8 @@ object BalloonRenderer {
         const val INDICES = GpuBuffer.USAGE_INDEX
     }
     *///? } else if >= 1.21.5 {
-    /*
-    private val RenderTarget.colorTextureView: GpuTexture?
+    
+    /*private val RenderTarget.colorTextureView: GpuTexture?
         get() = this.colorTexture
 
     private val RenderTarget.depthTextureView: GpuTexture?

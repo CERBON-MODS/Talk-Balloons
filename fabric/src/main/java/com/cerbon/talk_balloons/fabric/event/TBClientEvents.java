@@ -7,7 +7,11 @@ import com.cerbon.talk_balloons.network.TBPackets;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+//? if >= 1.21.10 {
+/*import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+*///? } else {
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+//? }
 
 public class TBClientEvents {
     public static void init() {

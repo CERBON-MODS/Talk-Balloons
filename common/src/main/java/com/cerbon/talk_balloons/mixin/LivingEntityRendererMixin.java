@@ -13,17 +13,18 @@ import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.MultiBufferSource;
 *///? }
 
+import org.spongepowered.asm.mixin.Mixin;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+
 //? if >= 1.21.3 {
 /*import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.LivingEntity;
 import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
-import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
