@@ -187,7 +187,7 @@ object BalloonRenderer {
             blitSprite(poseStack.last(), consumer, balloonSprite, baseX, -balloonDistance - balloonHeight, actualBalloonWidth, balloonHeight, balloonTint, light = light)
 
             if (index == 0) {
-                blitSprite(poseStack.last(), consumer, arrowSprite, -(arrowSprite.contents().width() / 2f), -1f, arrowSprite.contents().width(), arrowSprite.contents().height(), balloonTint, 0.001f, light)
+                blitSprite(poseStack.last(), consumer, arrowSprite, -(arrowSprite.contents().width() / 2f), -1f, arrowSprite.contents().width(), arrowSprite.contents().height(), balloonTint, 0.01f, light)
             }
 
             balloonDistance += balloonHeight + TalkBalloons.config.distanceBetweenBalloons
