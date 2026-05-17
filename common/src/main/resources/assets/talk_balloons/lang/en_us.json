@@ -16,6 +16,8 @@
     "yacl3.config.talk_balloons.category.global.group.style.option.balloonTint": "Balloon tint",
     "yacl3.config.talk_balloons.category.global.group.style.option.balloonStyle": "Balloon style",
     "yacl3.config.talk_balloons.category.global.group.style.option.balloonPadding": "Balloon padding",
+    "yacl3.config.talk_balloons.category.global.group.style.option.balloonOpacity": "Balloon opacity",
+    "yacl3.config.talk_balloons.category.global.group.style.option.balloonSneakingOpacity": "Balloon opacity when sneaking",
 
     "yacl3.config.talk_balloons.category.global.group.preferences.option.showOwnBalloon": "Show own balloon",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.onlyDisplayBalloons": "Only display balloons",

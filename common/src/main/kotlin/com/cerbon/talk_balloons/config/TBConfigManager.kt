@@ -23,6 +23,10 @@ object TBConfigManager {
         integer("balloonPadding", 0, 64, TBConfig::balloonPadding)
         integer("balloonAge", 0, 120, TBConfig::balloonAge)
             .comment("In seconds")
+
+        integer("balloonOpacity", 30, 255, TBConfig::balloonOpacity)
+        integer("balloonSneakingOpacity", 30, 255, TBConfig::balloonSneakingOpacity)
+
         value("balloonStyle", Codec.withAlternative(
             // convert old balloon style to new variant
             Codec.STRING.comapFlatMap({ oldId -> if (oldId.contains(":")) DataResult.error { "This is an actual ID!" } else DataResult.success(TalkBalloons.id(oldId.lowercase())) }, Identifier::toString),

@@ -65,6 +65,16 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
             }
 
+            val balloonOpacity by options.registering {
+                binding = bindingFromSunset("balloonOpacity")
+                controller = slider(30..255)
+            }
+
+            val balloonSneakingOpacity by options.registering {
+                binding = bindingFromSunset("balloonSneakingOpacity")
+                controller = slider(30..255)
+            }
+
             val balloonsHeightOffset by options.registering {
                 binding = bindingFromSunset("balloonsHeightOffset")
                 controller = slider(range = 0f..16f, step = 0.1f)

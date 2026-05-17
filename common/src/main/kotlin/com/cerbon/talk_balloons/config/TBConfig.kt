@@ -25,6 +25,9 @@ object TBConfig {
     var textColor: Int = 0x141414 // RGB-encoded
     var balloonTint: Int = 0xF1F6F8 // RGB-encoded
 
+    var balloonOpacity: Int = 240
+    var balloonSneakingOpacity: Int = 165
+
     var showOwnBalloon: Boolean = true
     var onlyDisplayBalloons: Boolean = false
 

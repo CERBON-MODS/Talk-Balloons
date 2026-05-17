@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.world.entity.Pose;
 //?} else if >= 1.21.3 {
 /*import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -61,7 +62,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<
         ITalkBalloonsPlayer playerMixin = (ITalkBalloonsPlayer) player;
         if (playerMixin.talk_balloons$getBalloonMessages() == null || playerMixin.talk_balloons$getBalloonMessages().isEmpty()) return;
 
-        BalloonRenderer.submitBalloons(poseStack, this.entityRenderDispatcher.camera.getYRot(), this.getFont(), playerMixin.talk_balloons$getBalloonMessages(), player.getBbHeight(), TalkBalloonsClient.syncedConfigs.getPlayerConfig(player.getUUID()), packedLight);
+        BalloonRenderer.submitBalloons(poseStack, this.entityRenderDispatcher.camera.getYRot(), this.getFont(), playerMixin.talk_balloons$getBalloonMessages(), player.getBbHeight(), player.getPose() == Pose.CROUCHING, TalkBalloonsClient.syncedConfigs.getPlayerConfig(player.getUUID()), packedLight);
     }
     //?} else if >= 1.21.3 {
 

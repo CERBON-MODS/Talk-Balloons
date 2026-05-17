@@ -10,6 +10,7 @@ import com.cerbon.talk_balloons.client.resources.BalloonStyle
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
 import com.cerbon.talk_balloons.compat.CompatHandler
 import com.cerbon.talk_balloons.compat.iris.IrisCompat
+import com.cerbon.talk_balloons.config.TBConfig
 import com.cerbon.talk_balloons.util.HistoricalData
 import com.cerbon.talk_balloons.util.SynchronizedConfigData
 //? if >= 1.21.5 {
@@ -131,7 +132,7 @@ object BalloonRenderer {
     private val renderQueue = ConcurrentLinkedQueue<MeshData>()
 
     @JvmStatic
-    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, configData: SynchronizedConfigData, light: Int) {
+    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int) {
         if (messages.isEmpty())
             return
 
@@ -147,11 +148,12 @@ object BalloonRenderer {
 
         val consumer = BufferBuilder(this.bufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
 
+        val balloonOpacity = if (isSneaking) TBConfig.balloonSneakingOpacity else TBConfig.balloonOpacity
         val padding = configData.balloonPadding.orElse(TalkBalloons.config.balloonPadding)!!
-        val textColor = configData.textColor.orElse(TalkBalloons.config.textColor)!! or (0xFF shl 24)
-        val balloonTint = if (style.allowsTint)
-            configData.balloonTint.orElse(TalkBalloons.config.balloonTint)!! or (0xFF shl 24)
-        else -1
+        val textColor = configData.textColor.orElse(TalkBalloons.config.textColor)!! or (balloonOpacity shl 24)
+        val balloonTint = (if (style.allowsTint)
+            configData.balloonTint.orElse(TalkBalloons.config.balloonTint)!!
+        else 0xFFFFFF) or (balloonOpacity shl 24)
         val fontHeight = font.lineHeight
 
         var balloonDistance = 0f
