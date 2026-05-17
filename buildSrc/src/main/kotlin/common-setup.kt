@@ -22,7 +22,7 @@ fun Project.setupCommon(module: String) {
     version = "${mod.version}+${stonecutter.current.version}"
 
     project.extensions.configure<BasePluginExtension>("base") {
-        archivesName.set("${mod.name}-$module")
+        archivesName.set("${mod.name.replace(" ", "")}-$module")
     }
 
     stonecutter.constants.match(module, "fabric", "forge", "neoforge",
@@ -60,7 +60,7 @@ fun Project.setupCommon(module: String) {
         }
 
         val base = project.extensions.getByType<BasePluginExtension>()
-        base.archivesName.set("${common.project.mod.name}-${module}")
+        base.archivesName.set("${common.project.mod.name.replace(" ", "")}-${module}")
 
         // setup publishing to Modrinth and such
         apply(plugin = "me.modmuss50.mod-publish-plugin")
