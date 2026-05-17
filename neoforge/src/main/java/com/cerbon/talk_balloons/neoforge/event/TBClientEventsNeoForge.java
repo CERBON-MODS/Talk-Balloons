@@ -3,10 +3,11 @@ package com.cerbon.talk_balloons.neoforge.event;
 import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.cerbon.talk_balloons.client.config.TBConfigGuiKt;
+//? if < 1.21.9 {
 import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager;
+//? }
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
 import com.cerbon.talk_balloons.util.TBConstants;
-import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
@@ -58,7 +59,9 @@ public class TBClientEventsNeoForge {
     //? } else {
     /*@SubscribeEvent
     public static void onRegisterResourceReloaders(AddClientReloadListenersEvent event) {
+        //? if < 1.21.9 {
         event.addListener(BalloonSpriteManager.ID, BalloonRenderer.SPRITE_MANAGER);
+        //? }
         event.addListener(BalloonStyleManager.ID, BalloonStyleManager.INSTANCE);
     }
     *///? }

@@ -6,15 +6,19 @@ package com.cerbon.talk_balloons.mixin;
 //? if >= 1.21.9 {
 /*import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.cerbon.talk_balloons.util.mixin.ICameraRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
 *///?} else if >= 1.21.3 {
-/*import net.minecraft.client.model.EntityModel;
+/*import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.renderer.MultiBufferSource;
+*///? }
+
+//? if >= 1.21.3 {
+/*import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.world.entity.LivingEntity;
 import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
@@ -46,7 +50,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
         if (stateMixin.tb_getBalloons() == null)
             return;
 
-        BalloonRenderer.renderBalloons(poseStack, cameraRenderState.yRot, this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData());
+        BalloonRenderer.renderBalloons(poseStack, ((ICameraRenderState) cameraRenderState).talk_balloons$yaw(), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData(), renderState.lightCoords);
     }
     ^///?} else {
     @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"))

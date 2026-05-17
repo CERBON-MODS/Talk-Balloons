@@ -3,7 +3,9 @@ package com.cerbon.talk_balloons.client.resources
 import com.cerbon.talk_balloons.TalkBalloons
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.renderer.texture.TextureManager
+//? if <= 1.21.8 {
 import net.minecraft.client.resources.TextureAtlasHolder
+//? }
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection
 import net.minecraft.client.resources.metadata.gui.GuiMetadataSection
 //? if < 1.21.11 {

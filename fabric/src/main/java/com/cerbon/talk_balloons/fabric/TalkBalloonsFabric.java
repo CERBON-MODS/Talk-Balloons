@@ -4,8 +4,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import com.cerbon.talk_balloons.TalkBalloons;
+//? if < 1.21.9 {
 import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager;
+import net.minecraft.server.packs.resources.ResourceManager;
+//? }
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
 import com.cerbon.talk_balloons.compat.CompatHandler;
 import com.cerbon.talk_balloons.fabric.event.TBClientEvents;
@@ -14,7 +17,6 @@ import com.cerbon.talk_balloons.fabric.network.FabricNetworkRegistry;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
 //? if < 1.21.4 {
 import net.minecraft.util.profiling.ProfilerFiller;
  //? }
@@ -38,6 +40,7 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
     @Override
     public void onInitializeClient() {
         TBClientEvents.init();
+        //? if < 1.21.9 {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
             .registerReloadListener(new IdentifiableResourceReloadListener() {
                 @Override
@@ -50,6 +53,7 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
                     return BalloonRenderer.SPRITE_MANAGER.reload(preparationBarrier, resourceManager, /*? if < 1.21.4 {*/preparationsProfiler, reloadProfiler,/*? }*/ backgroundExecutor, gameExecutor);
                 }
             });
+        //? }
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
             .registerReloadListener(new IdentifiableResourceReloadListener() {
@@ -58,10 +62,20 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
                     return BalloonStyleManager.ID;
                 }
 
+                //? if < 1.21.9 {
                 @Override
-                public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, /*? if < 1.21.4 {*/ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler,/*? }*/ Executor backgroundExecutor, Executor gameExecutor) {
+                public CompletableFuture<Void> reload(
+                    PreparationBarrier preparationBarrier, ResourceManager resourceManager, /*? if < 1.21.4 {*/ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler,/*? }*/ Executor backgroundExecutor, Executor gameExecutor) {
                     return BalloonStyleManager.INSTANCE.reload(preparationBarrier, resourceManager, /*? if < 1.21.4 {*/preparationsProfiler, reloadProfiler,/*? }*/ backgroundExecutor, gameExecutor);
                 }
+                //? } else {
+
+                /*@Override
+                public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier barrier, Executor applyExecutor) {
+                    return BalloonStyleManager.INSTANCE.reload(sharedState, executor, barrier, applyExecutor);
+                }
+
+                *///? }
             });
     }
 }

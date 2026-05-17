@@ -1,7 +1,11 @@
 package com.cerbon.talk_balloons.client
 
 import com.cerbon.talk_balloons.TalkBalloons
+//? if < 1.21.9 {
 import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager
+//? } else {
+/*import net.minecraft.client.resources.metadata.gui.GuiMetadataSection
+*///? }
 import com.cerbon.talk_balloons.client.resources.BalloonStyle
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
 import com.cerbon.talk_balloons.compat.CompatHandler
@@ -50,7 +54,9 @@ import net.minecraft.util.Mth
 import kotlin.math.min
 
 object BalloonRenderer {
+    //? if < 1.21.9 {
     @JvmField val SPRITE_MANAGER = BalloonSpriteManager(Minecraft.getInstance().textureManager)
+    //? }
 
     //? if >= 1.21.6 {
     /*private object BufferType {
@@ -111,8 +117,14 @@ object BalloonRenderer {
             return
 
         val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(TalkBalloons.config.balloonStyle)!!)
+        //? if < 1.21.9 {
         val balloonSprite = SPRITE_MANAGER.getSpriteAccess(style.balloon)
         val arrowSprite = SPRITE_MANAGER.getSpriteAccess(style.arrow)
+        //? } else {
+        /*val balloonAtlas = Minecraft.getInstance().atlasManager.getAtlasOrThrow(BalloonStyle.BALLOONS_ATLAS)
+        val balloonSprite = balloonAtlas.getSprite(style.balloon)
+        val arrowSprite = balloonAtlas.getSprite(style.arrow)
+        *///? }
 
         val consumer = BufferBuilder(this.bufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
 
@@ -185,7 +197,7 @@ object BalloonRenderer {
             RenderSystem.disableDepthTest()
             RenderSystem.disableBlend()
             RenderSystem.disablePolygonOffset()
-            //? } else if <= 1.21.8 {
+            //? } else {
             /*val renderTarget = Minecraft.getInstance().mainRenderTarget
             val encoder = RenderSystem.getDevice().createCommandEncoder()
 
@@ -251,7 +263,11 @@ object BalloonRenderer {
     }
 
     private fun blitSprite(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, width: Int, height: Int, color: Int = -1, z: Float = 0f, light: Int) {
+        //? if < 1.21.9 {
         val scaling = SPRITE_MANAGER.getMetadata(sprite).scaling
+        //? } else {
+        /*val scaling = sprite.contents().getAdditionalMetadata(GuiMetadataSection.TYPE).orElse(GuiMetadataSection.DEFAULT)!!.scaling
+        *///? }
 
         if (scaling is GuiSpriteScaling.Stretch) {
             this.blitDirect(pose, consumer, x, y, width.toFloat(), height.toFloat(), sprite.u0, sprite.v0, sprite.u1, sprite.v1, color, z, light)
