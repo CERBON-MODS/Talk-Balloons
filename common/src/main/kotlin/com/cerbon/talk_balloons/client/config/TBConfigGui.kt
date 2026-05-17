@@ -4,6 +4,7 @@ import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
 import com.cerbon.talk_balloons.config.SynchronizedConfigType
 import com.cerbon.talk_balloons.config.TBConfig
 import com.cerbon.talk_balloons.config.TBConfigManager
+import com.cerbon.talk_balloons.network.TBClientPacketHandler
 import com.cerbon.talk_balloons.util.TBConstants
 import dev.isxander.yacl3.api.Binding
 import dev.isxander.yacl3.api.controller.DropdownStringControllerBuilder
@@ -28,6 +29,7 @@ private fun <T> bindingFromSunset(name: String): Binding<T> {
 fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD_ID) {
     save {
         TBConfigManager.config.save()
+        TBClientPacketHandler.syncBalloonConfig()
     }
 
     val global by categories.registering {
