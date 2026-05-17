@@ -162,10 +162,10 @@ object BalloonRenderer {
 
         val balloonOpacity = ((if (isSneaking) TBConfig.balloonSneakingOpacity else TBConfig.balloonOpacity) * 255).toInt()
         val padding = configData.balloonPadding.orElse(config.balloonPadding)!!
-        val textColor = configData.textColor.orElse(config.textColor)!! or (balloonOpacity shl 24)
-        val balloonTint = (if (style.allowsTint)
+        val textColor = (configData.textColor.orElse(config.textColor)!! and 0x00FFFFFF) or (balloonOpacity shl 24)
+        val balloonTint = ((if (style.allowsTint)
             configData.balloonTint.orElse(config.balloonTint)!!
-        else 0xFFFFFF) or (balloonOpacity shl 24)
+        else 0xFFFFFF) and 0x00FFFFFF) or (balloonOpacity shl 24)
         val fontHeight = font.lineHeight
 
         var balloonDistance = 0f
