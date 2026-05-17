@@ -28,6 +28,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.ConfigScreenHandler;
 *///?}
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 @EventBusSubscriber(modid = TBConstants.MOD_ID,
     //? if < 1.21.6 {
@@ -84,6 +85,11 @@ public class TBClientEventsNeoForge {
         @SubscribeEvent
         public static void onPlayerDisconnect(ClientPlayerNetworkEvent.LoggingOut event) {
             TalkBalloonsClient.onClientDisconnect();
+        }
+
+        @SubscribeEvent
+        public static void onRenderEntities(RenderLevelStageEvent.AfterEntities event) {
+            BalloonRenderer.renderBalloons();
         }
     }
 }

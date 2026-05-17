@@ -61,7 +61,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<
         ITalkBalloonsPlayer playerMixin = (ITalkBalloonsPlayer) player;
         if (playerMixin.talk_balloons$getBalloonMessages() == null || playerMixin.talk_balloons$getBalloonMessages().isEmpty()) return;
 
-        BalloonRenderer.renderBalloons(poseStack, this.entityRenderDispatcher.camera.getYRot(), this.getFont(), playerMixin.talk_balloons$getBalloonMessages(), player.getBbHeight(), TalkBalloonsClient.syncedConfigs.getPlayerConfig(player.getUUID()), packedLight);
+        BalloonRenderer.submitBalloons(poseStack, this.entityRenderDispatcher.camera.getYRot(), this.getFont(), playerMixin.talk_balloons$getBalloonMessages(), player.getBbHeight(), TalkBalloonsClient.syncedConfigs.getPlayerConfig(player.getUUID()), packedLight);
     }
     //?} else if >= 1.21.3 {
 

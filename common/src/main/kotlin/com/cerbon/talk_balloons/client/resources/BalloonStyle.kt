@@ -1,6 +1,5 @@
 package com.cerbon.talk_balloons.client.resources
 
-
 import com.cerbon.talk_balloons.TalkBalloons
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder

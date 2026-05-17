@@ -15,7 +15,11 @@ import com.cerbon.talk_balloons.fabric.event.TBClientEvents;
 import com.cerbon.talk_balloons.fabric.event.TBServerEvents;
 import com.cerbon.talk_balloons.fabric.network.FabricNetworkRegistry;
 
+//? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation;
+ //?} else {
+/*import net.minecraft.resources.Identifier;
+*///?}
 import net.minecraft.server.packs.PackType;
 //? if < 1.21.4 {
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -44,7 +48,7 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
             .registerReloadListener(new IdentifiableResourceReloadListener() {
                 @Override
-                public ResourceLocation getFabricId() {
+                public /*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/ getFabricId() {
                     return BalloonSpriteManager.ID;
                 }
 
@@ -58,7 +62,7 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
             .registerReloadListener(new IdentifiableResourceReloadListener() {
                 @Override
-                public ResourceLocation getFabricId() {
+                public /*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/ getFabricId() {
                     return BalloonStyleManager.ID;
                 }
 

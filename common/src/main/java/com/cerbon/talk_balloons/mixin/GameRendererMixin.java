@@ -25,7 +25,13 @@ public abstract class GameRendererMixin {
 
     @Inject(method = "extractCamera", at = @At("TAIL"))
     private void extractCameraYawData(float partialTick, CallbackInfo ci, @Local CameraRenderState renderState) {
-        ((ICameraRenderState) renderState).talk_balloons$setYaw(this.mainCamera.getYRot());
+        ((ICameraRenderState) renderState).talk_balloons$setYaw(this.mainCamera
+            //? if <= 1.21.10 {
+            .getYRot()
+            //? } else {
+            /^.yRot()
+            ^///? }
+        );
     }
     *///? }
 }

@@ -17,17 +17,22 @@ import com.cerbon.talk_balloons.util.SynchronizedConfigData
 //? if <= 1.21.5 {
 import com.mojang.blaze3d.buffers.BufferType
 import com.mojang.blaze3d.buffers.BufferUsage
+import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.textures.GpuTexture
 import net.minecraft.client.renderer.texture.AbstractTexture
 //? }
 import com.mojang.blaze3d.pipeline.BlendFunction
 import com.mojang.blaze3d.pipeline.RenderPipeline
-import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.platform.DepthTestFunction
 import com.mojang.blaze3d.shaders.UniformType
 import java.util.OptionalDouble
 import java.util.OptionalInt
 *///? }
+
+//? if >= 1.21.11 {
+/*import com.mojang.blaze3d.textures.FilterMode
+*///? }
+
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.ByteBufferBuilder
@@ -35,6 +40,7 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.BufferUploader
 //? }
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
+import com.mojang.blaze3d.vertex.MeshData
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.blaze3d.vertex.VertexFormat
@@ -51,6 +57,7 @@ import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
+import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.math.min
 
 object BalloonRenderer {
@@ -110,9 +117,10 @@ object BalloonRenderer {
     *///? }
 
     private val bufferBuilder = ByteBufferBuilder(1 * 1024 * 1024) // 1 KiB of data max
+    private val renderQueue = ConcurrentLinkedQueue<MeshData>()
 
     @JvmStatic
-    fun renderBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, configData: SynchronizedConfigData, light: Int) {
+    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, configData: SynchronizedConfigData, light: Int) {
         if (messages.isEmpty())
             return
 
@@ -178,6 +186,15 @@ object BalloonRenderer {
 
         val meshData = consumer.build()
         if (meshData != null) {
+            this.renderQueue.add(meshData)
+        }
+    }
+
+    @JvmStatic
+    fun renderBalloons() {
+        while (this.renderQueue.isNotEmpty()) {
+            val meshData = this.renderQueue.remove()
+
             //? if <= 1.21.4 {
             RenderSystem.enableBlend()
             RenderSystem.defaultBlendFunc()
@@ -225,12 +242,19 @@ object BalloonRenderer {
                     /*RenderSystem.bindDefaultUniforms(pass)
                     *///? }
 
+                    //? if <= 1.21.10 {
                     pass.bindSampler("Sampler0", Minecraft.getInstance().textureManager.getTexture(BalloonStyle.BALLOONS_SHEET).textureView)
                     //? if <= 1.21.5 {
                     Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer()
                     pass.bindSampler("Sampler2", RenderSystem.getShaderTexture(2)!!)
                     //? } else {
                     /*pass.bindSampler("Sampler2", Minecraft.getInstance().gameRenderer.lightTexture().textureView)
+                    *///? }
+                    //? } else {
+                    /*val balloonsSheet = Minecraft.getInstance().textureManager.getTexture(BalloonStyle.BALLOONS_SHEET)
+                    val lightTexture = Minecraft.getInstance().gameRenderer.lightTexture()
+                    pass.bindTexture("Sampler0", balloonsSheet.textureView, balloonsSheet.sampler)
+                    pass.bindTexture("Sampler2", lightTexture.textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR))
                     *///? }
 
                     pass.setPipeline(BALLOON_PIPELINE)
