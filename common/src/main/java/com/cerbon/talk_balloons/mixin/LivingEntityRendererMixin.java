@@ -63,7 +63,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
         if (stateMixin.tb_getBalloons() == null)
             return;
 
-        BalloonRenderer.submitBalloons(poseStack, ((ICameraRenderState) cameraRenderState).talk_balloons$yaw(), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData(), renderState.lightCoords);
+        BalloonRenderer.submitBalloons(poseStack, ((ICameraRenderState) cameraRenderState).talk_balloons$yaw(), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight, stateMixin.tb_getPlayerConfigData(), renderState.lightCoords);
     }
     ^///?} else {
     @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"))
@@ -79,7 +79,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
         if (stateMixin.tb_getBalloons() == null)
             return;
 
-        BalloonRenderer.submitBalloons(poseStack, this.entityRenderDispatcher.camera.getYRot(), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight + 0.3f, stateMixin.tb_getPlayerConfigData(), packedLight);
+        BalloonRenderer.submitBalloons(poseStack, this.entityRenderDispatcher.camera.getYRot(), this.getFont(), stateMixin.tb_getBalloons(), playerRenderState.boundingBoxHeight, stateMixin.tb_getPlayerConfigData(), packedLight);
     }
     //?}
 }
