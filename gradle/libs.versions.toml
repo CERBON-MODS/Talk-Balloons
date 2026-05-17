@@ -1,6 +1,6 @@
 [versions]
 # https://fabricmc.net/develop/
-fabric-loom = "1.15.+"
+fabric-loom = "1.16.+"
 # https://projects.neoforged.net/neoforged/moddevgradle
 moddevgradle = "2.0.140"
 # https://kotlinlang.org/docs/releases.html
