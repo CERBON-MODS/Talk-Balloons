@@ -27,5 +27,21 @@
     "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.text_color": "Synchronize text color?",
     "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.balloon_tint": "Synchronize balloon tint?",
     "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.balloon_padding": "Synchronize balloon padding?",
-    "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.only_display_balloons": "Synchronize balloon-only messages?"
+    "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.only_display_balloons": "Synchronize balloon-only messages?",
+
+    "talk_balloons.config.unit.second": "%s second",
+    "talk_balloons.config.unit.seconds": "%s seconds",
+    "talk_balloons.config.unit.pixel": "%s px",
+    "talk_balloons.config.unit.pixels": "%s px",
+    "talk_balloons.config.unit.block": "%s block",
+    "talk_balloons.config.unit.blocks": "%s blocks",
+
+    "talk_balloons.style.talk_balloons.classic/circular": "Classic (Circular)",
+    "talk_balloons.style.talk_balloons.classic/rounded": "Classic (Rounded Rectangular)",
+    "talk_balloons.style.talk_balloons.classic/rounded_1px": "Classic (Rounded Rectangular, 1px)",
+    "talk_balloons.style.talk_balloons.classic/squared": "Classic (Rectangular)",
+    "talk_balloons.style.talk_balloons.golden/circular": "Dark and Gold (Circular)",
+    "talk_balloons.style.talk_balloons.golden/rounded": "Dark and Gold (Rounded Rectangular)",
+    "talk_balloons.style.talk_balloons.golden/rounded_1px": "Dark and Gold (Rounded Rectangular, 1px)",
+    "talk_balloons.style.talk_balloons.golden/squared": "Dark and Gold (Rectangular)"
 }

@@ -1,6 +1,9 @@
 package com.cerbon.talk_balloons.client.config
 
-import com.cerbon.talk_balloons.TalkBalloons
+//? if < 1.21.11 {
+//?} else {
+/*import net.minecraft.resources.Identifier
+ *///?}
 import com.cerbon.talk_balloons.client.BalloonRenderer
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
 import com.cerbon.talk_balloons.config.ITBConfig
@@ -14,14 +17,10 @@ import com.cerbon.talk_balloons.util.TBConstants
 import com.google.common.collect.Queues
 import com.mojang.blaze3d.vertex.MeshData
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.math.Axis
 import dev.isxander.yacl3.api.Binding
-import dev.isxander.yacl3.api.ConfigCategory
 import dev.isxander.yacl3.api.Controller
 import dev.isxander.yacl3.api.Option
-import dev.isxander.yacl3.api.OptionEventListener
 import dev.isxander.yacl3.api.controller.ControllerBuilder
-import dev.isxander.yacl3.api.controller.DropdownStringControllerBuilder
 import dev.isxander.yacl3.api.utils.Dimension
 import dev.isxander.yacl3.dsl.*
 import dev.isxander.yacl3.gui.AbstractWidget
@@ -33,15 +32,12 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-//? if < 1.21.11 {
-import net.minecraft.resources.ResourceLocation as Identifier
-//?} else {
-/*import net.minecraft.resources.Identifier
- *///?}
 import java.awt.Color
-import java.util.EnumSet
+import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.function.Supplier
 import kotlin.reflect.KProperty
+import net.minecraft.resources.ResourceLocation as Identifier
 
 private fun <T> bindingFromSunset(name: String): Binding<T> {
     val value = TBConfigManager.config.rootCategory.getValueById<T>(name)!!
@@ -112,6 +108,24 @@ class IdentifierDropdownController(option: Option<Identifier>, values: List<Iden
     override fun provideWidget(screen: YACLScreen, widgetDimension: Dimension<Int>): AbstractWidget {
         return IdentifierDropdownControllerElement(this, screen, widgetDimension)
     }
+
+    override fun getValidValue(value: String?, offset: Int): String {
+        if (offset == -1) return this.string
+
+        val valueLowerCase = value!!.lowercase()
+        return getAllowedValues(value).stream()
+            .filter { it.lowercase(Locale.getDefault()).contains(valueLowerCase) }
+            .sorted { s1, s2 ->
+                val s1LowerCase = s1.lowercase()
+                val s2LowerCase = s2.lowercase()
+                if (s1LowerCase.startsWith(valueLowerCase) && !s2LowerCase.startsWith(valueLowerCase)) return@sorted -1
+                if (!s1LowerCase.startsWith(valueLowerCase) && s2LowerCase.startsWith(valueLowerCase)) return@sorted 1
+                s1.compareTo(s2)
+            }
+            .skip(offset.toLong())
+            .findFirst()
+            .orElseGet(this::getString)
+    }
 }
 
 class IdentifierDropdownControllerElement(private val controller: IdentifierDropdownController, screen: YACLScreen, dim: Dimension<Int>) : AbstractDropdownControllerElement<Identifier, String>(controller, screen, dim) {
@@ -172,8 +186,8 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
             get() = categories["global"]["style"].futureRef<Color>("textColor").get().pendingValue().rgb
         override val balloonTint: Int
             get() = categories["global"]["style"].futureRef<Color>("balloonTint").get().pendingValue().rgb
-        override val balloonOpacity: Int by categories["global"]["style"]
-        override val balloonSneakingOpacity: Int by categories["global"]["style"]
+        override val balloonOpacity: Float by categories["global"]["style"]
+        override val balloonSneakingOpacity: Float by categories["global"]["style"]
         override val showOwnBalloon: Boolean by categories["global"]["preferences"]
         override val onlyDisplayBalloons: Boolean by categories["global"]["preferences"]
         override val syncedConfigs: EnumSet<SynchronizedConfigType> by TBConfig::syncedConfigs
@@ -194,7 +208,7 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                     .xmap(ITBConfig.IdentifierHolder::identifier, ITBConfig::IdentifierHolder)
 
                 controller {
-                    IdentifierDropdownControllerBuilder(it, BalloonStyleManager.styleIds.toList(), "")
+                    IdentifierDropdownControllerBuilder(it, BalloonStyleManager.styleIds.toList(), "talk_balloons.style")
                 }
             }
 
@@ -229,9 +243,10 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
 
                 balloonStyle.addEventListener { option, _ ->
                     val id = option.pendingValue()
+                    val tintRef = options.futureRef<Color>("balloonTint").get()
 
                     if (id != null) {
-                        option.setAvailable(BalloonStyleManager.getStyleById(id).allowsTint)
+                        tintRef.setAvailable(BalloonStyleManager.getStyleById(id).allowsTint)
                     }
                 }
             }
@@ -242,7 +257,9 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("balloonOpacity")
-                controller = slider(30..255)
+                controller = slider(0.15f..1f, formatter = { value ->
+                    Component.literal("${(value * 100).toInt()}%")
+                })
             }
 
             val balloonSneakingOpacity by options.registering {
@@ -251,7 +268,9 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("balloonSneakingOpacity")
-                controller = slider(30..255)
+                controller = slider(0.15f..1f, formatter = { value ->
+                    Component.literal("${(value * 100).toInt()}%")
+                })
             }
 
             val balloonsHeightOffset by options.registering {
@@ -260,7 +279,9 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("balloonsHeightOffset")
-                controller = slider(range = 0f..16f, step = 0.1f)
+                controller = slider(range = 0f..16f, step = 0.1f, formatter = { value ->
+                    Component.translatable("talk_balloons.config.unit.block${if (value == 1f) "" else "s"}", value)
+                })
             }
 
             val distanceBetweenBalloons by options.registering {
@@ -269,7 +290,9 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("distanceBetweenBalloons")
-                controller = slider(range = 0..20)
+                controller = slider(range = 0..20, formatter = { value ->
+                    Component.translatable("talk_balloons.config.unit.pixel${if (value == 1) "" else "s"}", value)
+                })
             }
 
             val minBalloonWidth by options.registering {
@@ -278,7 +301,9 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("minBalloonWidth")
-                controller = slider(range = 8..512, step = 8)
+                controller = slider(range = 8..512, step = 8, formatter = { value ->
+                    Component.translatable("talk_balloons.config.unit.pixel${if (value == 1) "" else "s"}", value)
+                })
             }
 
             val maxBalloonWidth by options.registering {
@@ -287,7 +312,9 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("maxBalloonWidth")
-                controller = slider(range = 8..512, step = 8)
+                controller = slider(range = 8..512, step = 8, formatter = { value ->
+                    Component.translatable("talk_balloons.config.unit.pixel${if (value == 1) "" else "s"}", value)
+                })
             }
 
             val balloonPadding by options.registering {
@@ -296,7 +323,9 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("balloonPadding")
-                controller = slider(range = 0..64, step = 1)
+                controller = slider(range = 0..64, step = 1, formatter = { value ->
+                    Component.translatable("talk_balloons.config.unit.pixel${if (value == 1) "" else "s"}", value)
+                })
             }
         }
 
@@ -308,7 +337,9 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
 
             val balloonAge by options.registering {
                 binding = bindingFromSunset("balloonAge")
-                controller = slider(range = 0..120, step = 1)
+                controller = slider(range = 0..120, step = 1, formatter = { value ->
+                    Component.translatable("talk_balloons.config.unit.second${if (value == 1) "" else "s"}", value)
+                })
             }
 
             val showOwnBalloon by options.registering {

@@ -24,8 +24,8 @@ object TBConfig : ITBConfig {
     override var textColor: Int = 0x141414 // RGB-encoded
     override var balloonTint: Int = 0xF1F6F8 // RGB-encoded
 
-    override var balloonOpacity: Int = 240
-    override var balloonSneakingOpacity: Int = 165
+    override var balloonOpacity: Float = 0.95f
+    override var balloonSneakingOpacity: Float = 0.65f
 
     override var showOwnBalloon: Boolean = true
     override var onlyDisplayBalloons: Boolean = false

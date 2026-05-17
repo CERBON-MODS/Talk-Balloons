@@ -8,8 +8,8 @@ import net.minecraft.resources.ResourceLocation as Identifier
  *///?}
 
 object BalloonStyles {
-    @JvmField val CIRCULAR: Identifier = TalkBalloons.id("circular")
-    @JvmField val ROUNDED: Identifier = TalkBalloons.id("rounded")
-    @JvmField val ROUNDED_1PX: Identifier = TalkBalloons.id("rounded_1px")
-    @JvmField val SQUARED: Identifier = TalkBalloons.id("squared")
+    @JvmField val CIRCULAR: Identifier = TalkBalloons.id("classic/circular")
+    @JvmField val ROUNDED: Identifier = TalkBalloons.id("classic/rounded")
+    @JvmField val ROUNDED_1PX: Identifier = TalkBalloons.id("classic/rounded_1px")
+    @JvmField val SQUARED: Identifier = TalkBalloons.id("classic/squared")
 }

@@ -25,12 +25,18 @@ object TBConfigManager {
         integer("balloonAge", 0, 120, TBConfig::balloonAge)
             .comment("In seconds")
 
-        integer("balloonOpacity", 30, 255, TBConfig::balloonOpacity)
-        integer("balloonSneakingOpacity", 30, 255, TBConfig::balloonSneakingOpacity)
+        value("balloonOpacity", Codec.withAlternative(
+            Codec.floatRange(0.15f, 1f),
+            Codec.INT.xmap({ it / 255f }, { (it * 255).toInt() })
+        ), TBConfig::balloonOpacity)
+        value("balloonSneakingOpacity", Codec.withAlternative(
+            Codec.floatRange(0.15f, 1f),
+            Codec.INT.xmap({ it / 255f }, { (it * 255).toInt() })
+        ), TBConfig::balloonSneakingOpacity)
 
         value("balloonStyle", Codec.withAlternative(
             // convert old balloon style to new variant
-            Codec.STRING.comapFlatMap({ oldId -> if (oldId.contains(":")) DataResult.error { "This is an actual ID!" } else DataResult.success(TalkBalloons.id(oldId.lowercase())) }, Identifier::toString),
+            Codec.STRING.comapFlatMap({ oldId -> if (oldId.contains(":")) DataResult.error { "This is an actual ID!" } else DataResult.success(TalkBalloons.id("classic/${oldId.lowercase()}")) }, Identifier::toString),
             Identifier.CODEC
         ).xmap(::IdentifierHolder, IdentifierHolder::identifier), TBConfig::balloonStyle)
         integer("textColor", TBConfig::textColor)

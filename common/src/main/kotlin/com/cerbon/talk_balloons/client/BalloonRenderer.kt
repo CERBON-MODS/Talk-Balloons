@@ -160,7 +160,7 @@ object BalloonRenderer {
 
         val consumer = BufferBuilder(this.bufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
 
-        val balloonOpacity = if (isSneaking) TBConfig.balloonSneakingOpacity else TBConfig.balloonOpacity
+        val balloonOpacity = ((if (isSneaking) TBConfig.balloonSneakingOpacity else TBConfig.balloonOpacity) * 255).toInt()
         val padding = configData.balloonPadding.orElse(config.balloonPadding)!!
         val textColor = configData.textColor.orElse(config.textColor)!! or (balloonOpacity shl 24)
         val balloonTint = (if (style.allowsTint)

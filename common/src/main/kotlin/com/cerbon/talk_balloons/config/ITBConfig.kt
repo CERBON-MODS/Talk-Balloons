@@ -23,8 +23,8 @@ interface ITBConfig {
     val textColor: Int
     val balloonTint: Int
     
-    val balloonOpacity: Int
-    val balloonSneakingOpacity: Int
+    val balloonOpacity: Float
+    val balloonSneakingOpacity: Float
     
     val showOwnBalloon: Boolean
     val onlyDisplayBalloons: Boolean

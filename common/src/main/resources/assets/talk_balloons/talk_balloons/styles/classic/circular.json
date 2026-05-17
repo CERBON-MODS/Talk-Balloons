@@ -1,0 +1,6 @@
+{
+    "arrow": "talk_balloons:classic/arrow",
+    "balloon": "talk_balloons:classic/circular",
+    "allows_tint": true,
+    "margin": 1
+}
