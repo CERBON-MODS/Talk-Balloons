@@ -134,13 +134,13 @@ fun Project.setupCommon(module: String) {
         }
 
         tasks.named<Jar>("jar") {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
             from(zipTree(commonProj.tasks.named<Jar>("jar").get().archiveFile))
             archiveClassifier = "dev"
         }
 
         tasks.named<Jar>("sourcesJar") {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
             from(zipTree(commonProj.tasks.named<Jar>("sourcesJar").get().archiveFile))
         }
 
@@ -151,12 +151,12 @@ fun Project.setupCommon(module: String) {
                 archiveClassifier = null
             }
 
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
             from(zipTree(tasks.named<Jar>("jar").get().archiveFile))
         }
 
         tasks.named<ProcessResources>("processResources") {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
             from(commonProj.extensions.getByName<SourceSetContainer>("sourceSets").named("main").get().resources)
         }
 
