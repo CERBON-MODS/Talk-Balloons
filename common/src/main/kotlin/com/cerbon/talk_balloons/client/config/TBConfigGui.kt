@@ -1,6 +1,7 @@
 package com.cerbon.talk_balloons.client.config
 
 //? if < 1.21.11 {
+import net.minecraft.resources.ResourceLocation as Identifier
 //?} else {
 /*import net.minecraft.resources.Identifier
  *///?}
@@ -35,9 +36,7 @@ import net.minecraft.network.chat.Component
 import java.awt.Color
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.function.Supplier
 import kotlin.reflect.KProperty
-import net.minecraft.resources.ResourceLocation as Identifier
 
 private fun <T> bindingFromSunset(name: String): Binding<T> {
     val value = TBConfigManager.config.rootCategory.getValueById<T>(name)!!
