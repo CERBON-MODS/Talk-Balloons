@@ -40,15 +40,18 @@ public abstract class PlayerMixin extends LivingEntity implements ITalkBalloonsP
         talk_balloons$tryInitHistoricalData();
 
         var balloonMessages = this.talk_balloons$getBalloonMessages();
-        var currentTick = new AtomicInteger(0);
-        talk_balloons$queuedTickEvents.add(() -> {
-            if (currentTick.getAndIncrement() >= timeToRemove) {
-                balloonMessages.remove(text);
-                return true;
-            }
 
-            return false;
-        });
+        if (timeToRemove > 0) {
+            var currentTick = new AtomicInteger(0);
+            talk_balloons$queuedTickEvents.add(() -> {
+                if (currentTick.getAndIncrement() >= timeToRemove) {
+                    balloonMessages.remove(text);
+                    return true;
+                }
+
+                return false;
+            });
+        }
 
         balloonMessages.add(text);
     }
