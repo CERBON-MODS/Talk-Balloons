@@ -43,5 +43,9 @@
     "talk_balloons.style.talk_balloons.golden/circular": "Dark and Gold (Circular)",
     "talk_balloons.style.talk_balloons.golden/rounded": "Dark and Gold (Rounded Rectangular)",
     "talk_balloons.style.talk_balloons.golden/rounded_1px": "Dark and Gold (Rounded Rectangular, 1px)",
-    "talk_balloons.style.talk_balloons.golden/squared": "Dark and Gold (Rectangular)"
+    "talk_balloons.style.talk_balloons.golden/squared": "Dark and Gold (Rectangular)",
+
+    "talk_balloons.config.preview.short": "Short text",
+    "talk_balloons.config.preview.long": "Much longer text for comedic effect and for spacing reasons, I guess. How many characters do we think can fit here?",
+    "talk_balloons.config.preview.tiny": "..."
 }

@@ -50,9 +50,9 @@ const val FULL_BRIGHT = 15728880
 
 class GuiBalloonRenderer(private val config: ITBConfig, private val sneaking: Boolean = false) : ImageRenderer {
     val messages = HistoricalData<Component>(3).apply {
-        add(Component.literal("Short text"))
-        add(Component.literal("Much longer text for comedic effect and for spacing reasons, I guess. How many characters do we think can fit here?"))
-        add(Component.literal("..."))
+        add(Component.translatable("talk_balloons.config.preview.short"))
+        add(Component.translatable("talk_balloons.config.preview.long"))
+        add(Component.translatable("talk_balloons.config.preview.tiny"))
     }
 
     override fun render(graphics: GuiGraphics, x: Int, y: Int, renderWidth: Int, tickDelta: Float): Int {
