@@ -1,7 +1,7 @@
 package com.cerbon.talk_balloons.config
 
 import com.cerbon.talk_balloons.TalkBalloons
-import com.cerbon.talk_balloons.config.TBConfig.IdentifierHolder
+import com.cerbon.talk_balloons.config.ITBConfig.IdentifierHolder
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 //? if < 1.21.11 {
@@ -12,11 +12,6 @@ import net.minecraft.resources.ResourceLocation as Identifier
 import xyz.bluspring.sunset.SunsetConfig
 import xyz.bluspring.sunset.serializer.JsonWithCommentsSerializer
 import kotlin.io.path.Path
-import kotlin.reflect.KMutableProperty
-import kotlin.reflect.KParameter
-import kotlin.reflect.KType
-import kotlin.reflect.KTypeParameter
-import kotlin.reflect.KVisibility
 
 object TBConfigManager {
     val path = Path("config/talk_balloons.json5")
@@ -24,8 +19,8 @@ object TBConfigManager {
         float("balloonsHeightOffset", TBConfig::balloonsHeightOffset)
         integer("distanceBetweenBalloons", TBConfig::distanceBetweenBalloons)
         integer("maxBalloons", 1, 16, TBConfig::maxBalloons)
-        integer("minBalloonWidth", 0, 512, TBConfig::minBalloonWidth)
-        integer("maxBalloonWidth", 0, 512, TBConfig::maxBalloonWidth)
+        integer("minBalloonWidth", 8, 512, TBConfig::minBalloonWidth)
+        integer("maxBalloonWidth", 8, 512, TBConfig::maxBalloonWidth)
         integer("balloonPadding", 0, 64, TBConfig::balloonPadding)
         integer("balloonAge", 0, 120, TBConfig::balloonAge)
             .comment("In seconds")

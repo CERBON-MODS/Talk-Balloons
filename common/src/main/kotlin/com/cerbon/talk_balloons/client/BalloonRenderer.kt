@@ -10,6 +10,7 @@ import com.cerbon.talk_balloons.client.resources.BalloonStyle
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
 import com.cerbon.talk_balloons.compat.CompatHandler
 import com.cerbon.talk_balloons.compat.iris.IrisCompat
+import com.cerbon.talk_balloons.config.ITBConfig
 import com.cerbon.talk_balloons.config.TBConfig
 import com.cerbon.talk_balloons.util.HistoricalData
 import com.cerbon.talk_balloons.util.SynchronizedConfigData
@@ -64,6 +65,7 @@ import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
+import java.util.AbstractQueue
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.math.min
 
@@ -132,11 +134,21 @@ object BalloonRenderer {
     private val renderQueue = ConcurrentLinkedQueue<MeshData>()
 
     @JvmStatic
-    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int) {
+    fun calculateEstimatedBalloonHeight(messages: List<Component>, font: Font, configData: SynchronizedConfigData, config: ITBConfig): Int {
+        val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(config.balloonStyle.identifier)!!)
+        val padding = configData.balloonPadding.orElse(config.balloonPadding)!!
+        val fontHeight = font.lineHeight
+        val dividedMessages = messages.map { font.split(it, config.maxBalloonWidth) }
+
+        return dividedMessages.sumOf { ((padding * 2) + style.margins.verticalMargins + it.size * fontHeight) + config.distanceBetweenBalloons }
+    }
+
+    @JvmStatic @JvmOverloads
+    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int, renderQueue: AbstractQueue<MeshData> = this.renderQueue, config: ITBConfig = TalkBalloons.config) {
         if (messages.isEmpty())
             return
 
-        val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(TalkBalloons.config.balloonStyle.identifier)!!)
+        val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(config.balloonStyle.identifier)!!)
         //? if < 1.21.9 {
         val balloonSprite = SPRITE_MANAGER.getSpriteAccess(style.balloon)
         val arrowSprite = SPRITE_MANAGER.getSpriteAccess(style.arrow)
@@ -149,10 +161,10 @@ object BalloonRenderer {
         val consumer = BufferBuilder(this.bufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
 
         val balloonOpacity = if (isSneaking) TBConfig.balloonSneakingOpacity else TBConfig.balloonOpacity
-        val padding = configData.balloonPadding.orElse(TalkBalloons.config.balloonPadding)!!
-        val textColor = configData.textColor.orElse(TalkBalloons.config.textColor)!! or (balloonOpacity shl 24)
+        val padding = configData.balloonPadding.orElse(config.balloonPadding)!!
+        val textColor = configData.textColor.orElse(config.textColor)!! or (balloonOpacity shl 24)
         val balloonTint = (if (style.allowsTint)
-            configData.balloonTint.orElse(TalkBalloons.config.balloonTint)!!
+            configData.balloonTint.orElse(config.balloonTint)!!
         else 0xFFFFFF) or (balloonOpacity shl 24)
         val fontHeight = font.lineHeight
 
@@ -161,16 +173,16 @@ object BalloonRenderer {
         messages.asReversed().forEachIndexed { index, message ->
             poseStack.pushPose()
 
-            poseStack.translate(0.0f, playerHeight + TalkBalloons.config.balloonsHeightOffset, 0.0f)
+            poseStack.translate(0.0f, playerHeight + config.balloonsHeightOffset, 0.0f)
             poseStack.mulPose(Axis.YP.rotationDegrees(-cameraYaw))
             poseStack.scale(-0.025f, -0.025f, -0.025f)
 
-            val dividedMessage = font.split(message, TalkBalloons.config.maxBalloonWidth)
+            val dividedMessage = font.split(message, config.maxBalloonWidth)
             val greatestTextWidth = dividedMessage.maxOf { font.width(it) }
 
             var textDistance = 0
 
-            val balloonWidth = Mth.clamp(greatestTextWidth, TalkBalloons.config.minBalloonWidth, TalkBalloons.config.maxBalloonWidth)
+            val balloonWidth = Mth.clamp(greatestTextWidth, config.minBalloonWidth, config.maxBalloonWidth)
             val actualBalloonWidth = balloonWidth + (padding * 2) + style.margins.horizontalMargins
             val baseX = -(actualBalloonWidth / 2f)
             val baseY = -((padding - 1f).coerceAtLeast(0f))
@@ -192,21 +204,21 @@ object BalloonRenderer {
                 blitSprite(poseStack.last(), consumer, arrowSprite, -(arrowSprite.contents().width() / 2f), -1f, arrowSprite.contents().width(), arrowSprite.contents().height(), balloonTint, 0.01f, light)
             }
 
-            balloonDistance += balloonHeight + TalkBalloons.config.distanceBetweenBalloons
+            balloonDistance += balloonHeight + config.distanceBetweenBalloons
 
             poseStack.popPose()
         }
 
         val meshData = consumer.build()
         if (meshData != null) {
-            this.renderQueue.add(meshData)
+            renderQueue.add(meshData)
         }
     }
 
-    @JvmStatic
-    fun renderBalloons() {
-        while (this.renderQueue.isNotEmpty()) {
-            val meshData = this.renderQueue.remove()
+    @JvmStatic @JvmOverloads
+    fun renderBalloons(queue: AbstractQueue<MeshData> = this.renderQueue) {
+        while (queue.isNotEmpty()) {
+            val meshData = queue.remove()
 
             //? if <= 1.21.4 {
             RenderSystem.enableBlend()
@@ -290,9 +302,9 @@ object BalloonRenderer {
 
                 indexBuffer?.close()
             }
+            *///? }
 
             meshData.close()
-            *///? }
         }
     }
 

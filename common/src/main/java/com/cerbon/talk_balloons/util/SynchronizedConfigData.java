@@ -3,6 +3,7 @@ package com.cerbon.talk_balloons.util;
 import java.util.Optional;
 
 import com.cerbon.talk_balloons.TalkBalloons;
+import com.cerbon.talk_balloons.config.ITBConfig;
 import com.cerbon.talk_balloons.config.SynchronizedConfigType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -21,6 +22,7 @@ public record SynchronizedConfigData(
     Optional<Integer> balloonPadding,
     Optional<Boolean> onlyDisplayBalloons
 ) {
+    public static final SynchronizedConfigData EMPTY = new SynchronizedConfigData(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
     public static final StreamCodec<FriendlyByteBuf, SynchronizedConfigData> NETWORK_CODEC = StreamCodec.composite(
         ByteBufCodecs.optional(/*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/.STREAM_CODEC), SynchronizedConfigData::balloonStyle,
         ByteBufCodecs.optional(ByteBufCodecs.VAR_INT), SynchronizedConfigData::textColor,
@@ -29,16 +31,20 @@ public record SynchronizedConfigData(
         ByteBufCodecs.optional(ByteBufCodecs.BOOL), SynchronizedConfigData::onlyDisplayBalloons,
         SynchronizedConfigData::new
     );
-
+    
     public static SynchronizedConfigData getDefault() {
-        var syncedConfigs = TalkBalloons.config.getSyncedConfigs();
+        return getDefault(TalkBalloons.config);
+    }
+
+    public static SynchronizedConfigData getDefault(ITBConfig config) {
+        var syncedConfigs = config.getSyncedConfigs();
 
         return new SynchronizedConfigData(
-            syncedConfigs.contains(SynchronizedConfigType.BALLOON_STYLE) ? Optional.of(TalkBalloons.config.getBalloonStyle().identifier()) : Optional.empty(),
-            syncedConfigs.contains(SynchronizedConfigType.TEXT_COLOR) ? Optional.of(TalkBalloons.config.getTextColor()) : Optional.empty(),
-            syncedConfigs.contains(SynchronizedConfigType.BALLOON_TINT) ? Optional.of(TalkBalloons.config.getBalloonTint()) : Optional.empty(),
-            syncedConfigs.contains(SynchronizedConfigType.BALLOON_PADDING) ? Optional.of(TalkBalloons.config.getBalloonPadding()) : Optional.empty(),
-            syncedConfigs.contains(SynchronizedConfigType.ONLY_DISPLAY_BALLOONS) ? Optional.of(TalkBalloons.config.getOnlyDisplayBalloons()) : Optional.empty()
+            syncedConfigs.contains(SynchronizedConfigType.BALLOON_STYLE) ? Optional.of(config.getBalloonStyle().identifier()) : Optional.empty(),
+            syncedConfigs.contains(SynchronizedConfigType.TEXT_COLOR) ? Optional.of(config.getTextColor()) : Optional.empty(),
+            syncedConfigs.contains(SynchronizedConfigType.BALLOON_TINT) ? Optional.of(config.getBalloonTint()) : Optional.empty(),
+            syncedConfigs.contains(SynchronizedConfigType.BALLOON_PADDING) ? Optional.of(config.getBalloonPadding()) : Optional.empty(),
+            syncedConfigs.contains(SynchronizedConfigType.ONLY_DISPLAY_BALLOONS) ? Optional.of(config.getOnlyDisplayBalloons()) : Optional.empty()
         );
     }
 }

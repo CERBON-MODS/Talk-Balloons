@@ -8,34 +8,27 @@ import net.minecraft.resources.ResourceLocation as Identifier
 /*import net.minecraft.resources.Identifier
  *///?}
 
-object TBConfig {
-    var balloonsHeightOffset: Float = 0.4f
-    var distanceBetweenBalloons: Int = 3
+object TBConfig : ITBConfig {
+    override var balloonsHeightOffset: Float = 0.4f
+    override var distanceBetweenBalloons: Int = 3
 
-    var maxBalloons: Int = 7
+    override var maxBalloons: Int = 7
 
-    var minBalloonWidth: Int = 13
-    var maxBalloonWidth: Int = 180
+    override var minBalloonWidth: Int = 8
+    override var maxBalloonWidth: Int = 180
 
-    var balloonPadding: Int = 2
-    var balloonAge: Int = 15
-    var balloonStyle: IdentifierHolder = BalloonStyles.ROUNDED.holder
+    override var balloonPadding: Int = 2
+    override var balloonAge: Int = 15
+    override var balloonStyle: ITBConfig.IdentifierHolder = BalloonStyles.ROUNDED.holder
 
-    var textColor: Int = 0x141414 // RGB-encoded
-    var balloonTint: Int = 0xF1F6F8 // RGB-encoded
+    override var textColor: Int = 0x141414 // RGB-encoded
+    override var balloonTint: Int = 0xF1F6F8 // RGB-encoded
 
-    var balloonOpacity: Int = 240
-    var balloonSneakingOpacity: Int = 165
+    override var balloonOpacity: Int = 240
+    override var balloonSneakingOpacity: Int = 165
 
-    var showOwnBalloon: Boolean = true
-    var onlyDisplayBalloons: Boolean = false
+    override var showOwnBalloon: Boolean = true
+    override var onlyDisplayBalloons: Boolean = false
 
-    var syncedConfigs: EnumSet<SynchronizedConfigType> = EnumSet.allOf(SynchronizedConfigType::class.java)
-
-    // Workaround to https://github.com/FabricMC/tiny-remapper/issues/165
-    @JvmRecord
-    data class IdentifierHolder(val identifier: Identifier)
-
-    val Identifier.holder: IdentifierHolder
-        get() = IdentifierHolder(this)
+    override var syncedConfigs: EnumSet<SynchronizedConfigType> = EnumSet.allOf(SynchronizedConfigType::class.java)
 }

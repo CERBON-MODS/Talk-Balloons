@@ -1,5 +1,6 @@
 package com.cerbon.talk_balloons;
 
+import com.cerbon.talk_balloons.config.ITBConfig;
 import com.cerbon.talk_balloons.config.TBConfig;
 import com.cerbon.talk_balloons.config.TBConfigManager;
 import com.cerbon.talk_balloons.network.TBPackets;
@@ -17,7 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.*;
 
 public class TalkBalloons {
-	public static TBConfig config = TBConfig.INSTANCE;
+	public static ITBConfig config = TBConfig.INSTANCE;
 	public static final SyncedConfigManager serverSyncedConfigs = new SyncedConfigManager();
 	private static final Set<UUID> playersWithSupport = Collections.synchronizedSet(new HashSet<>());
 
