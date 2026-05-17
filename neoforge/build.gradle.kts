@@ -21,4 +21,5 @@ dependencies {
     api("dev.nyon:KotlinLangForge:${libs.versions.kotlinlangforge.get()}-${klfLangVersion}+neoforge")
     api(libs.sunset)
     jarJar(libs.sunset)
+    jarJar(api("dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-neoforge")!!)
 }

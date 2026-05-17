@@ -92,6 +92,10 @@ fun Project.setupCommon(module: String) {
                         slug = "kotlin-lang-forge"
                     }
                 }
+
+                embeds {
+                    slug = "yacl"
+                }
             }
 
             curseforge {
@@ -111,6 +115,10 @@ fun Project.setupCommon(module: String) {
                     requires {
                         slug = "kotlinlangforge"
                     }
+                }
+
+                embeds {
+                    slug = "yacl"
                 }
             }
         }

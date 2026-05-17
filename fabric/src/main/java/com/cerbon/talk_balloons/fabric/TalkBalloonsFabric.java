@@ -6,6 +6,7 @@ import java.util.concurrent.Executor;
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.client.resources.BalloonStyle;
+import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
 import com.cerbon.talk_balloons.compat.CompatHandler;
 import com.cerbon.talk_balloons.fabric.event.TBClientEvents;
 import com.cerbon.talk_balloons.fabric.event.TBServerEvents;
@@ -47,6 +48,19 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
                 @Override
                 public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
                     return BalloonRenderer.SPRITE_MANAGER.reload(preparationBarrier, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor);
+                }
+            });
+
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
+            .registerReloadListener(new IdentifiableResourceReloadListener() {
+                @Override
+                public ResourceLocation getFabricId() {
+                    return TalkBalloons.id("balloon_style_manager");
+                }
+
+                @Override
+                public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
+                    return BalloonStyleManager.INSTANCE.reload(preparationBarrier, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor);
                 }
             });
     }

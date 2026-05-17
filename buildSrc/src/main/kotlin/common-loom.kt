@@ -49,7 +49,7 @@ fun Project.setupCommonLoom(module: String) {
 }
 
 fun Project.moddedImplementation(notation: Any): Dependency? {
-    return if (this.shouldRemap()) {
+    return if (this.shouldRemap() && this.configurations.named("modImplementation").orNull != null) {
         this.dependencies.add("modImplementation", notation)
     } else {
         this.dependencies.add("implementation", notation)
@@ -57,7 +57,7 @@ fun Project.moddedImplementation(notation: Any): Dependency? {
 }
 
 fun Project.moddedCompileOnly(notation: Any): Dependency? {
-    return if (this.shouldRemap()) {
+    return if (this.shouldRemap() && this.configurations.named("modCompileOnly").orNull != null) {
         this.dependencies.add("modCompileOnly", notation)
     } else {
         this.dependencies.add("compileOnly", notation)
@@ -65,7 +65,7 @@ fun Project.moddedCompileOnly(notation: Any): Dependency? {
 }
 
 fun Project.moddedRuntimeOnly(notation: Any): Dependency? {
-    return if (this.shouldRemap()) {
+    return if (this.shouldRemap() && this.configurations.named("modRuntimeOnly").orNull != null) {
         this.dependencies.add("modRuntimeOnly", notation)
     } else {
         this.dependencies.add("runtimeOnly", notation)

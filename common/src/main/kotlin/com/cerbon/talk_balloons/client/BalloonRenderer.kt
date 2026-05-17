@@ -35,16 +35,16 @@ object BalloonRenderer {
         if (messages.isEmpty())
             return
 
-        val style = BalloonStyleManager.getStyleById(configData.balloonStyle)
+        val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(TalkBalloons.config.balloonStyle)!!)
         val balloonSprite = SPRITE_MANAGER.getSpriteAccess(style.balloon)
         val arrowSprite = SPRITE_MANAGER.getSpriteAccess(style.arrow)
 
         val consumer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
 
-        val padding = configData.balloonPadding
-        val textColor = configData.textColor or (0xFF shl 24)
+        val padding = configData.balloonPadding.orElse(TalkBalloons.config.balloonPadding)
+        val textColor = configData.textColor.orElse(TalkBalloons.config.textColor)!! or (0xFF shl 24)
         val balloonTint = if (style.allowsTint)
-            configData.balloonTint or (0xFF shl 24)
+            configData.balloonTint.orElse(TalkBalloons.config.balloonTint)!! or (0xFF shl 24)
         else -1
         val fontHeight = font.lineHeight
 

@@ -1,15 +1,29 @@
 {
-  "text.autoconfig.talk_balloons.option.balloonsHeightOffset": "Balloons height offset",
-  "text.autoconfig.talk_balloons.option.distanceBetweenBalloons": "Distance between balloons",
-  "text.autoconfig.talk_balloons.option.maxBalloons": "Max balloons",
-  "text.autoconfig.talk_balloons.option.minBalloonWidth": "Min balloon width",
-  "text.autoconfig.talk_balloons.option.maxBalloonWidth": "Max balloon width",
-  "text.autoconfig.talk_balloons.option.balloonAge": "Balloon age",
-  "text.autoconfig.talk_balloons.option.textColor": "Text color",
-  "text.autoconfig.talk_balloons.option.balloonTint": "Balloon tint",
-  "text.autoconfig.talk_balloons.option.balloonStyle": "Balloon style",
-  "text.autoconfig.talk_balloons.option.showOwnBalloon": "Show own balloon",
-  "text.autoconfig.talk_balloons.option.onlyDisplayBalloons": "Only display balloons",
-  "text.autoconfig.talk_balloons.option.onlyDisplayBalloons.tooltip": "Only displays balloons instead of chat messages for yourself.",
-  "text.autoconfig.talk_balloons.option.balloonPadding": "Balloon padding"
+    "yacl3.config.talk_balloons.title": "Talk Balloons",
+    "yacl3.config.talk_balloons.category.global": "Talk Balloons",
+
+    "yacl3.config.talk_balloons.category.global.group.style": "Balloon Style Customization",
+    "yacl3.config.talk_balloons.category.global.group.preferences": "Balloon Preferences",
+    "yacl3.config.talk_balloons.category.global.group.syncedConfigs": "Synchronized Configs",
+
+    "yacl3.config.talk_balloons.category.global.group.style.option.balloonsHeightOffset": "Balloons height offset",
+    "yacl3.config.talk_balloons.category.global.group.style.option.distanceBetweenBalloons": "Distance between balloons",
+    "yacl3.config.talk_balloons.category.global.group.style.option.maxBalloons": "Max balloons",
+    "yacl3.config.talk_balloons.category.global.group.style.option.minBalloonWidth": "Min balloon width",
+    "yacl3.config.talk_balloons.category.global.group.style.option.maxBalloonWidth": "Max balloon width",
+    "yacl3.config.talk_balloons.category.global.group.style.option.balloonAge": "Balloon age",
+    "yacl3.config.talk_balloons.category.global.group.style.option.textColor": "Text color",
+    "yacl3.config.talk_balloons.category.global.group.style.option.balloonTint": "Balloon tint",
+    "yacl3.config.talk_balloons.category.global.group.style.option.balloonStyle": "Balloon style",
+    "yacl3.config.talk_balloons.category.global.group.style.option.balloonPadding": "Balloon padding",
+
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.showOwnBalloon": "Show own balloon",
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.onlyDisplayBalloons": "Only display balloons",
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.onlyDisplayBalloons.tooltip": "Only displays balloons instead of chat messages for yourself.",
+
+    "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.balloon_style": "Synchronize balloon style?",
+    "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.text_color": "Synchronize text color?",
+    "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.balloon_tint": "Synchronize balloon tint?",
+    "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.balloon_padding": "Synchronize balloon padding?",
+    "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.only_display_balloons": "Synchronize balloon-only messages?"
 }

@@ -16,22 +16,24 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.collections.iterator
 
-class BalloonStyleManager : SimplePreparableReloadListener<Map<Identifier, BalloonStyle>>() {
-    companion object {
-        private val logger: Logger = LoggerFactory.getLogger(BalloonStyleManager::class.java)
-        private val styles: MutableMap<Identifier, BalloonStyle> = mutableMapOf()
+object BalloonStyleManager : SimplePreparableReloadListener<Map<Identifier, BalloonStyle>>() {
+    private val logger: Logger = LoggerFactory.getLogger(BalloonStyleManager::class.java)
+    private val styles: MutableMap<Identifier, BalloonStyle> = mutableMapOf()
 
-        @JvmStatic
-        fun getStyleById(id: Identifier): BalloonStyle {
-            return this.styles[id] ?: this.styles[TBConfig.balloonStyle] ?: this.styles[BalloonStyles.ROUNDED]
-                ?: BalloonStyle.FALLBACK
-        }
+    @JvmStatic
+    val styleIds: Collection<Identifier>
+        get() = this.styles.keys
 
-        @JvmStatic
-        fun getStyleId(style: BalloonStyle): Identifier {
-            return this.styles.filterValues { it == style }.keys.firstOrNull()
-                ?: BalloonStyles.ROUNDED
-        }
+    @JvmStatic
+    fun getStyleById(id: Identifier): BalloonStyle {
+        return this.styles[id] ?: this.styles[TBConfig.balloonStyle] ?: this.styles[BalloonStyles.ROUNDED]
+        ?: BalloonStyle.FALLBACK
+    }
+
+    @JvmStatic
+    fun getStyleId(style: BalloonStyle): Identifier {
+        return this.styles.filterValues { it == style }.keys.firstOrNull()
+            ?: BalloonStyles.ROUNDED
     }
 
     override fun prepare(manager: ResourceManager, profiler: ProfilerFiller): Map<Identifier, BalloonStyle> {

@@ -1,6 +1,8 @@
 package com.cerbon.talk_balloons.config
 
 import com.cerbon.talk_balloons.client.resources.BalloonStyles
+import java.util.EnumSet
+import java.util.Optional
 //? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation as Identifier
 //?} else {
@@ -25,4 +27,6 @@ object TBConfig {
 
     var showOwnBalloon: Boolean = true
     var onlyDisplayBalloons: Boolean = false
+
+    var syncedConfigs: EnumSet<SynchronizedConfigType> = EnumSet.allOf(SynchronizedConfigType::class.java)
 }

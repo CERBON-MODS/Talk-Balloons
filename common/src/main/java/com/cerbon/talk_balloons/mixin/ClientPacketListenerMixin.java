@@ -56,22 +56,22 @@ public class ClientPacketListenerMixin {
 
         var config = TalkBalloonsClient.syncedConfigs.getPlayerConfig(sender);
         if (TalkBalloonsClient.hasServerSupport())
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         Level level = this.minecraft.level;
         if (level == null)
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         Player thisClientPlayer = this.minecraft.player;
         if (thisClientPlayer != null && thisClientPlayer.getUUID() == sender && !TalkBalloons.config.getShowOwnBalloon())
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         Player player = level.getPlayerByUUID(sender);
         if (player == null)
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         ((ITalkBalloonsPlayer) player).talk_balloons$createBalloonMessage(message, TalkBalloons.config.getBalloonAge() * 20);
-        return !config.onlyDisplayBalloons();
+        return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
     }
     *///?}
 }

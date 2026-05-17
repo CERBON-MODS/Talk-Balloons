@@ -29,4 +29,5 @@ dependencies {
     annotationProcessor(libs.mixinextras.fabric)
     moddedApi(libs.sunset)
     "include"(libs.sunset)
+    "include"(moddedApi("dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-fabric")!!)
 }

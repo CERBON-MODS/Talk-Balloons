@@ -8,8 +8,9 @@ plugins {
 
 val mcVersion = stonecutter.current.version
 val common = stonecutter.node.sibling("")!!
+val isLegacy = stonecutter.eval(mcVersion, "<=1.20.1")
 
-if (stonecutter.eval(mcVersion, "<=1.20.1")) {
+if (isLegacy) {
     apply(plugin = "net.neoforged.moddev.legacyforge")
 
     project.extensions.configure<LegacyForgeExtension> {
@@ -37,4 +38,5 @@ dependencies {
     api(libs.mixinextras.common)
     api(libs.sunset)
     compileOnly(libs.iris)
+    compileOnly("dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-${if (isLegacy) "forge" else "neoforge"}") // Use the Neo variant, since this is MDG.
 }

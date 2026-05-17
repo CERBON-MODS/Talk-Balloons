@@ -1,7 +1,6 @@
 package com.cerbon.talk_balloons.mixin;
 
 import com.cerbon.talk_balloons.client.BalloonRenderer;
-import com.cerbon.talk_balloons.client.BalloonRendererOld;
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.cerbon.talk_balloons.util.mixin.ITalkBalloonsPlayer;
 //? if <= 1.21.1 {

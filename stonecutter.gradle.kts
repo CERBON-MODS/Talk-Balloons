@@ -25,6 +25,7 @@ allprojects {
         maven("https://maven.terraformersmc.com/releases")
         maven("https://maven.nucleoid.xyz/")
         maven("https://api.modrinth.com/maven")
+        maven("https://maven.isxander.dev/releases")
     }
 
     group = mod.group

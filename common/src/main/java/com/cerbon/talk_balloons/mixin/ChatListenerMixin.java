@@ -42,18 +42,18 @@ public class ChatListenerMixin {
         var config = TalkBalloonsClient.syncedConfigs.getPlayerConfig(contents.sender());
 
         if (level == null)
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         Player thisClientPlayer = minecraft.player;
         if (thisClientPlayer != null && thisClientPlayer.getUUID() == contents.sender() && !TalkBalloons.config.getShowOwnBalloon())
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         Player player = level.getPlayerByUUID(contents.sender());
         if (player == null)
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         TalkBalloonsApi.INSTANCE.createBalloonMessage(player, Component.literal(contents.contents()), TalkBalloons.config.getBalloonAge() * 20);
-        return !config.onlyDisplayBalloons();
+        return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
     }
 
     @WrapWithCondition(method = "showMessageToPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", ordinal = 0))
@@ -61,24 +61,24 @@ public class ChatListenerMixin {
         var config = TalkBalloonsClient.syncedConfigs.getPlayerConfig(chatMessage/*? if <= 1.19.2 {*//*.signedHeader()*//*?}*/.sender());
 
         if (TalkBalloonsClient.hasServerSupport())
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         Minecraft minecraft = Minecraft.getInstance();
         Level level = minecraft.level;
         if (level == null)
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         Player thisClientPlayer = minecraft.player;
         if (thisClientPlayer != null && thisClientPlayer.getUUID() == chatMessage/*? if <= 1.19.2 {*//*.signedHeader()*//*?}*/.sender() && !TalkBalloons.config.getShowOwnBalloon())
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         Player player = level.getPlayerByUUID(chatMessage/*? if <= 1.19.2 {*//*.signedHeader()*//*?}*/.sender());
         if (player == null)
-            return !config.onlyDisplayBalloons();
+            return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
 
         TalkBalloonsApi.INSTANCE.createBalloonMessage(player, chatMessage/*? if <= 1.19.2 {*//*.signedContent().plain()*//*?} else {*/.decoratedContent()/*?}*/, TalkBalloons.config.getBalloonAge() * 20);
 
-        return !config.onlyDisplayBalloons();
+        return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
     }
     //?}
 }
