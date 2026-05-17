@@ -9,10 +9,16 @@ import com.cerbon.talk_balloons.compat.iris.IrisCompat
 import com.cerbon.talk_balloons.util.HistoricalData
 import com.cerbon.talk_balloons.util.SynchronizedConfigData
 //? if >= 1.21.5 {
-/*import com.mojang.blaze3d.buffers.BufferType
+/*import com.mojang.blaze3d.buffers.GpuBuffer
+//? if <= 1.21.5 {
+import com.mojang.blaze3d.buffers.BufferType
 import com.mojang.blaze3d.buffers.BufferUsage
+import com.mojang.blaze3d.textures.GpuTexture
+import net.minecraft.client.renderer.texture.AbstractTexture
+//? }
 import com.mojang.blaze3d.pipeline.BlendFunction
 import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.platform.DepthTestFunction
 import com.mojang.blaze3d.shaders.UniformType
 import java.util.OptionalDouble
@@ -46,8 +52,26 @@ import kotlin.math.min
 object BalloonRenderer {
     @JvmField val SPRITE_MANAGER = BalloonSpriteManager(Minecraft.getInstance().textureManager)
 
+    //? if >= 1.21.6 {
+    /*private object BufferType {
+        const val VERTICES = GpuBuffer.USAGE_VERTEX
+        const val INDICES = GpuBuffer.USAGE_INDEX
+    }
+    *///? } else if >= 1.21.5 {
+    /*
+    private val RenderTarget.colorTextureView: GpuTexture?
+        get() = this.colorTexture
+
+    private val RenderTarget.depthTextureView: GpuTexture?
+        get() = this.depthTexture
+
+    private val AbstractTexture.textureView: GpuTexture
+        get() = this.texture
+    *///? }
+
     //? if >= 1.21.5 {
     /*@JvmField val BALLOON_PIPELINE: RenderPipeline = RenderPipeline.builder()
+        //? if <= 1.21.5 {
         // Matrices snippet
         .withUniform("ModelViewMat", UniformType.MATRIX4X4)
         .withUniform("ProjMat", UniformType.MATRIX4X4)
@@ -59,6 +83,12 @@ object BalloonRenderer {
         .withUniform("FogShape", UniformType.INT)
         // Fog (color) snippet
         .withUniform("FogColor", UniformType.VEC4)
+        //? } else {
+        /*// Globals snippet
+        .withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
+        .withUniform("Projection", UniformType.UNIFORM_BUFFER)
+        .withUniform("Fog", UniformType.UNIFORM_BUFFER)
+        *///? }
         // Particle snippet
         .withVertexShader("core/particle")
         .withFragmentShader("core/particle")
@@ -160,13 +190,36 @@ object BalloonRenderer {
             val encoder = RenderSystem.getDevice().createCommandEncoder()
 
             meshData.sortQuads(this.bufferBuilder, RenderSystem.getProjectionType().vertexSorting())
-            RenderSystem.getDevice().createBuffer({ "Talk Balloons Vertex Buffer" }, BufferType.VERTICES, BufferUsage.DYNAMIC_WRITE, meshData.vertexBuffer()).use { vertexBuffer ->
-                val indexBuffer = meshData.indexBuffer()?.let { RenderSystem.getDevice().createBuffer({ "Talk Balloons Index Buffer" }, BufferType.INDICES, BufferUsage.DYNAMIC_WRITE, it) }
+            RenderSystem.getDevice().createBuffer({ "Talk Balloons Vertex Buffer" }, BufferType.VERTICES,
+                //? if <= 1.21.5 {
+                BufferUsage.DYNAMIC_WRITE,
+                //? }
+                meshData.vertexBuffer()
+            ).use { vertexBuffer ->
+                val indexBuffer = meshData.indexBuffer()?.let { RenderSystem.getDevice().createBuffer({ "Talk Balloons Index Buffer" }, BufferType.INDICES,
+                    //? if <= 1.21.5 {
+                    BufferUsage.DYNAMIC_WRITE,
+                    //? }
+                    it
+                ) }
 
-                encoder.createRenderPass(renderTarget.colorTexture!!, OptionalInt.empty(), renderTarget.depthTexture!!, OptionalDouble.empty()).use { pass ->
-                    pass.bindSampler("Sampler0", Minecraft.getInstance().textureManager.getTexture(BalloonStyle.BALLOONS_SHEET).texture)
+                encoder.createRenderPass(
+                    //? if >= 1.21.6 {
+                    /*{ "TalkBalloons Render Pass" },
+                    *///? }
+                    renderTarget.colorTextureView!!, OptionalInt.empty(), renderTarget.depthTextureView!!, OptionalDouble.empty()
+                ).use { pass ->
+                    //? if >= 1.21.8 {
+                    /*RenderSystem.bindDefaultUniforms(pass)
+                    *///? }
+
+                    pass.bindSampler("Sampler0", Minecraft.getInstance().textureManager.getTexture(BalloonStyle.BALLOONS_SHEET).textureView)
+                    //? if <= 1.21.5 {
                     Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer()
                     pass.bindSampler("Sampler2", RenderSystem.getShaderTexture(2)!!)
+                    //? } else {
+                    /*pass.bindSampler("Sampler2", Minecraft.getInstance().gameRenderer.lightTexture().textureView)
+                    *///? }
 
                     pass.setPipeline(BALLOON_PIPELINE)
                     pass.setVertexBuffer(0, vertexBuffer)
@@ -174,7 +227,11 @@ object BalloonRenderer {
                         pass.setIndexBuffer(it, meshData.drawState().indexType)
                     }
 
+                    //? if <= 1.21.5 {
                     pass.drawIndexed(0, meshData.drawState().indexCount)
+                    //? } else {
+                    /*pass.drawIndexed(0, 0, meshData.drawState().indexCount, 1)
+                    *///? }
                 }
 
                 indexBuffer?.close()
