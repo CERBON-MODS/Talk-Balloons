@@ -41,7 +41,7 @@ object BalloonRenderer {
 
         val consumer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
 
-        val padding = configData.balloonPadding.orElse(TalkBalloons.config.balloonPadding)
+        val padding = configData.balloonPadding.orElse(TalkBalloons.config.balloonPadding)!!
         val textColor = configData.textColor.orElse(TalkBalloons.config.textColor)!! or (0xFF shl 24)
         val balloonTint = if (style.allowsTint)
             configData.balloonTint.orElse(TalkBalloons.config.balloonTint)!! or (0xFF shl 24)
@@ -65,14 +65,15 @@ object BalloonRenderer {
             val balloonWidth = Mth.clamp(greatestTextWidth, TalkBalloons.config.minBalloonWidth, TalkBalloons.config.maxBalloonWidth)
             val actualBalloonWidth = balloonWidth + (padding * 2) + style.margins.horizontalMargins
             val baseX = -(actualBalloonWidth / 2f)
+            val baseY = -((padding - 1f).coerceAtLeast(0f))
 
             if (dividedMessage.size > 1) {
                 for (text in dividedMessage) {
-                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, -(fontHeight * dividedMessage.size) - balloonDistance + textDistance, textColor, false, light)
+                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance + textDistance, textColor, false, light)
                     textDistance += fontHeight
                 }
             } else {
-                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, -(fontHeight * dividedMessage.size) - balloonDistance, textColor, false, light)
+                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance, textColor, false, light)
                 textDistance += fontHeight
             }
 
