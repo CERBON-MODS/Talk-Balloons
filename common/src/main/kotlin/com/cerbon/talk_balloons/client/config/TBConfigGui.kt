@@ -257,7 +257,7 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("balloonOpacity")
-                controller = slider(0.15f..1f, formatter = { value ->
+                controller = slider(0.15f..1f, step = 0.01f, formatter = { value ->
                     Component.literal("${(value * 100).toInt()}%")
                 })
             }
@@ -268,7 +268,7 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("balloonSneakingOpacity")
-                controller = slider(0.15f..1f, formatter = { value ->
+                controller = slider(0.15f..1f, step = 0.01f, formatter = { value ->
                     Component.literal("${(value * 100).toInt()}%")
                 })
             }
