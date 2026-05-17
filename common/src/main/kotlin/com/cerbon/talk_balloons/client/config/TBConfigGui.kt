@@ -53,6 +53,16 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 binding = bindingFromSunset<Int>("balloonTint")
                     .xmap(::Color, Color::getRGB)
                 controller = colorPicker(false)
+
+                available {
+                    val id = Identifier.tryParse(balloonStyle.pendingValue())
+
+                    if (id != null) {
+                        return@available BalloonStyleManager.getStyleById(id).allowsTint
+                    }
+
+                    false
+                }
             }
 
             val balloonsHeightOffset by options.registering {
