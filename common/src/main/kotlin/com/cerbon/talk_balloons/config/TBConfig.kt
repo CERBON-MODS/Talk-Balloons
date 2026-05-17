@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation as Identifier
  *///?}
 
 object TBConfig {
-    var balloonsHeightOffset: Float = 0.9f
+    var balloonsHeightOffset: Float = 0.4f
     var distanceBetweenBalloons: Int = 3
 
     var maxBalloons: Int = 7
@@ -18,7 +18,7 @@ object TBConfig {
     var minBalloonWidth: Int = 13
     var maxBalloonWidth: Int = 180
 
-    var balloonPadding: Int = 1
+    var balloonPadding: Int = 2
     var balloonAge: Int = 15
     var balloonStyle: Identifier = BalloonStyles.ROUNDED
 
