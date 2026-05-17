@@ -2,7 +2,6 @@ package com.cerbon.talk_balloons.config
 
 import com.cerbon.talk_balloons.client.resources.BalloonStyles
 import java.util.EnumSet
-import java.util.Optional
 //? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation as Identifier
 //?} else {
@@ -20,7 +19,7 @@ object TBConfig {
 
     var balloonPadding: Int = 2
     var balloonAge: Int = 15
-    var balloonStyle: Identifier = BalloonStyles.ROUNDED
+    var balloonStyle: IdentifierHolder = BalloonStyles.ROUNDED.holder
 
     var textColor: Int = 0x141414 // RGB-encoded
     var balloonTint: Int = 0xF1F6F8 // RGB-encoded
@@ -32,4 +31,11 @@ object TBConfig {
     var onlyDisplayBalloons: Boolean = false
 
     var syncedConfigs: EnumSet<SynchronizedConfigType> = EnumSet.allOf(SynchronizedConfigType::class.java)
+
+    // Workaround to https://github.com/FabricMC/tiny-remapper/issues/165
+    @JvmRecord
+    data class IdentifierHolder(val identifier: Identifier)
+
+    val Identifier.holder: IdentifierHolder
+        get() = IdentifierHolder(this)
 }

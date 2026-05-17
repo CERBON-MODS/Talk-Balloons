@@ -1,6 +1,7 @@
 package com.cerbon.talk_balloons.config
 
 import com.cerbon.talk_balloons.TalkBalloons
+import com.cerbon.talk_balloons.config.TBConfig.IdentifierHolder
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 //? if < 1.21.11 {
@@ -11,6 +12,11 @@ import net.minecraft.resources.ResourceLocation as Identifier
 import xyz.bluspring.sunset.SunsetConfig
 import xyz.bluspring.sunset.serializer.JsonWithCommentsSerializer
 import kotlin.io.path.Path
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.KParameter
+import kotlin.reflect.KType
+import kotlin.reflect.KTypeParameter
+import kotlin.reflect.KVisibility
 
 object TBConfigManager {
     val path = Path("config/talk_balloons.json5")
@@ -31,7 +37,7 @@ object TBConfigManager {
             // convert old balloon style to new variant
             Codec.STRING.comapFlatMap({ oldId -> if (oldId.contains(":")) DataResult.error { "This is an actual ID!" } else DataResult.success(TalkBalloons.id(oldId.lowercase())) }, Identifier::toString),
             Identifier.CODEC
-        ), TBConfig::balloonStyle)
+        ).xmap(::IdentifierHolder, IdentifierHolder::identifier), TBConfig::balloonStyle)
         integer("textColor", TBConfig::textColor)
         integer("balloonTint", TBConfig::balloonTint)
         value("showOwnBalloon", Codec.BOOL, TBConfig::showOwnBalloon)

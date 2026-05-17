@@ -35,7 +35,8 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
     val global by categories.registering {
         val style by groups.registering {
             val balloonStyle by options.registering<String> {
-                binding = bindingFromSunset<Identifier>("balloonStyle")
+                binding = bindingFromSunset<TBConfig.IdentifierHolder>("balloonStyle")
+                    .xmap(TBConfig.IdentifierHolder::identifier, TBConfig::IdentifierHolder)
                     .xmap(Identifier::toString, Identifier::parse)
                 controller {
                     DropdownStringControllerBuilder.create(it)

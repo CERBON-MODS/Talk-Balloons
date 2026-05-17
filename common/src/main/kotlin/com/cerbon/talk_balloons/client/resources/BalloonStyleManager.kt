@@ -28,7 +28,7 @@ object BalloonStyleManager : SimplePreparableReloadListener<Map<Identifier, Ball
 
     @JvmStatic
     fun getStyleById(id: Identifier): BalloonStyle {
-        return this.styles[id] ?: this.styles[TBConfig.balloonStyle] ?: this.styles[BalloonStyles.ROUNDED]
+        return this.styles[id] ?: this.styles[TBConfig.balloonStyle.identifier] ?: this.styles[BalloonStyles.ROUNDED]
         ?: BalloonStyle.FALLBACK
     }
 

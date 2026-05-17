@@ -34,7 +34,7 @@ public record SynchronizedConfigData(
         var syncedConfigs = TalkBalloons.config.getSyncedConfigs();
 
         return new SynchronizedConfigData(
-            syncedConfigs.contains(SynchronizedConfigType.BALLOON_STYLE) ? Optional.of(TalkBalloons.config.getBalloonStyle()) : Optional.empty(),
+            syncedConfigs.contains(SynchronizedConfigType.BALLOON_STYLE) ? Optional.of(TalkBalloons.config.getBalloonStyle().identifier()) : Optional.empty(),
             syncedConfigs.contains(SynchronizedConfigType.TEXT_COLOR) ? Optional.of(TalkBalloons.config.getTextColor()) : Optional.empty(),
             syncedConfigs.contains(SynchronizedConfigType.BALLOON_TINT) ? Optional.of(TalkBalloons.config.getBalloonTint()) : Optional.empty(),
             syncedConfigs.contains(SynchronizedConfigType.BALLOON_PADDING) ? Optional.of(TalkBalloons.config.getBalloonPadding()) : Optional.empty(),

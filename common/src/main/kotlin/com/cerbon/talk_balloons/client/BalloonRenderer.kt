@@ -136,7 +136,7 @@ object BalloonRenderer {
         if (messages.isEmpty())
             return
 
-        val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(TalkBalloons.config.balloonStyle)!!)
+        val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(TalkBalloons.config.balloonStyle.identifier)!!)
         //? if < 1.21.9 {
         val balloonSprite = SPRITE_MANAGER.getSpriteAccess(style.balloon)
         val arrowSprite = SPRITE_MANAGER.getSpriteAccess(style.arrow)
