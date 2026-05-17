@@ -88,7 +88,9 @@ public class TBClientEventsNeoForge {
         }
 
         @SubscribeEvent
-        //? if >= 1.21.8 {
+        //? if >= 26.1 {
+        /*public static void onRenderEntities(RenderLevelStageEvent.AfterOpaqueFeatures event) {
+        *///? } else if >= 1.21.8 && <= 1.21.11 {
         /*public static void onRenderEntities(RenderLevelStageEvent.AfterEntities event) {
         *///? } else {
         public static void onRenderEntities(RenderLevelStageEvent event) {

@@ -7,7 +7,11 @@ import com.cerbon.talk_balloons.util.ChatUtils;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.llamalad7.mixinextras.sugar.Local;
+//? if <= 1.21.11 {
 import net.minecraft.client.GuiMessageTag;
+//? } else {
+/*import net.minecraft.client.multiplayer.chat.GuiMessageTag;
+*///? }
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.chat.ChatListener;
@@ -27,7 +31,16 @@ import java.util.UUID;
 public class ChatListenerMixin {
     //? if >= 1.19.2 {
     // Try to extract the player from the sent message, to workaround an incompatibility with No Chat Reports.
-    @WrapWithCondition(method = "handleSystemMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;)V"))
+    @WrapWithCondition(method = "handleSystemMessage",
+        //? if <= 1.21.11 {
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;)V")
+        //? } else {
+        /*at = {
+            @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addClientSystemMessage(Lnet/minecraft/network/chat/Component;)V"),
+            @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addServerSystemMessage(Lnet/minecraft/network/chat/Component;)V")
+        }
+        *///? }
+    )
     private boolean tryGetChatMessageNCR(ChatComponent instance, Component component) {
         if (TalkBalloonsClient.hasServerSupport())
             return true;
@@ -56,7 +69,13 @@ public class ChatListenerMixin {
         return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
     }
 
-    @WrapWithCondition(method = "showMessageToPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", ordinal = 0))
+    @WrapWithCondition(method = "showMessageToPlayer",
+        //? if <= 1.21.11 {
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", ordinal = 0)
+        //? } else {
+        /*at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addPlayerMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)V", ordinal = 0)
+        *///? }
+    )
     private boolean getChatMessage(ChatComponent instance, Component component, MessageSignature messageSignature, GuiMessageTag guiMessageTag, @Local(argsOnly = true) PlayerChatMessage chatMessage) {
         var config = TalkBalloonsClient.syncedConfigs.getPlayerConfig(chatMessage/*? if <= 1.19.2 {*//*.signedHeader()*//*?}*/.sender());
 

@@ -21,14 +21,14 @@ object FabricNetworkRegistry {
         //? if < 26.1 {
         PayloadTypeRegistry.playS2C()
         //? } else {
-        /*PayloadTypeRegistry.playClientbound()
+        /*PayloadTypeRegistry.clientboundPlay()
         *///? }
 
     private fun playServerbound(): PayloadTypeRegistry<RegistryFriendlyByteBuf> =
         //? if < 26.1 {
         PayloadTypeRegistry.playC2S()
         //? } else {
-        /*PayloadTypeRegistry.playServerbound()
+        /*PayloadTypeRegistry.serverboundPlay()
         *///? }
 
     private fun <B : FriendlyByteBuf, T : CustomPacketPayload> PayloadTypeRegistry<B>.register(combined: CustomPacketPayload.TypeAndCodec<in B, T>) {

@@ -15,7 +15,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.resources.metadata.gui.GuiMetadataSection;
+//? if <= 1.21.11 {
 import net.minecraft.client.resources.model.AtlasManager;
+//? } else {
+/^import net.minecraft.client.resources.model.sprite.AtlasManager;
+^///? }
 
 @Mixin(AtlasManager.class)
 *///? }

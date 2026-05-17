@@ -7,7 +7,13 @@ package com.cerbon.talk_balloons.mixin;
 /*import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.cerbon.talk_balloons.util.mixin.ICameraRenderState;
+
+//? if <= 1.21.11 {
 import net.minecraft.client.renderer.state.CameraRenderState;
+//? } else {
+/^import net.minecraft.client.renderer.state.level.CameraRenderState;
+^///? }
+
 *///?} else if >= 1.21.3 {
 /*import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -38,7 +44,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     }
 
     //? if >= 1.21.9 {
-    /^@Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At("HEAD"))
+    /^@Inject(method = {
+        //? if <= 1.21.11 {
+        "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V"
+        //? } else {
+        /^¹"submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+        ¹^///? }
+    }, at = @At("HEAD"))
     private void tb_tryRenderBalloons(LivingEntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (!(renderState instanceof AvatarRenderState playerRenderState))
             return;

@@ -7,7 +7,10 @@ import com.cerbon.talk_balloons.network.TBPackets;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-//? if >= 1.21.10 {
+
+//? if >= 26.1 {
+/*import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+*///? } else if >= 1.21.10 && <= 1.21.11 {
 /*import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 *///? } else {
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -31,8 +34,13 @@ public class TBClientEvents {
             TBClientPacketHandler.handleSyncConfigToPlayer(packet);
         });
 
-        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
-            BalloonRenderer.renderBalloons();
-        });
+        //? if <= 1.21.11 {
+        WorldRenderEvents.AFTER_ENTITIES
+        //? } else {
+        /*LevelRenderEvents.AFTER_SOLID_FEATURES
+        *///? }
+            .register(context -> {
+                BalloonRenderer.renderBalloons();
+            });
     }
 }

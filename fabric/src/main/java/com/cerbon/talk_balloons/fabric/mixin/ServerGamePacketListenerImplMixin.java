@@ -47,7 +47,7 @@ public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ exte
     @Shadow public abstract ServerPlayer getPlayer();
 
     //? if >= 1.19.2 {
-    @WrapWithCondition(method = {"method_45064"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"))
+    @WrapWithCondition(method = {"method_45064", "lambda$handleChat$1"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"), require = 0)
     private boolean talk_balloons$sendBalloonToPlayers(ServerGamePacketListenerImpl instance, PlayerChatMessage message) {
         var text = /*? if <= 1.19.2 {*//*Component.literal(message.signedContent().plain())*//*?} else {*/message.decoratedContent()/*?}*/;
         TalkBalloonsApi.INSTANCE.broadcastBalloonMessage(this.getPlayer(), text);

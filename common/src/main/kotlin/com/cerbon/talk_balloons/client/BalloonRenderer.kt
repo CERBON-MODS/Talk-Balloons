@@ -23,7 +23,13 @@ import net.minecraft.client.renderer.texture.AbstractTexture
 //? }
 import com.mojang.blaze3d.pipeline.BlendFunction
 import com.mojang.blaze3d.pipeline.RenderPipeline
+//? if <= 1.21.11 {
 import com.mojang.blaze3d.platform.DepthTestFunction
+//? } else {
+/*import com.mojang.blaze3d.pipeline.ColorTargetState
+import com.mojang.blaze3d.pipeline.DepthStencilState
+import com.mojang.blaze3d.platform.CompareOp
+*///? }
 import com.mojang.blaze3d.shaders.UniformType
 import java.util.OptionalDouble
 import java.util.OptionalInt
@@ -110,9 +116,14 @@ object BalloonRenderer {
         .withVertexFormat(DefaultVertexFormat.PARTICLE, VertexFormat.Mode.QUADS)
         // Balloon (ours)
         .withLocation(TalkBalloons.id("balloon"))
+        //? if <= 1.21.11 {
         .withBlend(BlendFunction.TRANSLUCENT)
-        .withDepthTestFunction(DepthTestFunction.LESS_DEPTH_TEST) // enable depth test
+        .withDepthTestFunction(DepthTestFunction.LEQUAL_DEPTH_TEST) // enable depth test
         .withDepthBias(3f, 3f) // polygon offset
+        //? } else {
+        /*.withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+        .withDepthStencilState(DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true, 3f, 3f))
+        *///? }
         .build()
     *///? }
 
@@ -252,9 +263,14 @@ object BalloonRenderer {
                     *///? }
                     //? } else {
                     /*val balloonsSheet = Minecraft.getInstance().textureManager.getTexture(BalloonStyle.BALLOONS_SHEET)
-                    val lightTexture = Minecraft.getInstance().gameRenderer.lightTexture()
                     pass.bindTexture("Sampler0", balloonsSheet.textureView, balloonsSheet.sampler)
+
+                    //? if <= 1.21.11 {
+                    val lightTexture = Minecraft.getInstance().gameRenderer.lightTexture()
                     pass.bindTexture("Sampler2", lightTexture.textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR))
+                    //? } else {
+                    /*pass.bindTexture("Sampler2", Minecraft.getInstance().gameRenderer.lightmap(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR))
+                    *///? }
                     *///? }
 
                     pass.setPipeline(BALLOON_PIPELINE)

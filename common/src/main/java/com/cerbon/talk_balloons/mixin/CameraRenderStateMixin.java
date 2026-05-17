@@ -5,7 +5,11 @@ import com.cerbon.talk_balloons.util.mixin.ICameraRenderState;
 /*import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
+//? if <= 1.21.11 {
 import net.minecraft.client.renderer.state.CameraRenderState;
+//? } else {
+/^import net.minecraft.client.renderer.state.level.CameraRenderState;
+^///? }
 
 @Mixin(CameraRenderState.class)
 *///? }
