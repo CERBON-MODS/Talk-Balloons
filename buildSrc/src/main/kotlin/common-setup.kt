@@ -178,6 +178,7 @@ fun Project.setupCommon(module: String) {
 
             "minecraft_version_range_fabric" to commonProject.mod.prop("minecraft_version_range_fabric"),
             "minecraft_version_range_forge" to commonProject.mod.prop("minecraft_version_range_forge"),
+            "neoforge_version" to commonProject.mod.dep("neoforge", "")
         )
     }
 }
