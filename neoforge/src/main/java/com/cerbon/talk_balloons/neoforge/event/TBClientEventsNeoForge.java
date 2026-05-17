@@ -5,7 +5,6 @@ import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.cerbon.talk_balloons.client.config.TBConfigGuiKt;
 import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager;
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
-import com.cerbon.talk_balloons.network.TBClientPacketHandler;
 import com.cerbon.talk_balloons.util.TBConstants;
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
@@ -17,7 +16,9 @@ import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 //? } else {
 /*import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 *///? }
-import net.neoforged.neoforge.client.event.ScreenEvent;
+//? if >= 1.21.5 {
+/*import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
+*///? }
 //? if > 1.20.4 {
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -33,8 +34,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
     //?}
     value = Dist.CLIENT)
 public class TBClientEventsNeoForge {
-    private static Screen configScreenToHandle;
-
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         //? if > 1.20.4 {
@@ -61,6 +60,13 @@ public class TBClientEventsNeoForge {
     public static void onRegisterResourceReloaders(AddClientReloadListenersEvent event) {
         event.addListener(BalloonSpriteManager.ID, BalloonRenderer.SPRITE_MANAGER);
         event.addListener(BalloonStyleManager.ID, BalloonStyleManager.INSTANCE);
+    }
+    *///? }
+
+    //? if >= 1.21.5 {
+    /*@SubscribeEvent
+    public static void onRegisterPipelines(RegisterRenderPipelinesEvent event) {
+        event.registerPipeline(BalloonRenderer.BALLOON_PIPELINE);
     }
     *///? }
 

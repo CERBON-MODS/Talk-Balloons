@@ -6,22 +6,21 @@ import java.util.concurrent.Executor;
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager;
-import com.cerbon.talk_balloons.client.resources.BalloonStyle;
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
 import com.cerbon.talk_balloons.compat.CompatHandler;
 import com.cerbon.talk_balloons.fabric.event.TBClientEvents;
 import com.cerbon.talk_balloons.fabric.event.TBServerEvents;
 import com.cerbon.talk_balloons.fabric.network.FabricNetworkRegistry;
 
-import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+//? if < 1.21.4 {
 import net.minecraft.util.profiling.ProfilerFiller;
+ //? }
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.AtlasSourceTypeRegistry;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;

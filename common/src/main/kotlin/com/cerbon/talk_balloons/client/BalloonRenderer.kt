@@ -8,11 +8,24 @@ import com.cerbon.talk_balloons.compat.CompatHandler
 import com.cerbon.talk_balloons.compat.iris.IrisCompat
 import com.cerbon.talk_balloons.util.HistoricalData
 import com.cerbon.talk_balloons.util.SynchronizedConfigData
+//? if >= 1.21.5 {
+/*import com.mojang.blaze3d.buffers.BufferType
+import com.mojang.blaze3d.buffers.BufferUsage
+import com.mojang.blaze3d.pipeline.BlendFunction
+import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.blaze3d.platform.DepthTestFunction
+import com.mojang.blaze3d.shaders.UniformType
+import java.util.OptionalDouble
+import java.util.OptionalInt
+*///? }
 import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.vertex.BufferBuilder
+import com.mojang.blaze3d.vertex.ByteBufferBuilder
+//? if <= 1.21.4 {
 import com.mojang.blaze3d.vertex.BufferUploader
+//? }
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.blaze3d.vertex.Tesselator
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.blaze3d.vertex.VertexFormat
 import com.mojang.math.Axis
@@ -20,7 +33,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 //? if < 1.21.3 {
 import net.minecraft.client.renderer.GameRenderer
- //? } else {
+ //? } else if <= 1.21.4 {
 /*import net.minecraft.client.renderer.CoreShaders
 *///? }
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
@@ -33,6 +46,35 @@ import kotlin.math.min
 object BalloonRenderer {
     @JvmField val SPRITE_MANAGER = BalloonSpriteManager(Minecraft.getInstance().textureManager)
 
+    //? if >= 1.21.5 {
+    /*@JvmField val BALLOON_PIPELINE: RenderPipeline = RenderPipeline.builder()
+        // Matrices snippet
+        .withUniform("ModelViewMat", UniformType.MATRIX4X4)
+        .withUniform("ProjMat", UniformType.MATRIX4X4)
+        // Color snippet
+        .withUniform("ColorModulator", UniformType.VEC4)
+        // Fog (no-color) snippet
+        .withUniform("FogStart", UniformType.FLOAT)
+        .withUniform("FogEnd", UniformType.FLOAT)
+        .withUniform("FogShape", UniformType.INT)
+        // Fog (color) snippet
+        .withUniform("FogColor", UniformType.VEC4)
+        // Particle snippet
+        .withVertexShader("core/particle")
+        .withFragmentShader("core/particle")
+        .withSampler("Sampler0")
+        .withSampler("Sampler2")
+        .withVertexFormat(DefaultVertexFormat.PARTICLE, VertexFormat.Mode.QUADS)
+        // Balloon (ours)
+        .withLocation(TalkBalloons.id("balloon"))
+        .withBlend(BlendFunction.TRANSLUCENT)
+        .withDepthTestFunction(DepthTestFunction.LESS_DEPTH_TEST) // enable depth test
+        .withDepthBias(3f, 3f) // polygon offset
+        .build()
+    *///? }
+
+    private val bufferBuilder = ByteBufferBuilder(1 * 1024 * 1024) // 1 KiB of data max
+
     @JvmStatic
     fun renderBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, configData: SynchronizedConfigData, light: Int) {
         if (messages.isEmpty())
@@ -42,7 +84,7 @@ object BalloonRenderer {
         val balloonSprite = SPRITE_MANAGER.getSpriteAccess(style.balloon)
         val arrowSprite = SPRITE_MANAGER.getSpriteAccess(style.arrow)
 
-        val consumer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
+        val consumer = BufferBuilder(this.bufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
 
         val padding = configData.balloonPadding.orElse(TalkBalloons.config.balloonPadding)!!
         val textColor = configData.textColor.orElse(TalkBalloons.config.textColor)!! or (0xFF shl 24)
@@ -94,6 +136,7 @@ object BalloonRenderer {
 
         val meshData = consumer.build()
         if (meshData != null) {
+            //? if <= 1.21.4 {
             RenderSystem.enableBlend()
             RenderSystem.defaultBlendFunc()
             RenderSystem.enableDepthTest()
@@ -112,6 +155,33 @@ object BalloonRenderer {
             RenderSystem.disableDepthTest()
             RenderSystem.disableBlend()
             RenderSystem.disablePolygonOffset()
+            //? } else if <= 1.21.8 {
+            /*val renderTarget = Minecraft.getInstance().mainRenderTarget
+            val encoder = RenderSystem.getDevice().createCommandEncoder()
+
+            meshData.sortQuads(this.bufferBuilder, RenderSystem.getProjectionType().vertexSorting())
+            RenderSystem.getDevice().createBuffer({ "Talk Balloons Vertex Buffer" }, BufferType.VERTICES, BufferUsage.DYNAMIC_WRITE, meshData.vertexBuffer()).use { vertexBuffer ->
+                val indexBuffer = meshData.indexBuffer()?.let { RenderSystem.getDevice().createBuffer({ "Talk Balloons Index Buffer" }, BufferType.INDICES, BufferUsage.DYNAMIC_WRITE, it) }
+
+                encoder.createRenderPass(renderTarget.colorTexture!!, OptionalInt.empty(), renderTarget.depthTexture!!, OptionalDouble.empty()).use { pass ->
+                    pass.bindSampler("Sampler0", Minecraft.getInstance().textureManager.getTexture(BalloonStyle.BALLOONS_SHEET).texture)
+                    Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer()
+                    pass.bindSampler("Sampler2", RenderSystem.getShaderTexture(2)!!)
+
+                    pass.setPipeline(BALLOON_PIPELINE)
+                    pass.setVertexBuffer(0, vertexBuffer)
+                    indexBuffer?.let {
+                        pass.setIndexBuffer(it, meshData.drawState().indexType)
+                    }
+
+                    pass.drawIndexed(0, meshData.drawState().indexCount)
+                }
+
+                indexBuffer?.close()
+            }
+
+            meshData.close()
+            *///? }
         }
     }
 
