@@ -30,11 +30,6 @@ import net.neoforged.neoforge.client.ConfigScreenHandler;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
-@EventBusSubscriber(modid = TBConstants.MOD_ID,
-    //? if < 1.21.6 {
-    bus = EventBusSubscriber.Bus.MOD,
-    //?}
-    value = Dist.CLIENT)
 public class TBClientEventsNeoForge {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
@@ -74,13 +69,6 @@ public class TBClientEventsNeoForge {
     }
     *///? }
 
-    @EventBusSubscriber(modid = TBConstants.MOD_ID,
-        //? if <= 1.20.4 {
-        /*bus = EventBusSubscriber.Bus.FORGE,
-        *///?} else if < 1.21.6 {
-        bus = EventBusSubscriber.Bus.GAME,
-        //?}
-        value = Dist.CLIENT)
     public static class TBNeoForgeClientEvents {
         @SubscribeEvent
         public static void onPlayerDisconnect(ClientPlayerNetworkEvent.LoggingOut event) {

@@ -14,7 +14,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public class TBPackets {
-    public static final int PROTOCOL_VERSION = 1;
+    public static final int PROTOCOL_VERSION = 2;
 
     // Dual (C <-> S) packets
     public static final CustomPacketPayload.TypeAndCodec<FriendlyByteBuf, TalkBalloonsStatusPacket> STATUS = register("status", TalkBalloonsStatusPacket.CODEC);
@@ -24,7 +24,7 @@ public class TBPackets {
 
     // Clientbound (S -> C) packets
     public static final CustomPacketPayload.TypeAndCodec</*? if >= 1.20.6 {*/RegistryFriendlyByteBuf/*?} else {*//*FriendlyByteBuf*//*?}*/, CreateBalloonPacket> CREATE_BALLOON = register("create_balloon", CreateBalloonPacket.CODEC);
-    public static final CustomPacketPayload.TypeAndCodec<FriendlyByteBuf, SyncBalloonConfigToPlayerPacket> SYNC_CONFIG_TO_PLAYER = register("sync_balloon_config", SyncBalloonConfigToPlayerPacket.CODEC);
+    public static final CustomPacketPayload.TypeAndCodec<FriendlyByteBuf, SyncBalloonConfigToPlayerPacket> SYNC_CONFIG_TO_PLAYER = register("sync_config_to_player", SyncBalloonConfigToPlayerPacket.CODEC);
 
     private static <B extends FriendlyByteBuf, V extends CustomPacketPayload> CustomPacketPayload.TypeAndCodec<B, V> register(String path, StreamCodec<B, V> codec) {
         return new CustomPacketPayload.TypeAndCodec<>(new CustomPacketPayload.Type<>(TalkBalloons.id(path)), codec);

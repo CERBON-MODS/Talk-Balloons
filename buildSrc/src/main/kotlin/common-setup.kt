@@ -142,7 +142,7 @@ fun Project.setupCommon(module: String) {
             }
 
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-            from(zipTree(commonProj.tasks.named<Jar>("jar").get().archiveFile))
+            from(zipTree(tasks.named<Jar>("jar").get().archiveFile))
         }
 
         tasks.named<ProcessResources>("processResources") {
