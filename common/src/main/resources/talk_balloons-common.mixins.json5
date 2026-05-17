@@ -14,7 +14,7 @@
     "PlayerRendererMixin",
 
     //? if >= 1.21.3
-    /*"PlayerRenderStateMixin",*/
+    //"PlayerRenderStateMixin",
     "LivingEntityRendererMixin"
   ],
   "injectors": {

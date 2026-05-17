@@ -18,8 +18,11 @@ import com.mojang.blaze3d.vertex.VertexFormat
 import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
+//? if < 1.21.3 {
 import net.minecraft.client.renderer.GameRenderer
-import net.minecraft.client.renderer.LightTexture
+ //? } else {
+/*import net.minecraft.client.renderer.CoreShaders
+*///? }
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling
 import net.minecraft.network.chat.Component
@@ -97,7 +100,11 @@ object BalloonRenderer {
             RenderSystem.enablePolygonOffset()
             RenderSystem.polygonOffset(3f, 3f)
 
+            //? if < 1.21.3 {
             RenderSystem.setShader(GameRenderer::getParticleShader)
+            //? } else if <= 1.21.4 {
+            /*RenderSystem.setShader(CoreShaders.PARTICLE)
+            *///? }
             RenderSystem.setShaderTexture(0, BalloonStyle.BALLOONS_SHEET)
             Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer()
             BufferUploader.drawWithShader(meshData)

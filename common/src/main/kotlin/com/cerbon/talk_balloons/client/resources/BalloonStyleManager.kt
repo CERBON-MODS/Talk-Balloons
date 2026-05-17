@@ -1,5 +1,6 @@
 package com.cerbon.talk_balloons.client.resources
 
+import com.cerbon.talk_balloons.TalkBalloons
 import com.cerbon.talk_balloons.config.TBConfig
 import com.google.gson.JsonParser
 import com.mojang.serialization.JsonOps
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory
 import kotlin.collections.iterator
 
 object BalloonStyleManager : SimplePreparableReloadListener<Map<Identifier, BalloonStyle>>() {
+    @JvmField val ID: Identifier = TalkBalloons.id("balloon_style_manager")
     private val logger: Logger = LoggerFactory.getLogger(BalloonStyleManager::class.java)
     private val styles: MutableMap<Identifier, BalloonStyle> = mutableMapOf()
 

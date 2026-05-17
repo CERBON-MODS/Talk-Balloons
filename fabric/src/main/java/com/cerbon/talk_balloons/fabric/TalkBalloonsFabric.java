@@ -5,6 +5,7 @@ import java.util.concurrent.Executor;
 
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.client.BalloonRenderer;
+import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager;
 import com.cerbon.talk_balloons.client.resources.BalloonStyle;
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
 import com.cerbon.talk_balloons.compat.CompatHandler;
@@ -42,12 +43,12 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
             .registerReloadListener(new IdentifiableResourceReloadListener() {
                 @Override
                 public ResourceLocation getFabricId() {
-                    return TalkBalloons.id("balloon_sprite_manager");
+                    return BalloonSpriteManager.ID;
                 }
 
                 @Override
-                public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
-                    return BalloonRenderer.SPRITE_MANAGER.reload(preparationBarrier, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor);
+                public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, /*? if < 1.21.4 {*/ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler,/*? }*/ Executor backgroundExecutor, Executor gameExecutor) {
+                    return BalloonRenderer.SPRITE_MANAGER.reload(preparationBarrier, resourceManager, /*? if < 1.21.4 {*/preparationsProfiler, reloadProfiler,/*? }*/ backgroundExecutor, gameExecutor);
                 }
             });
 
@@ -55,12 +56,12 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
             .registerReloadListener(new IdentifiableResourceReloadListener() {
                 @Override
                 public ResourceLocation getFabricId() {
-                    return TalkBalloons.id("balloon_style_manager");
+                    return BalloonStyleManager.ID;
                 }
 
                 @Override
-                public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
-                    return BalloonStyleManager.INSTANCE.reload(preparationBarrier, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor);
+                public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, /*? if < 1.21.4 {*/ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler,/*? }*/ Executor backgroundExecutor, Executor gameExecutor) {
+                    return BalloonStyleManager.INSTANCE.reload(preparationBarrier, resourceManager, /*? if < 1.21.4 {*/preparationsProfiler, reloadProfiler,/*? }*/ backgroundExecutor, gameExecutor);
                 }
             });
     }

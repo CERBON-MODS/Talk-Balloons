@@ -2,18 +2,28 @@ package com.cerbon.talk_balloons.mixin;
 
 //? if < 1.21.11 {
 //?}
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-//? if >= 1.21.3
-/*import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;*/
+
 //? if >= 1.21.9 {
 /*import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.state.CameraRenderState;
 *///?} else if >= 1.21.3 {
-/*import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+/*import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.world.entity.LivingEntity;
+import com.cerbon.talk_balloons.client.BalloonRenderer;
+import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 *///?}
-
-    import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(LivingEntityRenderer.class)
 //? if >= 1.21.3 {
