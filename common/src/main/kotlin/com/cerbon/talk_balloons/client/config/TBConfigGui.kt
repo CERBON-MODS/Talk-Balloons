@@ -279,7 +279,7 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
                 }
 
                 binding = bindingFromSunset("balloonsHeightOffset")
-                controller = slider(range = 0f..16f, step = 0.1f, formatter = { value ->
+                controller = slider(range = -16f..16f, step = 0.1f, formatter = { value ->
                     Component.translatable("talk_balloons.config.unit.block${if (value == 1f) "" else "s"}", value)
                 })
             }
@@ -338,16 +338,27 @@ fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD
             val balloonAge by options.registering {
                 binding = bindingFromSunset("balloonAge")
                 controller = slider(range = 0..120, step = 1, formatter = { value ->
-                    Component.translatable("talk_balloons.config.unit.second${if (value == 1) "" else "s"}", value)
+                    if (value == 0)
+                        Component.translatable("talk_balloons.config.always_display")
+                    else
+                        Component.translatable("talk_balloons.config.unit.second${if (value == 1) "" else "s"}", value)
                 })
             }
 
             val showOwnBalloon by options.registering {
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+
                 binding = bindingFromSunset("showOwnBalloon")
                 controller = tickBox()
             }
 
             val onlyDisplayBalloons by options.registering {
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+
                 binding = bindingFromSunset("onlyDisplayBalloons")
                 controller = tickBox()
             }

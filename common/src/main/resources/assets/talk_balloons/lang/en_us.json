@@ -19,9 +19,11 @@
 
     "yacl3.config.talk_balloons.category.global.group.preferences.option.maxBalloons": "Max balloons",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.balloonAge": "Max balloon age",
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.balloonAge.description": "How long a single balloon is allowed to last before disappearing.",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.showOwnBalloon": "Show own balloon",
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.showOwnBalloon.description": "Enables seeing your own balloon in third-person.",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.onlyDisplayBalloons": "Only display balloons",
-    "yacl3.config.talk_balloons.category.global.group.preferences.option.onlyDisplayBalloons.tooltip": "Only displays balloons instead of chat messages for yourself.",
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.onlyDisplayBalloons.description": "Only displays balloons instead of chat messages for yourself.",
 
     "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.balloon_style": "Synchronize balloon style?",
     "yacl3.config.talk_balloons.category.global.group.syncedConfigs.option.text_color": "Synchronize text color?",
@@ -35,6 +37,8 @@
     "talk_balloons.config.unit.pixels": "%s px",
     "talk_balloons.config.unit.block": "%s block",
     "talk_balloons.config.unit.blocks": "%s blocks",
+
+    "talk_balloons.config.always_display": "Always display",
 
     "talk_balloons.style.talk_balloons.classic/circular": "Classic (Circular)",
     "talk_balloons.style.talk_balloons.classic/rounded": "Classic (Rounded Rectangular)",
