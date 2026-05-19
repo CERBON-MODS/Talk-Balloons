@@ -11,7 +11,6 @@ import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
 import com.cerbon.talk_balloons.compat.CompatHandler
 import com.cerbon.talk_balloons.compat.iris.IrisCompat
 import com.cerbon.talk_balloons.config.ITBConfig
-import com.cerbon.talk_balloons.config.TBConfig
 import com.cerbon.talk_balloons.util.HistoricalData
 import com.cerbon.talk_balloons.util.SynchronizedConfigData
 //? if >= 1.21.5 {
@@ -68,6 +67,24 @@ import net.minecraft.util.Mth
 import java.util.AbstractQueue
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.math.min
+
+//? if >= 1.21.8 {
+/*import com.mojang.blaze3d.textures.GpuTextureView
+
+//? if > 1.21.8 {
+/*import net.minecraft.client.gui.font.TextRenderable
+*///? } else {
+import net.minecraft.client.gui.font.glyphs.BakedGlyph
+//? }
+
+import net.minecraft.client.renderer.RenderPipelines
+*///? }
+
+//? if < 1.21.11 {
+import net.minecraft.resources.ResourceLocation as Identifier
+//? } else {
+/*import com.mojang.blaze3d.textures.GpuSampler
+*///? }
 
 object BalloonRenderer {
     //? if < 1.21.9 {
@@ -130,8 +147,20 @@ object BalloonRenderer {
         .build()
     *///? }
 
-    private val bufferBuilder = ByteBufferBuilder(1 * 1024 * 1024) // 1 KiB of data max
-    private val renderQueue = ConcurrentLinkedQueue<MeshData>()
+    private val bufferBuilder = ByteBufferBuilder(1 * 1024 * 1024) // 1 MiB of data max
+    //? if >= 1.21.8 {
+    /*private val textBufferBuilder = ByteBufferBuilder(4 * 1024 * 1024) // 4 MiB of data max
+    *///? }
+
+    private val renderQueue = ConcurrentLinkedQueue<QueuedBalloonRender>()
+
+    //? if >= 1.21.5 {
+    /*init {
+        if (CompatHandler.isIrisLoaded) {
+            IrisCompat.setupPipelines()
+        }
+    }
+    *///? }
 
     @JvmStatic
     fun calculateEstimatedBalloonHeight(messages: List<Component>, font: Font, configData: SynchronizedConfigData, config: ITBConfig): Int {
@@ -144,9 +173,14 @@ object BalloonRenderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int, renderQueue: AbstractQueue<MeshData> = this.renderQueue, config: ITBConfig = TalkBalloons.config) {
+    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int, renderQueue: AbstractQueue<QueuedBalloonRender> = this.renderQueue, config: ITBConfig = TalkBalloons.config) {
         if (messages.isEmpty())
             return
+
+        //? if >= 1.21.5 {
+        /*if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
+            return
+        *///? }
 
         val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(config.balloonStyle.identifier)!!)
         //? if < 1.21.9 {
@@ -159,6 +193,9 @@ object BalloonRenderer {
         *///? }
 
         val consumer = BufferBuilder(this.bufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
+        //? if >= 1.21.8 {
+        /*val textConsumers = mutableMapOf<GpuTextureView, BufferBuilder>()
+        *///? }
 
         val balloonOpacity = ((if (isSneaking) config.balloonSneakingOpacity else config.balloonOpacity) * 255).toInt()
         val padding = configData.balloonPadding.orElse(config.balloonPadding)!!
@@ -189,11 +226,19 @@ object BalloonRenderer {
 
             if (dividedMessage.size > 1) {
                 for (text in dividedMessage) {
-                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance + textDistance, textColor, false, light)
+                    drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance + textDistance, textColor, false, light,
+                        //? if >= 1.21.8 {
+                        /*textConsumers
+                        *///? }
+                    )
                     textDistance += fontHeight
                 }
             } else {
-                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance, textColor, false, light)
+                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance, textColor, false, light,
+                    //? if >= 1.21.8 {
+                    /*textConsumers
+                    *///? }
+                )
                 textDistance += fontHeight
             }
 
@@ -211,14 +256,21 @@ object BalloonRenderer {
 
         val meshData = consumer.build()
         if (meshData != null) {
-            renderQueue.add(meshData)
+            renderQueue.add(QueuedBalloonRender(meshData,
+                //? if >= 1.21.8 {
+                /*textConsumers
+                    .mapValues { it.value.build() }
+                    .filter { it.value != null }
+                    .mapValues { it.value!! },
+                *///? }
+            ))
         }
     }
 
     @JvmStatic @JvmOverloads
-    fun renderBalloons(queue: AbstractQueue<MeshData> = this.renderQueue) {
+    fun renderBalloons(queue: AbstractQueue<QueuedBalloonRender> = this.renderQueue) {
         while (queue.isNotEmpty()) {
-            val meshData = queue.remove()
+            val (meshData, textBuffers) = queue.remove()
 
             //? if <= 1.21.4 {
             RenderSystem.enableBlend()
@@ -240,80 +292,189 @@ object BalloonRenderer {
             RenderSystem.disableBlend()
             RenderSystem.disablePolygonOffset()
             //? } else {
-            /*val renderTarget = Minecraft.getInstance().mainRenderTarget
-            val encoder = RenderSystem.getDevice().createCommandEncoder()
+            /*val texture = Minecraft.getInstance().textureManager.getTexture(BalloonStyle.BALLOONS_SHEET)
+            drawBuffer("Balloon", this.bufferBuilder, meshData,
+                //? if >= 1.21.8 {
+                /*texture.textureView,
 
-            meshData.sortQuads(this.bufferBuilder, RenderSystem.getProjectionType().vertexSorting())
-            RenderSystem.getDevice().createBuffer({ "Talk Balloons Vertex Buffer" }, BufferType.VERTICES,
-                //? if <= 1.21.5 {
-                BufferUsage.DYNAMIC_WRITE,
+                //? if >= 1.21.11 {
+                /*texture.sampler,
+                *///? }
+
+                *///? } else {
+                BalloonStyle.BALLOONS_SHEET,
                 //? }
-                meshData.vertexBuffer()
-            ).use { vertexBuffer ->
-                val indexBuffer = meshData.indexBuffer()?.let { RenderSystem.getDevice().createBuffer({ "Talk Balloons Index Buffer" }, BufferType.INDICES,
-                    //? if <= 1.21.5 {
-                    BufferUsage.DYNAMIC_WRITE,
-                    //? }
-                    it
-                ) }
+                BALLOON_PIPELINE
+            )
 
-                encoder.createRenderPass(
-                    //? if >= 1.21.6 {
-                    /*{ "TalkBalloons Render Pass" },
-                    *///? }
-                    renderTarget.colorTextureView!!, OptionalInt.empty(), renderTarget.depthTextureView!!, OptionalDouble.empty()
-                ).use { pass ->
-                    //? if >= 1.21.8 {
-                    /*RenderSystem.bindDefaultUniforms(pass)
+            //? if >= 1.21.8 {
+            /*for ((textureView, buffer) in textBuffers) {
+                buffer.sortQuads(this.textBufferBuilder, RenderSystem.getProjectionType().vertexSorting())
+                //? if < 26.2 {
+                drawBuffer("Text", this.textBufferBuilder, buffer, textureView,
+                    //? if >= 1.21.11 {
+                    /*RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST),
                     *///? }
 
-                    //? if <= 1.21.10 {
-                    pass.bindSampler("Sampler0", Minecraft.getInstance().textureManager.getTexture(BalloonStyle.BALLOONS_SHEET).textureView)
-                    //? if <= 1.21.5 {
-                    Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer()
-                    pass.bindSampler("Sampler2", RenderSystem.getShaderTexture(2)!!)
-                    //? } else {
-                    /*pass.bindSampler("Sampler2", Minecraft.getInstance().gameRenderer.lightTexture().textureView)
+                    //? if > 1.21.8 {
+                    /*if (queue !== this.renderQueue)
+                        RenderPipelines.GUI_TEXT
+                    else
                     *///? }
-                    //? } else {
-                    /*val balloonsSheet = Minecraft.getInstance().textureManager.getTexture(BalloonStyle.BALLOONS_SHEET)
-                    pass.bindTexture("Sampler0", balloonsSheet.textureView, balloonsSheet.sampler)
-
-                    //? if <= 1.21.11 {
-                    val lightTexture = Minecraft.getInstance().gameRenderer.lightTexture()
-                    pass.bindTexture("Sampler2", lightTexture.textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR))
-                    //? } else {
-                    /*pass.bindTexture("Sampler2", Minecraft.getInstance().gameRenderer.lightmap(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR))
-                    *///? }
-                    *///? }
-
-                    pass.setPipeline(BALLOON_PIPELINE)
-                    pass.setVertexBuffer(0, vertexBuffer)
-                    indexBuffer?.let {
-                        pass.setIndexBuffer(it, meshData.drawState().indexType)
-                    }
-
-                    //? if <= 1.21.5 {
-                    pass.drawIndexed(0, meshData.drawState().indexCount)
-                    //? } else {
-                    /*pass.drawIndexed(0, 0, meshData.drawState().indexCount, 1)
-                    *///? }
-                }
-
-                indexBuffer?.close()
+                        RenderPipelines.TEXT
+                )
+                //? }
             }
             *///? }
 
-            meshData.close()
+            *///? }
         }
     }
 
-    private fun drawString(pose: PoseStack.Pose, font: Font, text: FormattedCharSequence, x: Float, y: Float, color: Int, dropShadow: Boolean, light: Int) {
+    //? if > 1.21.4 {
+    /*private fun drawBuffer(
+        name: String,
+        bufferBuilder: ByteBufferBuilder, meshData: MeshData,
+
+        //? if >= 1.21.8 {
+        /*textureView: GpuTextureView,
+
+        //? if >= 1.21.11
+        //sampler: GpuSampler,
+
+        *///? } else {
+        texture: Identifier,
+        //? }
+        pipeline: RenderPipeline
+    ) {
+        val renderTarget = Minecraft.getInstance().mainRenderTarget
+        val encoder = RenderSystem.getDevice().createCommandEncoder()
+
+        meshData.sortQuads(bufferBuilder, RenderSystem.getProjectionType().vertexSorting())
+        RenderSystem.getDevice().createBuffer({ "Talk Balloons $name Vertex Buffer" }, BufferType.VERTICES,
+            //? if <= 1.21.5 {
+            BufferUsage.DYNAMIC_WRITE,
+            //? }
+            meshData.vertexBuffer()
+        ).use { vertexBuffer ->
+            val indexBuffer = meshData.indexBuffer()?.let { RenderSystem.getDevice().createBuffer({ "Talk Balloons $name Index Buffer" }, BufferType.INDICES,
+                //? if <= 1.21.5 {
+                BufferUsage.DYNAMIC_WRITE,
+                //? }
+                it
+            ) }
+
+            encoder.createRenderPass(
+                //? if >= 1.21.6 {
+                /*{ "TalkBalloons $name Render Pass" },
+                *///? }
+                renderTarget.colorTextureView!!, OptionalInt.empty(), renderTarget.depthTextureView!!, OptionalDouble.empty()
+            ).use { pass ->
+                //? if >= 1.21.8 {
+                /*RenderSystem.bindDefaultUniforms(pass)
+                *///? }
+
+                //? if <= 1.21.10 {
+
+                //? if <= 1.21.5 {
+                val textureView = Minecraft.getInstance().textureManager.getTexture(texture).textureView
+                //? }
+
+                pass.bindSampler("Sampler0", textureView)
+                //? if <= 1.21.5 {
+                Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer()
+                pass.bindSampler("Sampler2", RenderSystem.getShaderTexture(2)!!)
+                //? } else {
+                /*pass.bindSampler("Sampler2", Minecraft.getInstance().gameRenderer.lightTexture().textureView)
+                *///? }
+                //? } else {
+                /*pass.bindTexture("Sampler0", textureView, sampler)
+
+                //? if <= 1.21.11 {
+                val lightTexture = Minecraft.getInstance().gameRenderer.lightTexture()
+                pass.bindTexture("Sampler2", lightTexture.textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR))
+                //? } else {
+                /*pass.bindTexture("Sampler2", Minecraft.getInstance().gameRenderer.lightmap(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR))
+                *///? }
+
+                *///? }
+
+                pass.setPipeline(pipeline)
+                pass.setVertexBuffer(0, vertexBuffer)
+                indexBuffer?.let {
+                    pass.setIndexBuffer(it, meshData.drawState().indexType)
+                }
+
+                //? if <= 1.21.5 {
+                pass.drawIndexed(0, meshData.drawState().indexCount)
+                //? } else {
+                /*pass.drawIndexed(0, 0, meshData.drawState().indexCount, 1)
+                *///? }
+            }
+
+            indexBuffer?.close()
+        }
+
+        meshData.close()
+    }
+    *///? }
+
+    private fun drawString(
+        pose: PoseStack.Pose, font: Font, text: FormattedCharSequence, x: Float, y: Float, color: Int, dropShadow: Boolean, light: Int,
+        //? if >= 1.21.8 {
+        /*consumers: MutableMap<GpuTextureView, BufferBuilder>
+        *///? }
+    ) {
+        //? if < 1.21.8 {
         // otherwise text looks wonk af
         if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
             return
 
         font.drawInBatch(text, x, y, color, dropShadow, pose.pose(), Minecraft.getInstance().renderBuffers().bufferSource(), Font.DisplayMode.NORMAL, 0, light)
+        //? } else {
+        /*val prepared = font.prepareText(text, x, y, color, dropShadow,
+            //? if >= 1.21.11 {
+            /*true,
+            *///? }
+            0,
+        )
+        prepared.visit(object : Font.GlyphVisitor {
+            //? if > 1.21.8 {
+            /*override fun acceptEffect(effect: TextRenderable) {
+                this.accept(effect)
+            }
+
+            //? if >= 1.21.11 {
+            /^override fun acceptGlyph(glyph: TextRenderable.Styled) {
+                this.accept(glyph)
+            }
+            ^///? } else {
+            override fun acceptGlyph(glyph: TextRenderable) {
+                this.accept(glyph)
+            }
+            //? }
+
+            private fun accept(glyph: TextRenderable) {
+                val renderType = glyph.renderType(Font.DisplayMode.POLYGON_OFFSET)
+                val consumer = consumers.computeIfAbsent(glyph.textureView()!!) { BufferBuilder(this@BalloonRenderer.textBufferBuilder, renderType.mode(), renderType.format()) }
+                glyph.render(pose.pose(), consumer, light, false)
+            }
+            *///? } else {
+            override fun acceptEffect(glyph: BakedGlyph, effect: BakedGlyph.Effect) {
+                val renderType = glyph.renderType(Font.DisplayMode.POLYGON_OFFSET)
+                val consumer = consumers.computeIfAbsent(glyph.textureView()!!) { BufferBuilder(this@BalloonRenderer.textBufferBuilder, renderType.mode(), renderType.format()) }
+                glyph.renderEffect(effect, pose.pose(), consumer, light, false)
+            }
+
+            override fun acceptGlyph(instance: BakedGlyph.GlyphInstance) {
+                val glyph = instance.glyph
+                val renderType = glyph.renderType(Font.DisplayMode.POLYGON_OFFSET)
+                val consumer = consumers.computeIfAbsent(glyph.textureView()!!) { BufferBuilder(this@BalloonRenderer.textBufferBuilder, renderType.mode(), renderType.format()) }
+                glyph.renderChar(instance, pose.pose(), consumer, light, false)
+            }
+            //? }
+        })
+        *///? }
     }
 
     private fun blitSprite(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, width: Int, height: Int, color: Int = -1, z: Float = 0f, light: Int) {

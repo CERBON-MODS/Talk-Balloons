@@ -23,6 +23,10 @@
         "CameraRenderStateMixin",
         *///? }
         "GameRendererMixin",
+
+        //? if >= 1.21.8 {
+        /*"GuiRendererMixin",
+        *///? }
     ],
     "injectors": {
         "defaultRequire": 1

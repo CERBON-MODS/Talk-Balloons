@@ -30,8 +30,8 @@ kotlinlangforge = "2.12.0-k2.3.21"
 # https://github.com/BluSpring/SunsetConfig/blob/main/build.gradle.kts#L23
 sunset = "1.2.0"
 
-# https://modrinth.com/mod/iris/versions?g=26.1.2
-iris = "1.7.6+1.20.1"
+# https://modrinth.com/mod/iris/versions
+iris = "1.8.11+1.21.5-fabric"
 
 [libraries]
 fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }

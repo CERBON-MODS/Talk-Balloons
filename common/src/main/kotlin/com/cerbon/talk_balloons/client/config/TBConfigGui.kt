@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation as Identifier
 /*import net.minecraft.resources.Identifier
  *///?}
 import com.cerbon.talk_balloons.client.BalloonRenderer
+import com.cerbon.talk_balloons.client.QueuedBalloonRender
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
 import com.cerbon.talk_balloons.config.ITBConfig
 import com.cerbon.talk_balloons.config.SynchronizedConfigType
@@ -30,7 +31,11 @@ import dev.isxander.yacl3.gui.controllers.dropdown.AbstractDropdownController
 import dev.isxander.yacl3.gui.controllers.dropdown.AbstractDropdownControllerElement
 import dev.isxander.yacl3.gui.image.ImageRenderer
 import net.minecraft.client.Minecraft
+//? if < 26.1 {
 import net.minecraft.client.gui.GuiGraphics
+//? } else {
+/*import net.minecraft.client.gui.GuiGraphicsExtractor as GuiGraphics
+*///? }
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import java.awt.Color
@@ -54,31 +59,37 @@ class GuiBalloonRenderer(private val config: ITBConfig, private val sneaking: Bo
         add(Component.translatable("talk_balloons.config.preview.tiny"))
     }
 
+    companion object {
+        @JvmStatic val renderQueue = Queues.newConcurrentLinkedQueue<QueuedBalloonRender>()
+    }
+
     override fun render(graphics: GuiGraphics, x: Int, y: Int, renderWidth: Int, tickDelta: Float): Int {
         val poseStack = PoseStack()
         poseStack.pushPose()
 
+        val balloonHeight = BalloonRenderer.calculateEstimatedBalloonHeight(messages, Minecraft.getInstance().font, SynchronizedConfigData.EMPTY, config)
         val scaleDown = ((renderWidth - 5f) / config.maxBalloonWidth.toFloat()).coerceAtMost(1f)
         poseStack.translate(
             x.toFloat() + (renderWidth / 2f),
-            y.toFloat() + (BalloonRenderer.calculateEstimatedBalloonHeight(messages, Minecraft.getInstance().font, SynchronizedConfigData.EMPTY, config) * scaleDown),
+            y.toFloat() + (balloonHeight * scaleDown),
             9000f
         )
         poseStack.scale(-40f, -40f, -40f)
         poseStack.scale(scaleDown, scaleDown, 1f)
 
-        val renderQueue = Queues.newConcurrentLinkedQueue<MeshData>()
         BalloonRenderer.submitBalloons(poseStack, 0f, Minecraft.getInstance().font,
             messages,
             -config.balloonsHeightOffset, sneaking,
             SynchronizedConfigData.EMPTY, FULL_BRIGHT, renderQueue, config
         )
 
+        //? if <= 1.21.8 {
         BalloonRenderer.renderBalloons(renderQueue)
+        //? }
 
         poseStack.popPose()
 
-        return 100
+        return balloonHeight
     }
 
     override fun close() {
@@ -94,6 +105,17 @@ class IdentifierDropdownControllerBuilder(val option: Option<Identifier>, val va
 class IdentifierDropdownController(option: Option<Identifier>, values: List<Identifier>, val translationKey: String) : AbstractDropdownController<Identifier>(option, values.map { it.toString() }) {
     override fun getString(): String {
         return this.option.pendingValue().toString()
+    }
+
+    override fun formatValue(): Component {
+        if (this.string.isEmpty())
+            return super.formatValue()
+
+        return Component.translatableWithFallback(
+            Identifier.tryParse(this.string)
+                ?.toLanguageKey(this.translationKey) ?: return super.formatValue(),
+            this.string
+        )
     }
 
     override fun setFromString(value: String?) {
@@ -165,7 +187,7 @@ operator fun <T, V> CompletableFuture<OptionRegistrar>.getValue(thisRef: T, prop
     return this.futureRef<V>(property.name).get().pendingValue()
 }
 
-fun generateConfigGui(lastScreen: Screen?) = YetAnotherConfigLib(TBConstants.MOD_ID) {
+fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConstants.MOD_ID) {
     save {
         TBConfigManager.config.save()
         TBClientPacketHandler.syncBalloonConfig()
