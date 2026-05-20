@@ -4,6 +4,7 @@ import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.api.TalkBalloonsApi;
 import com.cerbon.talk_balloons.network.VanillaPacketSender;
 import com.cerbon.talk_balloons.network.packets.CreateBalloonPacket;
+import com.cerbon.talk_balloons.util.BalloonData;
 import com.cerbon.talk_balloons.util.mixin.ITalkBalloonsPlayer;
 import net.minecraft.network.chat.Component;
 //? if < 1.19 {
@@ -35,7 +36,7 @@ public class TalkBalloonsApiImpl implements TalkBalloonsApi {
 
     @Override
     public Collection<Component> getBalloonMessages(Player player) {
-        return ((ITalkBalloonsPlayer) player).talk_balloons$getBalloonMessages();
+        return ((ITalkBalloonsPlayer) player).talk_balloons$getBalloonMessages().stream().map(BalloonData::text).toList();
     }
 
     @Override

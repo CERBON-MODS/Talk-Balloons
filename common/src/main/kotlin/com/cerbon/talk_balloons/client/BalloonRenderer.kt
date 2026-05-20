@@ -12,7 +12,8 @@ import com.cerbon.talk_balloons.compat.CompatHandler
 import com.cerbon.talk_balloons.compat.iris.IrisCompat
 import com.cerbon.talk_balloons.config.ITBConfig
 import com.cerbon.talk_balloons.util.HistoricalData
-import com.cerbon.talk_balloons.util.SynchronizedConfigData
+import com.cerbon.talk_balloons.config.SynchronizedConfigData
+import com.cerbon.talk_balloons.util.BalloonData
 //? if >= 1.21.5 {
 /*import com.mojang.blaze3d.buffers.GpuBuffer
 //? if <= 1.21.5 {
@@ -47,7 +48,6 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.BufferUploader
 //? }
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
-import com.mojang.blaze3d.vertex.MeshData
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.blaze3d.vertex.VertexFormat
@@ -81,7 +81,7 @@ import net.minecraft.client.renderer.RenderPipelines
 *///? }
 
 //? if < 1.21.11 {
-import net.minecraft.resources.ResourceLocation as Identifier
+
 //? } else {
 /*import com.mojang.blaze3d.textures.GpuSampler
 *///? }
@@ -163,21 +163,23 @@ object BalloonRenderer {
     *///? }
 
     @JvmStatic
-    fun calculateEstimatedBalloonHeight(messages: List<Component>, font: Font, configData: SynchronizedConfigData, config: ITBConfig): Int {
+    fun calculateEstimatedBalloonHeight(messages: List<BalloonData>, font: Font, configData: SynchronizedConfigData, config: ITBConfig): Int {
         val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(config.balloonStyle.identifier)!!)
         val padding = configData.balloonPadding.orElse(config.balloonPadding)!!
         val fontHeight = font.lineHeight
-        val dividedMessages = messages.map { font.split(it, config.maxBalloonWidth) }
+        val dividedMessages = messages.map { font.split(it.text, config.maxBalloonWidth) }
 
         return dividedMessages.sumOf { ((padding * 2) + style.margins.verticalMargins + it.size * fontHeight) + config.distanceBetweenBalloons }
     }
 
     @JvmStatic @JvmOverloads
-    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<Component>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int, renderQueue: AbstractQueue<QueuedBalloonRender> = this.renderQueue, config: ITBConfig = TalkBalloons.config) {
+    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<BalloonData>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int, renderQueue: AbstractQueue<QueuedBalloonRender> = this.renderQueue, config: ITBConfig = TalkBalloons.config) {
         if (messages.isEmpty())
             return
 
-        //? if >= 1.21.5 {
+        val partialTick = Minecraft.getInstance().timer.getGameTimeDeltaPartialTick(true)
+
+        //? if >= 1.21.4 {
         /*if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
             return
         *///? }
@@ -197,24 +199,35 @@ object BalloonRenderer {
         /*val textConsumers = mutableMapOf<GpuTextureView, BufferBuilder>()
         *///? }
 
-        val balloonOpacity = ((if (isSneaking) config.balloonSneakingOpacity else config.balloonOpacity) * 255).toInt()
+        val defaultBalloonOpacity = if (isSneaking) config.balloonSneakingOpacity else config.balloonOpacity
         val padding = configData.balloonPadding.orElse(config.balloonPadding)!!
-        val textColor = (configData.textColor.orElse(config.textColor)!! and 0x00FFFFFF) or (balloonOpacity shl 24)
-        val balloonTint = ((if (style.allowsTint)
+        val defaultTextColor = configData.textColor.orElse(config.textColor)!! and 0x00FFFFFF
+        val defaultBalloonTint = (if (style.allowsTint)
             configData.balloonTint.orElse(config.balloonTint)!!
-        else 0xFFFFFF) and 0x00FFFFFF) or (balloonOpacity shl 24)
+        else 0xFFFFFF) and 0x00FFFFFF
         val fontHeight = font.lineHeight
 
         var balloonDistance = 0f
 
+        val currentTime = System.currentTimeMillis()
+        val fadeOutMs = (config.balloonFadeOut * 1000).toInt()
+
         messages.asReversed().forEachIndexed { index, message ->
+            val fadeAmount = if (message.ticksToLive > 0 && currentTime - message.creationTime >= (message.ticksToLive * 50) - fadeOutMs)
+                Mth.clamp(((message.ticksToLive * 50) - (currentTime - message.creationTime)) / fadeOutMs.toFloat(), 0f, 1f)
+            else 1f
+            val balloonOpacity = ((defaultBalloonOpacity * fadeAmount) * 255).toInt()
+                .coerceAtLeast(10) // funny bug, when we're at 0 the text becomes full opacity
+            val textColor = defaultTextColor or (balloonOpacity shl 24)
+            val balloonTint = defaultBalloonTint or (balloonOpacity shl 24)
+
             poseStack.pushPose()
 
             poseStack.translate(0.0f, playerHeight + config.balloonsHeightOffset, 0.0f)
             poseStack.mulPose(Axis.YP.rotationDegrees(-cameraYaw))
             poseStack.scale(-0.025f, -0.025f, -0.025f)
 
-            val dividedMessage = font.split(message, config.maxBalloonWidth)
+            val dividedMessage = font.split(message.text, config.maxBalloonWidth)
             val greatestTextWidth = dividedMessage.maxOf { font.width(it) }
 
             var textDistance = 0
@@ -234,7 +247,7 @@ object BalloonRenderer {
                     textDistance += fontHeight
                 }
             } else {
-                drawString(poseStack.last(), font, message.visualOrderText, -greatestTextWidth / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance, textColor, false, light,
+                drawString(poseStack.last(), font, message.text.visualOrderText, -greatestTextWidth / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance, textColor, false, light,
                     //? if >= 1.21.8 {
                     /*textConsumers
                     *///? }
@@ -269,6 +282,11 @@ object BalloonRenderer {
 
     @JvmStatic @JvmOverloads
     fun renderBalloons(queue: AbstractQueue<QueuedBalloonRender> = this.renderQueue) {
+        //? if >= 1.21.4 {
+        /*if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
+            return
+        *///? }
+
         while (queue.isNotEmpty()) {
             val (meshData, textBuffers) = queue.remove()
 

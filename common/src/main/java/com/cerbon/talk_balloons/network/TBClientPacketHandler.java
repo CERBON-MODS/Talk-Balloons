@@ -6,7 +6,7 @@ import com.cerbon.talk_balloons.network.packets.CreateBalloonPacket;
 import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigPacket;
 import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigToPlayerPacket;
 import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusPacket;
-import com.cerbon.talk_balloons.util.SynchronizedConfigData;
+import com.cerbon.talk_balloons.config.SynchronizedConfigData;
 
 import net.minecraft.client.Minecraft;
 

@@ -44,6 +44,8 @@ object TBConfigManager {
         value("showOwnBalloon", Codec.BOOL, TBConfig::showOwnBalloon)
         value("onlyDisplayBalloons", Codec.BOOL, TBConfig::onlyDisplayBalloons)
 
+        float("balloonFadeOut", 0f, 5f, TBConfig::balloonFadeOut)
+
         value("syncedConfigs", SynchronizedConfigType.SET_CODEC, TBConfig::syncedConfigs)
     }
 }

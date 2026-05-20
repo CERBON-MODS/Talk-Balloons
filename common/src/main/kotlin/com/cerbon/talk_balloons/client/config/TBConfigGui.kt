@@ -14,10 +14,10 @@ import com.cerbon.talk_balloons.config.TBConfig
 import com.cerbon.talk_balloons.config.TBConfigManager
 import com.cerbon.talk_balloons.network.TBClientPacketHandler
 import com.cerbon.talk_balloons.util.HistoricalData
-import com.cerbon.talk_balloons.util.SynchronizedConfigData
+import com.cerbon.talk_balloons.config.SynchronizedConfigData
+import com.cerbon.talk_balloons.util.BalloonData
 import com.cerbon.talk_balloons.util.TBConstants
 import com.google.common.collect.Queues
-import com.mojang.blaze3d.vertex.MeshData
 import com.mojang.blaze3d.vertex.PoseStack
 import dev.isxander.yacl3.api.Binding
 import dev.isxander.yacl3.api.Controller
@@ -53,10 +53,10 @@ private fun <T> bindingFromSunset(name: String): Binding<T> {
 const val FULL_BRIGHT = 15728880
 
 class GuiBalloonRenderer(private val config: ITBConfig, private val sneaking: Boolean = false) : ImageRenderer {
-    val messages = HistoricalData<Component>(3).apply {
-        add(Component.translatable("talk_balloons.config.preview.short"))
-        add(Component.translatable("talk_balloons.config.preview.long"))
-        add(Component.translatable("talk_balloons.config.preview.tiny"))
+    val messages = HistoricalData<BalloonData>(3).apply {
+        add(BalloonData.create(Component.translatable("talk_balloons.config.preview.short"), 0))
+        add(BalloonData.create(Component.translatable("talk_balloons.config.preview.long"), 0))
+        add(BalloonData.create(Component.translatable("talk_balloons.config.preview.tiny"), 0))
     }
 
     companion object {
@@ -212,6 +212,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
         override val showOwnBalloon: Boolean by categories["global"]["preferences"]
         override val onlyDisplayBalloons: Boolean by categories["global"]["preferences"]
         override val syncedConfigs: EnumSet<SynchronizedConfigType> by TBConfig::syncedConfigs
+        override val balloonFadeOut: Float by categories["global"]["preferences"]
     }
 
     val global by categories.registering category@{
@@ -222,6 +223,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val balloonStyle by options.registering<Identifier> {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder))
                 }
 
@@ -235,6 +237,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val textColor by options.registering<Color> {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder))
                 }
 
@@ -245,6 +248,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val balloonTint by options.registering<Color> {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder))
                 }
 
@@ -274,6 +278,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val balloonOpacity by options.registering {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder))
                 }
 
@@ -285,6 +290,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val balloonSneakingOpacity by options.registering {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder, true))
                 }
 
@@ -296,6 +302,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val balloonsHeightOffset by options.registering {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder))
                 }
 
@@ -307,6 +314,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val distanceBetweenBalloons by options.registering {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder))
                 }
 
@@ -318,6 +326,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val minBalloonWidth by options.registering {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder))
                 }
 
@@ -329,6 +338,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val maxBalloonWidth by options.registering {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder))
                 }
 
@@ -340,6 +350,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
             val balloonPadding by options.registering {
                 descriptionBuilder {
+                    addDefaultText(1)
                     customImage(GuiBalloonRenderer(configHolder))
                 }
 
@@ -352,17 +363,36 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
 
         val preferences by groups.registering {
             val maxBalloons by options.registering {
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+
                 binding = bindingFromSunset("maxBalloons")
                 controller = slider(range = 1..16, step = 1)
             }
 
             val balloonAge by options.registering {
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+
                 binding = bindingFromSunset("balloonAge")
                 controller = slider(range = 0..120, step = 1, formatter = { value ->
                     if (value == 0)
                         Component.translatable("talk_balloons.config.always_display")
                     else
                         Component.translatable("talk_balloons.config.unit.second${if (value == 1) "" else "s"}", value)
+                })
+            }
+
+            val balloonFadeOut by options.registering {
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+
+                binding = bindingFromSunset("balloonFadeOut")
+                controller = slider(range = 0f..5f, step = 0.05f, formatter = { value ->
+                    Component.translatable("talk_balloons.config.unit.second${if (value == 1f) "" else "s"}", value)
                 })
             }
 
@@ -386,6 +416,10 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
         }
 
         val syncedConfigs by groups.registering {
+            descriptionBuilder {
+                addDefaultText(1)
+            }
+
             val sunsetValue = TBConfigManager.config.rootCategory.getValueById<EnumSet<SynchronizedConfigType>>("syncedConfigs")!!
 
             for (syncedType in SynchronizedConfigType.entries) {

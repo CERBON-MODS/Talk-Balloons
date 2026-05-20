@@ -1,4 +1,4 @@
-package com.cerbon.talk_balloons.util;
+package com.cerbon.talk_balloons.config;
 
 import java.util.*;
 

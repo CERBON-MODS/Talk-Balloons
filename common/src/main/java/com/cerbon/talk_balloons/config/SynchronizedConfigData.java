@@ -1,12 +1,9 @@
-package com.cerbon.talk_balloons.util;
+package com.cerbon.talk_balloons.config;
 
 import java.util.Optional;
 
 import com.cerbon.talk_balloons.TalkBalloons;
-import com.cerbon.talk_balloons.config.ITBConfig;
-import com.cerbon.talk_balloons.config.SynchronizedConfigType;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

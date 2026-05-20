@@ -28,6 +28,8 @@ interface ITBConfig {
     
     val showOwnBalloon: Boolean
     val onlyDisplayBalloons: Boolean
+
+    val balloonFadeOut: Float
     
     val syncedConfigs: EnumSet<SynchronizedConfigType>
 

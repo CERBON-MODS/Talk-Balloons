@@ -1,5 +1,6 @@
 package com.cerbon.talk_balloons.util.mixin;
 
+import com.cerbon.talk_balloons.util.BalloonData;
 import com.cerbon.talk_balloons.util.HistoricalData;
 import net.minecraft.network.chat.Component;
 //? if < 1.19 {
@@ -19,5 +20,5 @@ public interface ITalkBalloonsPlayer {
     }
 
     void talk_balloons$createBalloonMessage(Component text, int duration);
-    HistoricalData<Component> talk_balloons$getBalloonMessages();
+    HistoricalData<BalloonData> talk_balloons$getBalloonMessages();
 }

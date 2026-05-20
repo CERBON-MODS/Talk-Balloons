@@ -1,6 +1,6 @@
 package com.cerbon.talk_balloons.client;
 
-import com.cerbon.talk_balloons.util.SyncedConfigManager;
+import com.cerbon.talk_balloons.config.SyncedConfigManager;
 
 public class TalkBalloonsClient {
     public static final SyncedConfigManager syncedConfigs = new SyncedConfigManager();

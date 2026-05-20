@@ -1,7 +1,7 @@
 package com.cerbon.talk_balloons.network.packets;
 
 import com.cerbon.talk_balloons.network.TBPackets;
-import com.cerbon.talk_balloons.util.SynchronizedConfigData;
+import com.cerbon.talk_balloons.config.SynchronizedConfigData;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

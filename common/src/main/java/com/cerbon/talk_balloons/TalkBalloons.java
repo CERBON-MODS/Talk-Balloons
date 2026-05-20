@@ -6,7 +6,7 @@ import com.cerbon.talk_balloons.config.TBConfigManager;
 import com.cerbon.talk_balloons.network.TBPackets;
 import com.cerbon.talk_balloons.network.VanillaPacketSender;
 import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusPacket;
-import com.cerbon.talk_balloons.util.SyncedConfigManager;
+import com.cerbon.talk_balloons.config.SyncedConfigManager;
 import com.cerbon.talk_balloons.util.TBConstants;
 //? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation;
