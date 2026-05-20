@@ -83,6 +83,10 @@ class GuiBalloonRenderer(private val config: ITBConfig, private val sneaking: Bo
             SynchronizedConfigData.EMPTY, FULL_BRIGHT, renderQueue, config
         )
 
+        //? if < 1.21.6 {
+        BalloonRenderer.renderBalloons(renderQueue)
+        //? }
+
         poseStack.popPose()
 
         return balloonHeight
