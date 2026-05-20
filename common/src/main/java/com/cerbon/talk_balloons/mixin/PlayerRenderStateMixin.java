@@ -9,8 +9,10 @@ import com.cerbon.talk_balloons.util.mixin.IPlayerRenderState;
 *///?} else if >= 1.21.3 {
 /*import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 *///?}
-import net.minecraft.network.chat.Component;
 
+//? if >= 1.21.3 {
+/*import org.spongepowered.asm.mixin.Mixin;
+*///? }
 import org.spongepowered.asm.mixin.Unique;
 
 //? if >= 1.21.9 {

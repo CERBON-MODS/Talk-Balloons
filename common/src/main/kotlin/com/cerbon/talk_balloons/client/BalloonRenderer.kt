@@ -61,7 +61,6 @@ import net.minecraft.client.renderer.GameRenderer
 *///? }
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling
-import net.minecraft.network.chat.Component
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
 import java.util.AbstractQueue
@@ -84,6 +83,10 @@ import net.minecraft.client.renderer.RenderPipelines
 
 //? } else {
 /*import com.mojang.blaze3d.textures.GpuSampler
+*///? }
+
+//? if >= 1.21.4 {
+/*import com.mojang.blaze3d.vertex.MeshData
 *///? }
 
 object BalloonRenderer {
@@ -176,8 +179,6 @@ object BalloonRenderer {
     fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<BalloonData>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int, renderQueue: AbstractQueue<QueuedBalloonRender> = this.renderQueue, config: ITBConfig = TalkBalloons.config) {
         if (messages.isEmpty())
             return
-
-        val partialTick = Minecraft.getInstance().timer.getGameTimeDeltaPartialTick(true)
 
         //? if >= 1.21.4 {
         /*if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
