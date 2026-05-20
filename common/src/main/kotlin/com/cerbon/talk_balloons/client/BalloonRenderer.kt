@@ -80,7 +80,7 @@ import net.minecraft.client.renderer.RenderPipelines
 *///? }
 
 //? if < 1.21.11 {
-
+import net.minecraft.resources.ResourceLocation as Identifier
 //? } else {
 /*import com.mojang.blaze3d.textures.GpuSampler
 *///? }
