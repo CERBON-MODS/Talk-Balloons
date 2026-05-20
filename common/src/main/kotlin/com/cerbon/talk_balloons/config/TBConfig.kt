@@ -30,5 +30,5 @@ object TBConfig : ITBConfig {
     override var showOwnBalloon: Boolean = true
     override var onlyDisplayBalloons: Boolean = false
 
-    override var syncedConfigs: EnumSet<SynchronizedConfigType> = EnumSet.allOf(SynchronizedConfigType::class.java)
+    override var syncedConfigs: EnumSet<SynchronizedConfigType> = EnumSet.noneOf(SynchronizedConfigType::class.java)
 }
