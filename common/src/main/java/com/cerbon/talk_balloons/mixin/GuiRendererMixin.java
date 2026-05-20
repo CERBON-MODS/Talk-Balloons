@@ -25,10 +25,10 @@ import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
 @Mixin(GuiRenderer.class)
 *///? }
 public abstract class GuiRendererMixin {
-    //? if <= 1.21.8 {
-    @Shadow @Final
+    //? if >= 1.21.6 && <= 1.21.8 {
+    /*@Shadow @Final
     private CachedOrthoProjectionMatrixBuffer guiProjectionMatrixBuffer;
-    //? }
+    *///? }
 
     //? if >= 1.21.8 {
     /*@Inject(method = "draw", at = @At("TAIL"))
