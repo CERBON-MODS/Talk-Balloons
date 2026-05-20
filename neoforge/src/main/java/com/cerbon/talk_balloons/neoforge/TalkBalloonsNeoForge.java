@@ -52,12 +52,21 @@ public class TalkBalloonsNeoForge {
     public static void register(RegisterPayloadHandlersEvent event) {
         var registrar = event.registrar("" + TBPackets.PROTOCOL_VERSION);
         registrar.playBidirectional(TBPackets.STATUS.type(), TBPackets.STATUS.codec(), (packet, ctx) -> {
-            if (ctx.flow() == PacketFlow.CLIENTBOUND) {
-                TBClientPacketHandler.handleStatus(packet);
-            } else {
+            if (ctx.flow() == PacketFlow.SERVERBOUND) {
                 TBServerPacketHandler.handleStatus((ServerPlayer) ctx.player(), packet);
             }
-        });
+        //? if >= 1.21.8 {
+            /*}, (packet, ctx) -> {
+        *///? } else {
+            else {
+        //? }
+                TBClientPacketHandler.handleStatus(packet);
+            }
+
+            //? if < 1.21.8 {
+            }
+            //? }
+        );
 
         registrar.playToServer(TBPackets.SYNC_BALLOON_CONFIG.type(), TBPackets.SYNC_BALLOON_CONFIG.codec(), (packet, ctx) -> {
             TBServerPacketHandler.handleSyncBalloonConfig((ServerPlayer) ctx.player(), packet);
