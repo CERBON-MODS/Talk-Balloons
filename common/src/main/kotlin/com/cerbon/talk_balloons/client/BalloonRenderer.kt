@@ -445,10 +445,10 @@ object BalloonRenderer {
             }
 
             //? if >= 1.21.11 {
-            /^override fun acceptGlyph(glyph: TextRenderable.Styled) {
+            /*override fun acceptGlyph(glyph: TextRenderable.Styled) {
                 this.accept(glyph)
             }
-            ^///? } else {
+            *///? } else {
             override fun acceptGlyph(glyph: TextRenderable) {
                 this.accept(glyph)
             }
