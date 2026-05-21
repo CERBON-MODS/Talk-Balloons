@@ -151,7 +151,12 @@ fun Project.setupCommon(module: String) {
                 archiveClassifier = null
             }
 
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            if (module == "neoforge") {
+                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            } else if (!shouldRemap()) {
+                duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            }
+
             from(zipTree(tasks.named<Jar>("jar").get().archiveFile))
         }
 
