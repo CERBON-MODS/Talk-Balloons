@@ -1,3 +1,13 @@
-## [1.4.1] - 2025-12-22
-- Update to 1.21.11
-- Update Modern Networking to 1.2.5
+## [1.5.0] - 2026-05-21
+- Update to 26.1.2
+- Drop Cloth Config and Modern Networking dependencies
+- Drop version support for 1.18.2 - 1.20.6
+- Add KotlinLangForge dependency
+- Rewrite balloon rendering to use batched rendering
+- Implement support for [custom balloon styles](https://github.com/CERBON-MODS/Talk-Balloons/wiki/Resource-Pack-Customization)
+- Implement QSMP-style gold and dark balloon style
+- Rewrite configuration screen to use YetAnotherConfigLib
+  - Also implemented live config preview for balloon styles
+- Implement balloon fading out
+- Improve synchronized configs
+- Migrate balloon textures to `textures/balloons`

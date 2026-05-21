@@ -67,7 +67,7 @@ fun Project.setupCommon(module: String) {
         project.extensions.configure<ModPublishExtension>("publishMods") {
             displayName = "${common.project.mod.version}+${stonecutter.current.version} ($properLoaderName)"
             version = "${common.project.mod.version}+${stonecutter.current.version}-$module"
-            changelog = ""
+            changelog = rootProject.file("CHANGELOG.md").readText()
             type = ReleaseType.STABLE
             modLoaders.add(module)
 
