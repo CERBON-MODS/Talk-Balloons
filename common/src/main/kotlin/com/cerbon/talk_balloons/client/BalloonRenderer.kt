@@ -180,10 +180,8 @@ object BalloonRenderer {
         if (messages.isEmpty())
             return
 
-        //? if >= 1.21.4 {
-        /*if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
+        if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
             return
-        *///? }
 
         val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(config.balloonStyle.identifier)!!)
         //? if < 1.21.9 {
@@ -283,10 +281,8 @@ object BalloonRenderer {
 
     @JvmStatic @JvmOverloads
     fun renderBalloons(queue: AbstractQueue<QueuedBalloonRender> = this.renderQueue) {
-        //? if >= 1.21.4 {
-        /*if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
+        if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
             return
-        *///? }
 
         while (queue.isNotEmpty()) {
             val (meshData, textBuffers) = queue.remove()
