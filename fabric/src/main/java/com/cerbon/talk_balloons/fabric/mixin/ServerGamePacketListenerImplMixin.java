@@ -15,10 +15,9 @@ import net.minecraft.server.level.ServerPlayer;
 //? if >= 1.19.2
 import net.minecraft.network.chat.PlayerChatMessage;
 //? if >= 1.20.2 {
-/*import net.minecraft.server.network.CommonListenerCookie;
-import net.minecraft.server.network.FilteredText;
+import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
-*///?}
+//?}
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.network.TextFilter;
 import net.minecraft.server.players.PlayerList;
@@ -28,28 +27,27 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.bluspring.modernnetworking.api.minecraft.VanillaPacketSender;
 
 import java.util.UUID;
 import java.util.function.Function;
 
 @Mixin(ServerGamePacketListenerImpl.class)
-public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ /*extends ServerCommonPacketListenerImpl*//*?}*/ {
+public abstract class ServerGamePacketListenerImplMixin/*? if >= 1.20.2 {*/ extends ServerCommonPacketListenerImpl/*?}*/ {
     //? if <= 1.20.1
-    @Shadow @Final private MinecraftServer server;
+    //@Shadow @Final private MinecraftServer server;
 
     @Shadow public ServerPlayer player;
 
     //? if >= 1.20.2 {
-    /*public ServerGamePacketListenerImplMixin(MinecraftServer server, Connection connection, CommonListenerCookie cookie) {
+    public ServerGamePacketListenerImplMixin(MinecraftServer server, Connection connection, CommonListenerCookie cookie) {
         super(server, connection, cookie);
     }
-    *///?}
+    //?}
 
     @Shadow public abstract ServerPlayer getPlayer();
 
     //? if >= 1.19.2 {
-    @WrapWithCondition(method = {"method_45064"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"))
+    @WrapWithCondition(method = {"method_45064", "lambda$handleChat$1"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;)V"), require = 0)
     private boolean talk_balloons$sendBalloonToPlayers(ServerGamePacketListenerImpl instance, PlayerChatMessage message) {
         var text = /*? if <= 1.19.2 {*//*Component.literal(message.signedContent().plain())*//*?} else {*/message.decoratedContent()/*?}*/;
         TalkBalloonsApi.INSTANCE.broadcastBalloonMessage(this.getPlayer(), text);
