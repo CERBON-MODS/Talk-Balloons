@@ -13,6 +13,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+
+import com.google.common.collect.Lists;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Collection;
@@ -36,7 +38,7 @@ public class TalkBalloonsApiImpl implements TalkBalloonsApi {
 
     @Override
     public Collection<Component> getBalloonMessages(Player player) {
-        return ((ITalkBalloonsPlayer) player).talk_balloons$getBalloonMessages().stream().map(BalloonData::text).toList();
+        return Lists.transform(((ITalkBalloonsPlayer) player).talk_balloons$getBalloonMessages(), BalloonData::text);
     }
 
     @Override
