@@ -18,7 +18,11 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 //?} else {
 /*import net.minecraft.network.chat.TranslatableComponent;
 *///?}
+//? if >= 26.2 {
+/*import net.minecraft.world.entity.EntityTypes;
+*///? } else {
 import net.minecraft.world.entity.EntityType;
+//? }
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +54,13 @@ public class ChatUtils {
                 /*var value = ((HoverEvent.ShowEntity) mutableComponent.getStyle().getHoverEvent()).entity();
                  *///?}
 
-                if (value != null && value.type == EntityType.PLAYER) {
+                if (value != null
+                    //? if < 26.2 {
+                    && value.type == EntityType.PLAYER
+                    //? } else {
+                    /*&& value.type == EntityTypes.PLAYER
+                    *///? }
+                ) {
                     UUID uuid = value/*? if <= 1.21.4 {*/.id/*?} else {*//*.uuid*//*?}*/;
                     return new MessageContents(uuid, message);
                 }

@@ -1,2 +1,2 @@
-## [1.5.1] - 2026-05-23
-- Fixed broken API for removing balloons 
+## [1.5.2] - 2026-06-17
+- Update to 26.2 

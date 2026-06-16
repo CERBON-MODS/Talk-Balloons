@@ -80,7 +80,7 @@ class GuiBalloonRenderer(private val config: ITBConfig, private val sneaking: Bo
         BalloonRenderer.submitBalloons(poseStack, 0f, Minecraft.getInstance().font,
             messages,
             -config.balloonsHeightOffset, sneaking,
-            SynchronizedConfigData.EMPTY, FULL_BRIGHT, renderQueue, config
+            SynchronizedConfigData.EMPTY, FULL_BRIGHT, renderQueue, config, true
         )
 
         //? if < 1.21.6 {

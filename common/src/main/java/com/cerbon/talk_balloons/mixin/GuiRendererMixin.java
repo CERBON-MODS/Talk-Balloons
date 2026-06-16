@@ -42,7 +42,12 @@ public abstract class GuiRendererMixin {
         RenderSystem.getDynamicUniforms().writeTransform((new Matrix4f()).setTranslation(0.0F, 0.0F, -11000.0F), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f(), 0.0F);
         //? }
 
-        BalloonRenderer.renderBalloons(GuiBalloonRenderer.getRenderQueue());
+        BalloonRenderer.renderBalloons(
+            GuiBalloonRenderer.getRenderQueue()
+            //? if >= 26.2 {
+            /^, new Matrix4f().setTranslation(0f, 0f, -11000f)
+            ^///? }
+        );
 
         //? if <= 1.21.8 {
         RenderSystem.setProjectionMatrix(oldProjMat, oldProjType);

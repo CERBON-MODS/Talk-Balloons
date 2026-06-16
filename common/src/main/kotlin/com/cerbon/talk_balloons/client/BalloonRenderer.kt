@@ -89,6 +89,16 @@ import net.minecraft.resources.ResourceLocation as Identifier
 /*import com.mojang.blaze3d.vertex.MeshData
 *///? }
 
+//? if >= 26.2 {
+/*import com.mojang.blaze3d.PrimitiveTopology
+import com.mojang.blaze3d.pipeline.RenderTarget
+import net.minecraft.client.renderer.BindGroupLayouts
+import net.minecraft.client.renderer.rendertype.RenderType
+import org.joml.Matrix4f
+import java.util.Optional
+
+*///? }
+
 object BalloonRenderer {
     //? if < 1.21.9 {
     @JvmField val SPRITE_MANAGER = BalloonSpriteManager(Minecraft.getInstance().textureManager)
@@ -125,18 +135,28 @@ object BalloonRenderer {
         .withUniform("FogShape", UniformType.INT)
         // Fog (color) snippet
         .withUniform("FogColor", UniformType.VEC4)
-        //? } else {
+        //? } else if <= 26.1.2 {
         /*// Globals snippet
         .withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
         .withUniform("Projection", UniformType.UNIFORM_BUFFER)
         .withUniform("Fog", UniformType.UNIFORM_BUFFER)
+        *///? } else {
+        /*// Globals snippet
+        .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+        .withBindGroupLayout(BindGroupLayouts.FOG)
         *///? }
         // Particle snippet
         .withVertexShader("core/particle")
         .withFragmentShader("core/particle")
+        //? if <= 26.1.2 {
         .withSampler("Sampler0")
         .withSampler("Sampler2")
         .withVertexFormat(DefaultVertexFormat.PARTICLE, VertexFormat.Mode.QUADS)
+        //? } else {
+        /*.withBindGroupLayout(BindGroupLayouts.SAMPLER0_SAMPLER2)
+        .withPrimitiveTopology(PrimitiveTopology.QUADS)
+        .withVertexBinding(0, DefaultVertexFormat.PARTICLE)
+        *///? }
         // Balloon (ours)
         .withLocation(TalkBalloons.id("balloon"))
         //? if <= 1.21.11 {
@@ -145,7 +165,12 @@ object BalloonRenderer {
         .withDepthBias(3f, 3f) // polygon offset
         //? } else {
         /*.withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+
+        //? if < 26.2 {
         .withDepthStencilState(DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true, 3f, 3f))
+        //? } else {
+        /*.withDepthStencilState(DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, true, -3f, 3f))
+        *///? }
         *///? }
         .build()
     *///? }
@@ -165,6 +190,16 @@ object BalloonRenderer {
     }
     *///? }
 
+    //? if <= 26.1.2 {
+    typealias PrimitiveTopology = VertexFormat.Mode
+    //? }
+
+    //? if >= 26.2 {
+    /*fun RenderType.mode(): PrimitiveTopology = this.primitiveTopology()
+    val Minecraft.mainRenderTarget: RenderTarget
+        get() = this.gameRenderer.mainRenderTarget()
+    *///? }
+
     @JvmStatic
     fun calculateEstimatedBalloonHeight(messages: List<BalloonData>, font: Font, configData: SynchronizedConfigData, config: ITBConfig): Int {
         val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(config.balloonStyle.identifier)!!)
@@ -176,7 +211,10 @@ object BalloonRenderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun submitBalloons(poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<BalloonData>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int, renderQueue: AbstractQueue<QueuedBalloonRender> = this.renderQueue, config: ITBConfig = TalkBalloons.config) {
+    fun submitBalloons(
+        poseStack: PoseStack, cameraYaw: Float, font: Font, messages: HistoricalData<BalloonData>, playerHeight: Float, isSneaking: Boolean, configData: SynchronizedConfigData, light: Int, renderQueue: AbstractQueue<QueuedBalloonRender> = this.renderQueue, config: ITBConfig = TalkBalloons.config,
+        isGui: Boolean = false,
+    ) {
         if (messages.isEmpty())
             return
 
@@ -193,7 +231,7 @@ object BalloonRenderer {
         val arrowSprite = balloonAtlas.getSprite(style.arrow)
         *///? }
 
-        val consumer = BufferBuilder(this.bufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
+        val consumer = BufferBuilder(this.bufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.PARTICLE)
         //? if >= 1.21.8 {
         /*val textConsumers = mutableMapOf<GpuTextureView, BufferBuilder>()
         *///? }
@@ -236,11 +274,21 @@ object BalloonRenderer {
             val baseX = -(actualBalloonWidth / 2f)
             val baseY = -((padding - 1f).coerceAtLeast(0f))
 
+            //? if >= 26.2 {
+            /*if (isGui) {
+                poseStack.pushPose()
+                poseStack.translate(0f, 0f, -5f)
+            }
+            *///? }
+
             if (dividedMessage.size > 1) {
                 for (text in dividedMessage) {
                     drawString(poseStack.last(), font, text, -font.width(text) / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance + textDistance, textColor, false, light,
                         //? if >= 1.21.8 {
-                        /*textConsumers
+                        /*textConsumers,
+                        *///? }
+                        //? if >= 26.2 {
+                        /*isGui,
                         *///? }
                     )
                     textDistance += fontHeight
@@ -248,11 +296,20 @@ object BalloonRenderer {
             } else {
                 drawString(poseStack.last(), font, message.text.visualOrderText, -greatestTextWidth / 2f + 0.5f, baseY - (fontHeight * dividedMessage.size) - balloonDistance, textColor, false, light,
                     //? if >= 1.21.8 {
-                    /*textConsumers
+                    /*textConsumers,
+                    *///? }
+                    //? if >= 26.2 {
+                    /*isGui,
                     *///? }
                 )
                 textDistance += fontHeight
             }
+
+            //? if >= 26.2 {
+            /*if (isGui) {
+                poseStack.popPose()
+            }
+            *///? }
 
             val balloonHeight = textDistance + (padding * 2) + style.margins.verticalMargins - 2
             blitSprite(poseStack.last(), consumer, balloonSprite, baseX, -balloonDistance - balloonHeight, actualBalloonWidth, balloonHeight, balloonTint, light = light)
@@ -280,7 +337,12 @@ object BalloonRenderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun renderBalloons(queue: AbstractQueue<QueuedBalloonRender> = this.renderQueue) {
+    fun renderBalloons(
+        queue: AbstractQueue<QueuedBalloonRender> = this.renderQueue,
+        //? if >= 26.2 {
+        /*viewMatrix: Matrix4f = RenderSystem.getModelViewStack()
+        *///? }
+    ) {
         if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
             return
 
@@ -319,7 +381,10 @@ object BalloonRenderer {
                 *///? } else {
                 BalloonStyle.BALLOONS_SHEET,
                 //? }
-                BALLOON_PIPELINE
+                BALLOON_PIPELINE,
+
+                //? if >= 26.2
+                //viewMatrix
             )
 
             //? if >= 1.21.8 {
@@ -336,7 +401,10 @@ object BalloonRenderer {
                         RenderPipelines.GUI_TEXT
                     else
                     *///? }
-                        RenderPipelines.TEXT
+                        RenderPipelines.TEXT,
+
+                    //? if >= 26.2
+                    //viewMatrix
                 )
                 //? }
             }
@@ -360,7 +428,11 @@ object BalloonRenderer {
         *///? } else {
         texture: Identifier,
         //? }
-        pipeline: RenderPipeline
+        pipeline: RenderPipeline,
+
+        //? if >= 26.2 {
+        /*viewMatrix: Matrix4f,
+        *///? }
     ) {
         val renderTarget = Minecraft.getInstance().mainRenderTarget
         val encoder = RenderSystem.getDevice().createCommandEncoder()
@@ -383,10 +455,21 @@ object BalloonRenderer {
                 //? if >= 1.21.6 {
                 /*{ "TalkBalloons $name Render Pass" },
                 *///? }
-                renderTarget.colorTextureView!!, OptionalInt.empty(), renderTarget.depthTextureView!!, OptionalDouble.empty()
+                renderTarget.colorTextureView!!,
+                //? if < 26.2 {
+                OptionalInt.empty(),
+                //? } else {
+                /*Optional.empty(),
+                *///? }
+                renderTarget.depthTextureView!!, OptionalDouble.empty()
             ).use { pass ->
                 //? if >= 1.21.8 {
                 /*RenderSystem.bindDefaultUniforms(pass)
+                *///? }
+
+                //? if >= 26.2 {
+                /*val dynamicTransforms = RenderSystem.getDynamicUniforms().writeTransform(Matrix4f(viewMatrix))
+                pass.setUniform("DynamicTransforms", dynamicTransforms)
                 *///? }
 
                 //? if <= 1.21.10 {
@@ -415,15 +498,20 @@ object BalloonRenderer {
                 *///? }
 
                 pass.setPipeline(pipeline)
-                pass.setVertexBuffer(0, vertexBuffer)
+                pass.setVertexBuffer(0, vertexBuffer
+                    //? if >= 26.2
+                    //.slice()
+                )
                 indexBuffer?.let {
                     pass.setIndexBuffer(it, meshData.drawState().indexType)
                 }
 
                 //? if <= 1.21.5 {
                 pass.drawIndexed(0, meshData.drawState().indexCount)
-                //? } else {
+                //? } else if < 26.2 {
                 /*pass.drawIndexed(0, 0, meshData.drawState().indexCount, 1)
+                *///? } else {
+                /*pass.drawIndexed(meshData.drawState().indexCount, 1, 0, 0, 0)
                 *///? }
             }
 
@@ -437,7 +525,10 @@ object BalloonRenderer {
     private fun drawString(
         pose: PoseStack.Pose, font: Font, text: FormattedCharSequence, x: Float, y: Float, color: Int, dropShadow: Boolean, light: Int,
         //? if >= 1.21.8 {
-        /*consumers: MutableMap<GpuTextureView, BufferBuilder>
+        /*consumers: MutableMap<GpuTextureView, BufferBuilder>,
+        *///? }
+        //? if >= 26.2 {
+        /*isGui: Boolean,
         *///? }
     ) {
         //? if < 1.21.8 {
@@ -470,8 +561,18 @@ object BalloonRenderer {
             //? }
 
             private fun accept(glyph: TextRenderable) {
-                val renderType = glyph.renderType(Font.DisplayMode.POLYGON_OFFSET)
-                val consumer = consumers.computeIfAbsent(glyph.textureView()!!) { BufferBuilder(this@BalloonRenderer.textBufferBuilder, renderType.mode(), renderType.format()) }
+                //? if >= 26.2 {
+                /*val consumer = if (isGui) {
+                    val pipeline = glyph.guiPipeline()
+                    consumers.computeIfAbsent(glyph.textureView()) { BufferBuilder(this@BalloonRenderer.textBufferBuilder, pipeline.primitiveTopology, pipeline.getVertexFormatBinding(0)!!) }
+                } else {
+                *///? } else {
+                val consumer = run {
+                //? }
+                    val renderType = glyph.renderType(Font.DisplayMode.POLYGON_OFFSET)
+                    consumers.computeIfAbsent(glyph.textureView()!!) { BufferBuilder(this@BalloonRenderer.textBufferBuilder, renderType.mode(), renderType.format()) }
+                }
+
                 glyph.render(pose.pose(), consumer, light, false)
             }
             *///? } else {
