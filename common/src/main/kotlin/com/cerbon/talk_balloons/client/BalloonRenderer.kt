@@ -390,7 +390,6 @@ object BalloonRenderer {
             //? if >= 1.21.8 {
             /*for ((textureView, buffer) in textBuffers) {
                 buffer.sortQuads(this.textBufferBuilder, RenderSystem.getProjectionType().vertexSorting())
-                //? if < 26.2 {
                 drawBuffer("Text", this.textBufferBuilder, buffer, textureView,
                     //? if >= 1.21.11 {
                     /*RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST),
@@ -406,7 +405,6 @@ object BalloonRenderer {
                     //? if >= 26.2
                     //viewMatrix
                 )
-                //? }
             }
             *///? }
 
