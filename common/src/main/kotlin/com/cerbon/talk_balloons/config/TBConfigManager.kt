@@ -41,6 +41,8 @@ object TBConfigManager {
         ).xmap(::IdentifierHolder, IdentifierHolder::identifier), TBConfig::balloonStyle)
         integer("textColor", TBConfig::textColor)
         integer("balloonTint", TBConfig::balloonTint)
+
+        value("isEnabled", Codec.BOOL, TBConfig::isEnabled)
         value("showOwnBalloon", Codec.BOOL, TBConfig::showOwnBalloon)
         value("onlyDisplayBalloons", Codec.BOOL, TBConfig::onlyDisplayBalloons)
 

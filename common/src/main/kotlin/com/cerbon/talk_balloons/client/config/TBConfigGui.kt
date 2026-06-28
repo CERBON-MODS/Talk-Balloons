@@ -209,6 +209,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
             get() = categories["global"]["style"].futureRef<Color>("balloonTint").get().pendingValue().rgb
         override val balloonOpacity: Float by categories["global"]["style"]
         override val balloonSneakingOpacity: Float by categories["global"]["style"]
+        override val isEnabled: Boolean by categories["global"]["preferences"]
         override val showOwnBalloon: Boolean by categories["global"]["preferences"]
         override val onlyDisplayBalloons: Boolean by categories["global"]["preferences"]
         override val syncedConfigs: EnumSet<SynchronizedConfigType> by TBConfig::syncedConfigs
@@ -362,6 +363,15 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
         }
 
         val preferences by groups.registering {
+            val isEnabled by options.registering {
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+
+                binding = bindingFromSunset("isEnabled")
+                controller = tickBox()
+            }
+
             val maxBalloons by options.registering {
                 descriptionBuilder {
                     addDefaultText(1)

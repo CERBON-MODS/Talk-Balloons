@@ -27,6 +27,8 @@
     "yacl3.config.talk_balloons.category.global.group.style.option.balloonSneakingOpacity": "Balloon opacity when sneaking",
     "yacl3.config.talk_balloons.category.global.group.style.option.balloonSneakingOpacity.description": "The opacity of the balloons while the player is sneaking.",
 
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.isEnabled": "Enable Mod",
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.isEnabled.description": "When disabled, all balloons will stop rendering.",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.maxBalloons": "Max balloons",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.maxBalloons.description": "The maximum amount of balloons that are allowed for a player.",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.balloonAge": "Balloon age",

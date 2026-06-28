@@ -27,6 +27,7 @@ object TBConfig : ITBConfig {
     override var balloonOpacity: Float = 0.95f
     override var balloonSneakingOpacity: Float = 0.65f
 
+    override var isEnabled: Boolean = true
     override var showOwnBalloon: Boolean = true
     override var onlyDisplayBalloons: Boolean = false
 

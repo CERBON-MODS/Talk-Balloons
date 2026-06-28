@@ -25,7 +25,8 @@ interface ITBConfig {
     
     val balloonOpacity: Float
     val balloonSneakingOpacity: Float
-    
+
+    val isEnabled: Boolean
     val showOwnBalloon: Boolean
     val onlyDisplayBalloons: Boolean
 

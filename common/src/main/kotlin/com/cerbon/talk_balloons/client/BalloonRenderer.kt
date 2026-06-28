@@ -221,6 +221,9 @@ object BalloonRenderer {
         if (CompatHandler.isIrisLoaded && IrisCompat.isInShadowPass())
             return
 
+        if (!config.isEnabled)
+            return
+
         val style = BalloonStyleManager.getStyleById(configData.balloonStyle.orElse(config.balloonStyle.identifier)!!)
         //? if < 1.21.9 {
         val balloonSprite = SPRITE_MANAGER.getSpriteAccess(style.balloon)
