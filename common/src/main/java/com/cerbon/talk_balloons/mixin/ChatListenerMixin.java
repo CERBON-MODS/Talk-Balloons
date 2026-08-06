@@ -42,7 +42,7 @@ public class ChatListenerMixin {
         *///? }
     )
     private boolean tryGetChatMessageNCR(ChatComponent instance, Component component) {
-        if (TalkBalloonsClient.hasServerSupport())
+        if (TalkBalloonsClient.hasServerSupport() || !TalkBalloons.config.getShouldTryUseFallback())
             return true;
 
         ChatUtils.MessageContents contents = ChatUtils.tryExtractContents(component);

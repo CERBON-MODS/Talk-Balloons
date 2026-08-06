@@ -17,6 +17,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
         maven("https://maven.parchmentmc.org")
         maven("https://mvn.devos.one/releases")
         maven("https://mvn.devos.one/snapshots")

@@ -3,6 +3,10 @@ package com.cerbon.talk_balloons.config;
 import java.util.Optional;
 
 import com.cerbon.talk_balloons.TalkBalloons;
+import xyz.bluspring.modernnetworking.api.v2.codec.CompositeCodecs;
+import xyz.bluspring.modernnetworking.api.v2.codec.NetworkCodec;
+import xyz.bluspring.modernnetworking.api.v2.codec.NetworkCodecs;
+import xyz.bluspring.modernnetworking.minecraft.api.v2.codec.MinecraftNetworkCodecs;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -20,12 +24,12 @@ public record SynchronizedConfigData(
     Optional<Boolean> onlyDisplayBalloons
 ) {
     public static final SynchronizedConfigData EMPTY = new SynchronizedConfigData(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
-    public static final StreamCodec<FriendlyByteBuf, SynchronizedConfigData> NETWORK_CODEC = StreamCodec.composite(
-        ByteBufCodecs.optional(/*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/.STREAM_CODEC), SynchronizedConfigData::balloonStyle,
-        ByteBufCodecs.optional(ByteBufCodecs.VAR_INT), SynchronizedConfigData::textColor,
-        ByteBufCodecs.optional(ByteBufCodecs.VAR_INT), SynchronizedConfigData::balloonTint,
-        ByteBufCodecs.optional(ByteBufCodecs.VAR_INT), SynchronizedConfigData::balloonPadding,
-        ByteBufCodecs.optional(ByteBufCodecs.BOOL), SynchronizedConfigData::onlyDisplayBalloons,
+    public static final NetworkCodec<FriendlyByteBuf, SynchronizedConfigData> NETWORK_CODEC = CompositeCodecs.composite(
+        NetworkCodecs.optional(MinecraftNetworkCodecs.IDENTIFIER), SynchronizedConfigData::balloonStyle,
+        NetworkCodecs.optional(NetworkCodecs.VAR_INT), SynchronizedConfigData::textColor,
+        NetworkCodecs.optional(NetworkCodecs.VAR_INT), SynchronizedConfigData::balloonTint,
+        NetworkCodecs.optional(NetworkCodecs.VAR_INT), SynchronizedConfigData::balloonPadding,
+        NetworkCodecs.optional(NetworkCodecs.BOOL), SynchronizedConfigData::onlyDisplayBalloons,
         SynchronizedConfigData::new
     );
     

@@ -2,15 +2,20 @@ package com.cerbon.talk_balloons.network.packets;
 
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.network.TBPackets;
+import io.netty.buffer.ByteBuf;
+import org.jetbrains.annotations.NotNull;
+import xyz.bluspring.modernnetworking.api.v2.codec.CompositeCodecs;
+import xyz.bluspring.modernnetworking.api.v2.codec.NetworkCodec;
+import xyz.bluspring.modernnetworking.api.v2.codec.NetworkCodecs;
+import xyz.bluspring.modernnetworking.api.v2.packet.NetworkPacket;
+import xyz.bluspring.modernnetworking.api.v2.packet.PacketDefinition;
+import xyz.bluspring.modernnetworking.minecraft.api.v2.codec.MinecraftNetworkCodecs;
 
 import net.minecraft.core.UUIDUtil;
 //? if >= 1.20.6
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.UUID;
 
@@ -18,18 +23,13 @@ public record CreateBalloonPacket(
     UUID uuid,
     Component message,
     int balloonAge // If -1, use the client config's balloon age.
-) implements CustomPacketPayload {
-    public static final StreamCodec</*? if >= 1.20.6 {*/RegistryFriendlyByteBuf/*?} else {*//*FriendlyByteBuf*//*?}*/, CreateBalloonPacket> CODEC = StreamCodec.composite(
-        UUIDUtil.STREAM_CODEC, CreateBalloonPacket::uuid,
-        ComponentSerialization.STREAM_CODEC, CreateBalloonPacket::message,
-        ByteBufCodecs.VAR_INT, CreateBalloonPacket::balloonAge,
+) implements NetworkPacket {
+    public static final NetworkCodec</*? if >= 1.20.6 {*/RegistryFriendlyByteBuf/*?} else {*//*FriendlyByteBuf*//*?}*/, CreateBalloonPacket> CODEC = CompositeCodecs.composite(
+        MinecraftNetworkCodecs.toNetworkCodec(UUIDUtil.STREAM_CODEC), CreateBalloonPacket::uuid,
+        MinecraftNetworkCodecs.toNetworkCodec(ComponentSerialization.STREAM_CODEC), CreateBalloonPacket::message,
+        NetworkCodecs.VAR_INT, CreateBalloonPacket::balloonAge,
         CreateBalloonPacket::new
     );
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TBPackets.CREATE_BALLOON.type();
-    }
 
     public int getBalloonAge() {
         if (this.balloonAge() == -1) {
@@ -37,5 +37,10 @@ public record CreateBalloonPacket(
         }
 
         return this.balloonAge();
+    }
+
+    @Override
+    public @NotNull PacketDefinition<? extends ByteBuf, ? extends NetworkPacket> getDefinition() {
+        return TBPackets.CREATE_BALLOON;
     }
 }

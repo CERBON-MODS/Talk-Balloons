@@ -30,4 +30,5 @@ dependencies {
     moddedApi(libs.sunset)
     "include"(libs.sunset)
     "include"(moddedApi("dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-fabric")!!)
+    moddedApi("xyz.bluspring.modernnetworking:modernnetworking-fabric:${libs.versions.modernnetworking.get()}+${mod.dep("modernnetworking_mc", common?.project?.mod?.dep("modernnetworking_mc"))}")
 }

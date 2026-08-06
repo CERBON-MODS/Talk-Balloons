@@ -29,4 +29,5 @@ dependencies {
     moddedApi("dev.nyon:KotlinLangForge:${libs.versions.kotlinlangforge.get()}-${klfLangVersion}+forge")
     moddedApi(libs.sunset)
     jarJar(libs.sunset)
+    moddedApi("xyz.bluspring.modernnetworking:modernnetworking-forge:${libs.versions.modernnetworking.get()}+${mod.dep("modernnetworking_mc", common?.project?.mod?.dep("modernnetworking_mc"))}")
 }

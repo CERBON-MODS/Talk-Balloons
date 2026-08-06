@@ -36,7 +36,12 @@ dependencies {
     api(libs.fabric.kotlin) // Provides all the Kotlin stuff we'd ever need
 //    annotationProcessor(libs.mixinextras.common) // MixinExtras
     api(libs.mixinextras.common)
-    api(libs.sunset)
+    api(libs.sunset) {
+        isTransitive = false
+    }
     compileOnly(libs.iris)
     compileOnly("dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-${if (isLegacy) "forge" else "neoforge"}") // Use the Neo variant, since this is MDG.
+
+    api(libs.modernnetworking.api)
+    api("xyz.bluspring.modernnetworking:modernnetworking-common:${libs.versions.modernnetworking.get()}+${mod.dep("modernnetworking_mc", common?.project?.mod?.dep("modernnetworking_mc"))}")
 }

@@ -7,6 +7,11 @@ import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigToPlayerPacket;
 import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusPacket;
 import com.cerbon.talk_balloons.util.TBConstants;
 import io.netty.buffer.ByteBuf;
+import xyz.bluspring.modernnetworking.api.v2.codec.NetworkCodec;
+import xyz.bluspring.modernnetworking.api.v2.packet.NetworkPacket;
+import xyz.bluspring.modernnetworking.api.v2.packet.PacketDefinition;
+import xyz.bluspring.modernnetworking.api.v2.packet.registry.NamespacedPacketRegistry;
+import xyz.bluspring.modernnetworking.minecraft.api.v2.packet.MinecraftPacketRegistries;
 //? if >= 1.20.6
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,19 +20,21 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public class TBPackets {
     public static final int PROTOCOL_VERSION = 2;
+    private static final NamespacedPacketRegistry SERVER_REGISTRY = MinecraftPacketRegistries.SERVER_PLAY.namespaced(TBConstants.MOD_ID);
+    private static final NamespacedPacketRegistry CLIENT_REGISTRY = MinecraftPacketRegistries.CLIENT_PLAY.namespaced(TBConstants.MOD_ID);
 
     // Dual (C <-> S) packets
-    public static final CustomPacketPayload.TypeAndCodec<FriendlyByteBuf, TalkBalloonsStatusPacket> STATUS = register("status", TalkBalloonsStatusPacket.CODEC);
+    public static final PacketDefinition<FriendlyByteBuf, TalkBalloonsStatusPacket> STATUS = registerDual("status", TalkBalloonsStatusPacket.CODEC);
 
     // Serverbound (C -> S) packets
-    public static final CustomPacketPayload.TypeAndCodec<FriendlyByteBuf, SyncBalloonConfigPacket> SYNC_BALLOON_CONFIG = register("sync_balloon_config", SyncBalloonConfigPacket.CODEC);
+    public static final PacketDefinition<FriendlyByteBuf, SyncBalloonConfigPacket> SYNC_BALLOON_CONFIG = SERVER_REGISTRY.register("sync_balloon_config", SyncBalloonConfigPacket.CODEC);
 
     // Clientbound (S -> C) packets
-    public static final CustomPacketPayload.TypeAndCodec</*? if >= 1.20.6 {*/RegistryFriendlyByteBuf/*?} else {*//*FriendlyByteBuf*//*?}*/, CreateBalloonPacket> CREATE_BALLOON = register("create_balloon", CreateBalloonPacket.CODEC);
-    public static final CustomPacketPayload.TypeAndCodec<FriendlyByteBuf, SyncBalloonConfigToPlayerPacket> SYNC_CONFIG_TO_PLAYER = register("sync_config_to_player", SyncBalloonConfigToPlayerPacket.CODEC);
+    public static final PacketDefinition</*? if >= 1.20.6 {*/RegistryFriendlyByteBuf/*?} else {*//*FriendlyByteBuf*//*?}*/, CreateBalloonPacket> CREATE_BALLOON = CLIENT_REGISTRY.register("create_balloon", CreateBalloonPacket.CODEC);
+    public static final PacketDefinition<FriendlyByteBuf, SyncBalloonConfigToPlayerPacket> SYNC_CONFIG_TO_PLAYER = CLIENT_REGISTRY.register("sync_config_to_player", SyncBalloonConfigToPlayerPacket.CODEC);
 
-    private static <B extends FriendlyByteBuf, V extends CustomPacketPayload> CustomPacketPayload.TypeAndCodec<B, V> register(String path, StreamCodec<B, V> codec) {
-        return new CustomPacketPayload.TypeAndCodec<>(new CustomPacketPayload.Type<>(TalkBalloons.id(path)), codec);
+    private static <B extends FriendlyByteBuf, V extends NetworkPacket> PacketDefinition<B, V> registerDual(String path, NetworkCodec<B, V> codec) {
+        return SERVER_REGISTRY.register(CLIENT_REGISTRY.register(path, codec));
     }
 
     public static void init() {

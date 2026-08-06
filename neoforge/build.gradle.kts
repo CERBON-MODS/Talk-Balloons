@@ -19,7 +19,15 @@ val shadedDep by configurations.named("shadedDep")
 
 dependencies {
     api("dev.nyon:KotlinLangForge:${libs.versions.kotlinlangforge.get()}-${klfLangVersion}+neoforge")
-    api(libs.sunset)
-    jarJar(libs.sunset)
-    jarJar(api("dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-neoforge")!!)
+    api(libs.sunset) {
+        isTransitive = false
+    }
+
+    jarJar(libs.sunset) {
+        isTransitive = false
+    }
+    jarJar(api("dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-neoforge") {
+        exclude(group = "thedarkcolour") // go away KFF
+    })
+    api("xyz.bluspring.modernnetworking:modernnetworking-neoforge:${libs.versions.modernnetworking.get()}+${mod.dep("modernnetworking_mc", common?.project?.mod?.dep("modernnetworking_mc"))}")
 }

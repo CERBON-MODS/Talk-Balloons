@@ -30,8 +30,10 @@ interface ITBConfig {
     val showOwnBalloon: Boolean
     val onlyDisplayBalloons: Boolean
 
+    var shouldTryUseFallback: Boolean
+
     val balloonFadeOut: Float
-    
+
     val syncedConfigs: EnumSet<SynchronizedConfigType>
 
     // Workaround to https://github.com/FabricMC/tiny-remapper/issues/165

@@ -212,6 +212,7 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
         override val isEnabled: Boolean by categories["global"]["preferences"]
         override val showOwnBalloon: Boolean by categories["global"]["preferences"]
         override val onlyDisplayBalloons: Boolean by categories["global"]["preferences"]
+        override val shouldTryUseFallback: Boolean by categories["global"]["preferences"]
         override val syncedConfigs: EnumSet<SynchronizedConfigType> by TBConfig::syncedConfigs
         override val balloonFadeOut: Float by categories["global"]["preferences"]
     }

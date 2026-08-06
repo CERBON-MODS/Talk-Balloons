@@ -1,8 +1,8 @@
 [versions]
 # https://fabricmc.net/develop/
-fabric-loom = "1.16.+"
+fabric-loom = "1.17.+"
 # https://projects.neoforged.net/neoforged/moddevgradle
-moddevgradle = "2.0.140"
+moddevgradle = "2.0.143"
 # https://kotlinlang.org/docs/releases.html
 kotlin = "2.3.21"
 # https://codeberg.org/stonecutter/fletching-table/src/branch/main/build.gradle.kts#L18
@@ -30,6 +30,8 @@ kotlinlangforge = "2.12.0-k2.3.21"
 # https://github.com/BluSpring/SunsetConfig/blob/main/build.gradle.kts#L23
 sunset = "1.2.0"
 
+modernnetworking = "2.0.0"
+
 # https://modrinth.com/mod/iris/versions
 iris = "1.8.11+1.21.5-fabric"
 
@@ -43,6 +45,8 @@ mixinextras-fabric = { module = "io.github.llamalad7:mixinextras-fabric", versio
 mixinextras-forge = { module = "io.github.llamalad7:mixinextras-forge", version.ref = "mixinextras" }
 sunset = { module = "xyz.bluspring.sunset:sunset-config", version.ref = "sunset" }
 iris = { module = "maven.modrinth:iris", version.ref = "iris" }
+
+modernnetworking-api = { module = "xyz.bluspring.modernnetworking:modernnetworking-api", version.ref = "modernnetworking" }
 
 [plugins]
 moddevgradle = { id = "net.neoforged.moddev" }
