@@ -1,13 +1,9 @@
 package com.cerbon.talk_balloons.forge.event;
 
+import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
-import com.cerbon.talk_balloons.config.TBConfig;
-import com.cerbon.talk_balloons.network.TBClientPacketHandler;
-import com.cerbon.talk_balloons.util.TBConstants;
-import me.shedaniel.autoconfig.AutoConfig;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.api.distmarker.Dist;
+import com.cerbon.talk_balloons.client.config.TBConfigGuiKt;
+import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
 //? if <= 1.18.2 {
 /*import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.client.event.ScreenOpenEvent;
@@ -15,20 +11,17 @@ import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.client.ConfigScreenHandler;
 //?}
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 //? if < 1.21.6 {
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 //?} else {
 /*import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 *///?}
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@Mod.EventBusSubscriber(modid = TBConstants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class TBClientEventsForge {
-    private static Screen configScreenToHandle;
-
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         //? if <= 1.18.2 {
@@ -36,26 +29,26 @@ public class TBClientEventsForge {
         *///?} else {
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> {
         //?}
-            var screen = AutoConfig.getConfigScreen(TBConfig.class, parent).get();
-            configScreenToHandle = screen;
-            return screen;
+            return TBConfigGuiKt.generateConfigGui(parent);
         }));
-
-        TBConfig.ConfigGuiHandler.init();
     }
 
-    @Mod.EventBusSubscriber(modid = TBConstants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-    public static class TBForgeClientEvents {
-        @SubscribeEvent
-        public static void onScreenClose(/*? if <= 1.18.2 {*//*ScreenOpenEvent*//*?} else {*/ScreenEvent.Closing/*?}*/ event) {
-            if (configScreenToHandle != null && /*? if <= 1.18.2 {*//*Minecraft.getInstance().screen*//*?} else {*/event.getScreen()/*?}*/ == configScreenToHandle) {
-                TBClientPacketHandler.syncBalloonConfig();
-            }
-        }
+    @SubscribeEvent
+    public static void onRegisterResourceReloaders(RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener(BalloonRenderer.SPRITE_MANAGER);
+        event.registerReloadListener(BalloonStyleManager.INSTANCE);
+    }
 
+    public static class TBForgeClientEvents {
         @SubscribeEvent
         public static void onPlayerDisconnect(/*? if <= 1.18.2 {*//*ClientPlayerNetworkEvent.LoggedOutEvent*//*?} else {*/ClientPlayerNetworkEvent.LoggingOut/*?}*/ event) {
             TalkBalloonsClient.onClientDisconnect();
+        }
+
+        @SubscribeEvent
+        public static void onRenderEntities(RenderLevelStageEvent event) {
+            if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) return;
+            BalloonRenderer.renderBalloons();
         }
     }
 }

@@ -7,10 +7,17 @@ import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigPacket;
 import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigToPlayerPacket;
 import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusPacket;
 import com.cerbon.talk_balloons.config.SynchronizedConfigData;
+import xyz.bluspring.modernnetworking.minecraft.api.v2.packet.MinecraftServerPacketHandlers;
 
 import net.minecraft.client.Minecraft;
 
 public class TBClientPacketHandler {
+    public static void init() {
+        MinecraftServerPacketHandlers.PLAY.register(TBPackets.CREATE_BALLOON, (packet, ctx) -> TBClientPacketHandler.handleCreateBalloon(packet));
+        MinecraftServerPacketHandlers.PLAY.register(TBPackets.STATUS, (packet, ctx) -> TBClientPacketHandler.handleStatus(packet));
+        MinecraftServerPacketHandlers.PLAY.register(TBPackets.SYNC_CONFIG_TO_PLAYER, (packet, ctx) -> TBClientPacketHandler.handleSyncConfigToPlayer(packet));
+    }
+
     public static void handleCreateBalloon(CreateBalloonPacket packet) {
         var level = Minecraft.getInstance().level;
 

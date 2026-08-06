@@ -4,11 +4,8 @@ import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.cerbon.talk_balloons.client.config.TBConfigGuiKt;
 //? if < 1.21.9 {
-import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager;
 //? }
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
-import com.cerbon.talk_balloons.util.TBConstants;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
@@ -21,11 +18,9 @@ import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 /*import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 *///? }
 //? if > 1.20.4 {
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 //?} else {
-/*import net.neoforged.fml.common.Mod.EventBusSubscriber;
-import net.neoforged.neoforge.client.ConfigScreenHandler;
+/*import net.neoforged.neoforge.client.ConfigScreenHandler;
 *///?}
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;

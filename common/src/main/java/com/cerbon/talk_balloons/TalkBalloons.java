@@ -46,9 +46,9 @@ public class TalkBalloons {
 
 	public static /*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/ id(String path) {
 		//? if < 1.21 {
-		/*return new ResourceLocation(TBConstants.MOD_ID, path);
-		*///?} else {
-		return /*? if < 1.21.11 {*/ResourceLocation/*?} else {*//*Identifier*//*?}*/.fromNamespaceAndPath(TBConstants.MOD_ID, path);
-		//?}
+		return new ResourceLocation(TBConstants.MOD_ID, path);
+		//?} else {
+		/*return /^? if < 1.21.11 {^/ResourceLocation/^?} else {^//^Identifier^//^?}^/.fromNamespaceAndPath(TBConstants.MOD_ID, path);
+		*///?}
 	}
 }

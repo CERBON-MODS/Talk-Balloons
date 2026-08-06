@@ -27,6 +27,13 @@ issueTrackerURL="https://github.com/CERBON-MODS/Talk-Balloons/issues"
    ordering="NONE"
    side="BOTH"
 
+[[dependencies.${mod_id}]]
+    modId="modernnetworking"
+    type = "required"
+    versionRange="[${modernnetworking_version},)"
+    ordering="NONE"
+    side="BOTH"
+
 [[mixins]]
    config = "${mod_id}.mixins.json"
 

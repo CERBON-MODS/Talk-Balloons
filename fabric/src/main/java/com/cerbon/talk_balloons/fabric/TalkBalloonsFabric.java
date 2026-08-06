@@ -13,7 +13,6 @@ import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
 import com.cerbon.talk_balloons.compat.CompatHandler;
 import com.cerbon.talk_balloons.fabric.event.TBClientEvents;
 import com.cerbon.talk_balloons.fabric.event.TBServerEvents;
-import com.cerbon.talk_balloons.fabric.network.FabricNetworkRegistry;
 
 //? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +34,6 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
 
     @Override
     public void onInitialize() {
-        FabricNetworkRegistry.init();
         TalkBalloons.init();
         TBServerEvents.init();
         CompatHandler.isIrisLoaded = FabricLoader.getInstance().isModLoaded("iris");

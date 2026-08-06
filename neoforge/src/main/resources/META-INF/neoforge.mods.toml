@@ -27,6 +27,13 @@ versionRange="${minecraft_version_range_forge}"
 ordering="NONE"
 side="BOTH"
 
+[[dependencies.${mod_id}]]
+modId="modernnetworking"
+type = "required"
+versionRange="[${modernnetworking_version},)"
+ordering="NONE"
+side="BOTH"
+
 [[mixins]]
 config = "${mod_id}.mixins.json"
 

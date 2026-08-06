@@ -2,17 +2,11 @@ package com.cerbon.talk_balloons.neoforge.event;
 
 import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.api.TalkBalloonsApi;
-import com.cerbon.talk_balloons.util.TBConstants;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-//? if > 1.20.4 {
-import net.neoforged.fml.common.EventBusSubscriber;
-//?} else {
-/*import net.neoforged.fml.common.Mod.EventBusSubscriber;
-*///?}
 
 public class TBServerEventsNeoForge {
     @SubscribeEvent

@@ -4,11 +4,17 @@ import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigPacket;
 import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigToPlayerPacket;
 import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusPacket;
+import xyz.bluspring.modernnetworking.minecraft.api.v2.packet.MinecraftServerPacketHandlers;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 public class TBServerPacketHandler {
+    public static void init() {
+        MinecraftServerPacketHandlers.PLAY.register(TBPackets.STATUS, (packet, ctx) -> handleStatus(ctx.getPlayer(), packet));
+        MinecraftServerPacketHandlers.PLAY.register(TBPackets.SYNC_BALLOON_CONFIG, (packet, ctx) -> handleSyncBalloonConfig(ctx.getPlayer(), packet));
+    }
+
     public static void handleStatus(ServerPlayer player, TalkBalloonsStatusPacket packet) {
         if (packet.protocolVersion() <= TBPackets.PROTOCOL_VERSION) {
             TalkBalloons.addSupportedPlayer(player.getUUID());

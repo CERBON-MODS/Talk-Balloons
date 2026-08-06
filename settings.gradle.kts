@@ -22,7 +22,7 @@ stonecutter {
 
     create(rootProject) {
         versions(versions)
-        vcsVersion = "1.21.1"
+        vcsVersion = "1.20.1"
 
         branch("common")
         branch("fabric")

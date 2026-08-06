@@ -13,7 +13,7 @@ import xyz.bluspring.modernnetworking.api.v2.packet.PacketDefinition;
 import xyz.bluspring.modernnetworking.api.v2.packet.registry.NamespacedPacketRegistry;
 import xyz.bluspring.modernnetworking.minecraft.api.v2.packet.MinecraftPacketRegistries;
 //? if >= 1.20.6
-import net.minecraft.network.RegistryFriendlyByteBuf;
+//import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -30,7 +30,7 @@ public class TBPackets {
     public static final PacketDefinition<FriendlyByteBuf, SyncBalloonConfigPacket> SYNC_BALLOON_CONFIG = SERVER_REGISTRY.register("sync_balloon_config", SyncBalloonConfigPacket.CODEC);
 
     // Clientbound (S -> C) packets
-    public static final PacketDefinition</*? if >= 1.20.6 {*/RegistryFriendlyByteBuf/*?} else {*//*FriendlyByteBuf*//*?}*/, CreateBalloonPacket> CREATE_BALLOON = CLIENT_REGISTRY.register("create_balloon", CreateBalloonPacket.CODEC);
+    public static final PacketDefinition</*? if >= 1.20.6 {*//*RegistryFriendlyByteBuf*//*?} else {*/FriendlyByteBuf/*?}*/, CreateBalloonPacket> CREATE_BALLOON = CLIENT_REGISTRY.register("create_balloon", CreateBalloonPacket.CODEC);
     public static final PacketDefinition<FriendlyByteBuf, SyncBalloonConfigToPlayerPacket> SYNC_CONFIG_TO_PLAYER = CLIENT_REGISTRY.register("sync_config_to_player", SyncBalloonConfigToPlayerPacket.CODEC);
 
     private static <B extends FriendlyByteBuf, V extends NetworkPacket> PacketDefinition<B, V> registerDual(String path, NetworkCodec<B, V> codec) {
@@ -38,5 +38,7 @@ public class TBPackets {
     }
 
     public static void init() {
+        TBServerPacketHandler.init();
+        TBClientPacketHandler.init();
     }
 }

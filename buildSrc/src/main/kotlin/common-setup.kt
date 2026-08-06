@@ -7,6 +7,7 @@ import me.modmuss50.mpp.ModPublishExtension
 import me.modmuss50.mpp.ReleaseType
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.tasks.Copy
@@ -181,6 +182,7 @@ fun Project.setupCommon(module: String) {
     }
 
     val commonProject = stonecutter.node.sibling("")?.project ?: this
+    val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
     tasks.named<ProcessResources>("processResources") {
         properties(listOf("fabric.mod.json", "META-INF/mods.toml", "META-INF/neoforge.mods.toml"),
@@ -193,7 +195,9 @@ fun Project.setupCommon(module: String) {
 
             "minecraft_version_range_fabric" to commonProject.mod.prop("minecraft_version_range_fabric"),
             "minecraft_version_range_forge" to commonProject.mod.prop("minecraft_version_range_forge"),
-            "neoforge_version" to commonProject.mod.dep("neoforge", "")
+            "neoforge_version" to commonProject.mod.dep("neoforge", ""),
+            "forge_version" to commonProject.mod.dep("forge", ""),
+            "modernnetworking_version" to libs.findVersion("modernnetworking").get(),
         )
     }
 }

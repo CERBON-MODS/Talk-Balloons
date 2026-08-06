@@ -2,15 +2,15 @@ package com.cerbon.talk_balloons.mixin;
 
 import com.cerbon.talk_balloons.TalkBalloons;
 //? if < 1.20.6 {
-/*import com.cerbon.talk_balloons.client.TalkBalloonsClient;
+import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.cerbon.talk_balloons.util.ChatUtils;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-*///?} else {
-import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
-//?}
+//?} else {
+/*import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
+*///?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 //? if < 1.19 {
@@ -30,10 +30,10 @@ import java.util.UUID;
 
 @Mixin(
     //? if < 1.20.6 {
-    /*ClientPacketListener.class
-    *///?} else {
-    ClientCommonPacketListenerImpl.class
-    //?}
+    ClientPacketListener.class
+    //?} else {
+    /*ClientCommonPacketListenerImpl.class
+    *///?}
 )
 public class ClientPacketListenerMixin {
     //? if < 1.19 {

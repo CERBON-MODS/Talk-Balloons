@@ -10,7 +10,7 @@ plugins {
     id("idea")
 }
 
-stonecutter active "1.21.1"
+stonecutter active "1.20.1"
 
 allprojects {
     apply(plugin = "idea")
