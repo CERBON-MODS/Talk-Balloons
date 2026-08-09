@@ -11,16 +11,16 @@ import xyz.bluspring.modernnetworking.api.v2.packet.PacketDefinition;
 
 import net.minecraft.network.FriendlyByteBuf;
 
-public record TalkBalloonsStatusPacket(
+public record TalkBalloonsStatusClientPacket(
     int protocolVersion
 ) implements NetworkPacket {
-    public static final NetworkCodec<FriendlyByteBuf, TalkBalloonsStatusPacket> CODEC = CompositeCodecs.composite(
-        NetworkCodecs.VAR_INT, TalkBalloonsStatusPacket::protocolVersion,
-        TalkBalloonsStatusPacket::new
+    public static final NetworkCodec<FriendlyByteBuf, TalkBalloonsStatusClientPacket> CODEC = CompositeCodecs.composite(
+        NetworkCodecs.VAR_INT, TalkBalloonsStatusClientPacket::protocolVersion,
+        TalkBalloonsStatusClientPacket::new
     );
 
     @Override
     public @NotNull PacketDefinition<? extends ByteBuf, ? extends NetworkPacket> getDefinition() {
-        return TBPackets.STATUS;
+        return TBPackets.STATUS_CLIENT;
     }
 }

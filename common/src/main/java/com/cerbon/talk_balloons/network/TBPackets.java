@@ -1,12 +1,11 @@
 package com.cerbon.talk_balloons.network;
 
-import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.network.packets.CreateBalloonPacket;
 import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigPacket;
 import com.cerbon.talk_balloons.network.packets.SyncBalloonConfigToPlayerPacket;
-import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusPacket;
+import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusClientPacket;
+import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusServerPacket;
 import com.cerbon.talk_balloons.util.TBConstants;
-import io.netty.buffer.ByteBuf;
 import xyz.bluspring.modernnetworking.api.v2.codec.NetworkCodec;
 import xyz.bluspring.modernnetworking.api.v2.packet.NetworkPacket;
 import xyz.bluspring.modernnetworking.api.v2.packet.PacketDefinition;
@@ -22,7 +21,8 @@ public class TBPackets {
     private static final NamespacedPacketRegistry CLIENT_REGISTRY = MinecraftPacketRegistries.CLIENT_PLAY.namespaced(TBConstants.MOD_ID);
 
     // Dual (C <-> S) packets
-    public static final PacketDefinition<FriendlyByteBuf, TalkBalloonsStatusPacket> STATUS = registerDual("status", TalkBalloonsStatusPacket.CODEC);
+    public static final PacketDefinition<FriendlyByteBuf, TalkBalloonsStatusServerPacket> STATUS_SERVER = SERVER_REGISTRY.register("status/server", TalkBalloonsStatusServerPacket.CODEC);
+    public static final PacketDefinition<FriendlyByteBuf, TalkBalloonsStatusClientPacket> STATUS_CLIENT = CLIENT_REGISTRY.register("status/client", TalkBalloonsStatusClientPacket.CODEC);
 
     // Serverbound (C -> S) packets
     public static final PacketDefinition<FriendlyByteBuf, SyncBalloonConfigPacket> SYNC_BALLOON_CONFIG = SERVER_REGISTRY.register("sync_balloon_config", SyncBalloonConfigPacket.CODEC);

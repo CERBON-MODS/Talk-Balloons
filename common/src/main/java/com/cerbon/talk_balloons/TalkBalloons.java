@@ -5,7 +5,7 @@ import com.cerbon.talk_balloons.config.TBConfig;
 import com.cerbon.talk_balloons.config.TBConfigManager;
 import com.cerbon.talk_balloons.network.TBPackets;
 import com.cerbon.talk_balloons.network.VanillaPacketSender;
-import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusPacket;
+import com.cerbon.talk_balloons.network.packets.TalkBalloonsStatusClientPacket;
 import com.cerbon.talk_balloons.config.SyncedConfigManager;
 import com.cerbon.talk_balloons.util.TBConstants;
 //? if < 1.21.11 {
@@ -28,7 +28,7 @@ public class TalkBalloons {
 	}
 
 	public static void onPlayerJoin(ServerPlayer player) {
-		VanillaPacketSender.sendToPlayer(player, new TalkBalloonsStatusPacket(TBPackets.PROTOCOL_VERSION));
+		VanillaPacketSender.sendToPlayer(player, new TalkBalloonsStatusClientPacket(TBPackets.PROTOCOL_VERSION));
 	}
 
 	public static void onPlayerDisconnect(UUID uuid) {
