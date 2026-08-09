@@ -15,8 +15,6 @@ import xyz.bluspring.modernnetworking.minecraft.api.v2.packet.MinecraftPacketReg
 //? if >= 1.20.6
 //import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public class TBPackets {
     public static final int PROTOCOL_VERSION = 2;

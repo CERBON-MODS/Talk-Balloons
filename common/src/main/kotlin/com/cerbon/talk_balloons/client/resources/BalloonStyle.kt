@@ -3,6 +3,11 @@ package com.cerbon.talk_balloons.client.resources
 import com.cerbon.talk_balloons.TalkBalloons
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+//? if <= 1.20.1 {
+import com.mojang.datafixers.util.Either
+import com.mojang.serialization.DataResult
+import java.util.function.Function
+//? }
 //? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation as Identifier
 //? } else {
@@ -65,9 +70,9 @@ data class BalloonStyle(
                     .forGetter(BalloonStyle::arrow),
                 Codec.BOOL.optionalFieldOf("allows_tint", false)
                     .forGetter(BalloonStyle::allowsTint),
-                Codec.withAlternative(
+                withAlternative(
                     Margins.CODEC,
-                    Codec.withAlternative(
+                    withAlternative(
                         Codec.INT.listOf(4, 4).xmap({ Margins(it[0], it[1], it[2], it[3]) }, { listOf(it.top, it.bottom, it.left, it.right) }),
                         Codec.INT.xmap(::Margins, Margins::top)
                     )
@@ -76,5 +81,28 @@ data class BalloonStyle(
             )
                 .apply(instance, ::BalloonStyle)
         }
+
+        //? if <= 1.20.1 {
+        private fun <T> withAlternative(primary: Codec<T>, alternative: Codec<out T>): Codec<T> {
+            return Codec.either(primary, alternative)
+                .xmap({ it.map(Function.identity(), Function.identity()) }, { Either.left(it) })
+        }
+
+        private fun <T> Codec<T>.listOf(min: Int, max: Int): Codec<List<T>> = this.listOf()
+            .flatXmap({
+                if (it.size !in min..max)
+                    DataResult.error { "List is not between [$min,$max]!" }
+                else
+                    DataResult.success(it)
+            }, {
+                if (it.size !in min..max)
+                    DataResult.error { "List is not between [$min,$max]!" }
+                else
+                    DataResult.success(it)
+            })
+        //? } else {
+        /*private fun <T> withAlternative(primary: Codec<T>, alternative: Codec<out T>): Codec<T>
+            = Codec.withAlternative(primary, alternative)
+        *///? }
     }
 }

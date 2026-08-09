@@ -28,12 +28,13 @@ fabric-kotlin = "1.13.11+kotlin.2.3.21"
 kotlinlangforge = "2.12.0-k2.3.21"
 
 # https://github.com/BluSpring/SunsetConfig/blob/main/build.gradle.kts#L23
-sunset = "1.2.0"
+sunset = "1.3.0"
 
 modernnetworking = "2.0.0"
 
 # https://modrinth.com/mod/iris/versions
-iris = "1.8.11+1.21.5-fabric"
+iris-modern = "1.8.11+1.21.5-fabric"
+iris-legacy = "1.7.6+1.20.1"
 
 [libraries]
 fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
@@ -43,8 +44,8 @@ mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
 mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
 mixinextras-fabric = { module = "io.github.llamalad7:mixinextras-fabric", version.ref = "mixinextras" }
 mixinextras-forge = { module = "io.github.llamalad7:mixinextras-forge", version.ref = "mixinextras" }
-sunset = { module = "xyz.bluspring.sunset:sunset-config", version.ref = "sunset" }
-iris = { module = "maven.modrinth:iris", version.ref = "iris" }
+iris-modern = { module = "maven.modrinth:iris", version.ref = "iris-modern" }
+iris-legacy = { module = "maven.modrinth:iris", version.ref = "iris-legacy" }
 
 modernnetworking-api = { module = "xyz.bluspring.modernnetworking:modernnetworking-api", version.ref = "modernnetworking" }
 

@@ -8,6 +8,7 @@ import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager
 *///? }
 import com.cerbon.talk_balloons.client.resources.BalloonStyle
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
+import com.cerbon.talk_balloons.client.resources.GuiSpriteScaling
 import com.cerbon.talk_balloons.compat.CompatHandler
 import com.cerbon.talk_balloons.compat.iris.IrisCompat
 import com.cerbon.talk_balloons.config.ITBConfig
@@ -43,7 +44,11 @@ import java.util.OptionalInt
 
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferBuilder
-import com.mojang.blaze3d.vertex.ByteBufferBuilder
+
+//? if > 1.20.1 {
+/*import com.mojang.blaze3d.vertex.ByteBufferBuilder
+*///? }
+
 //? if <= 1.21.4 {
 import com.mojang.blaze3d.vertex.BufferUploader
 //? }
@@ -60,7 +65,6 @@ import net.minecraft.client.renderer.GameRenderer
 /*import net.minecraft.client.renderer.CoreShaders
 *///? }
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
-import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
 import java.util.AbstractQueue
@@ -175,7 +179,12 @@ object BalloonRenderer {
         .build()
     *///? }
 
-    private val bufferBuilder = ByteBufferBuilder(1 * 1024 * 1024) // 1 MiB of data max
+    private const val BALLOON_BUFFER_SIZE = 1 * 1024 * 1024 // 1 MiB of data max
+
+    //? if > 1.20.1 {
+    /*private val bufferBuilder = ByteBufferBuilder(BALLOON_BUFFER_SIZE)
+    *///? }
+
     //? if >= 1.21.8 {
     /*private val textBufferBuilder = ByteBufferBuilder(4 * 1024 * 1024) // 4 MiB of data max
     *///? }
@@ -234,7 +243,12 @@ object BalloonRenderer {
         val arrowSprite = balloonAtlas.getSprite(style.arrow)
         *///? }
 
-        val consumer = BufferBuilder(this.bufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.PARTICLE)
+        //? if > 1.20.1 {
+        /*val consumer = BufferBuilder(this.bufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.PARTICLE)
+        *///? } else {
+        val consumer = BufferBuilder(BALLOON_BUFFER_SIZE)
+        consumer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
+        //? }
         //? if >= 1.21.8 {
         /*val textConsumers = mutableMapOf<GpuTextureView, BufferBuilder>()
         *///? }
@@ -326,7 +340,12 @@ object BalloonRenderer {
             poseStack.popPose()
         }
 
-        val meshData = consumer.build()
+        val meshData = consumer
+            //? if > 1.20.1 {
+            /*.build()
+            *///? } else {
+            .endOrDiscardIfEmpty()
+            //? }
         if (meshData != null) {
             renderQueue.add(QueuedBalloonRender(meshData,
                 //? if >= 1.21.8 {
@@ -659,6 +678,16 @@ object BalloonRenderer {
         }
     }
 
+    //? if <= 1.20.1 {
+    private fun TextureAtlasSprite.getU(u: Float): Float = this.getU(u.toDouble() * 16)
+    private fun TextureAtlasSprite.getV(v: Float): Float = this.getV(v.toDouble() * 16)
+
+    private fun VertexConsumer.addVertex(pose: PoseStack.Pose, x: Float, y: Float, z: Float): VertexConsumer = this.vertex(pose.pose(), x, y, z)
+    private fun VertexConsumer.setUv(u: Float, v: Float): VertexConsumer = this.uv(u, v)
+    private fun VertexConsumer.setColor(color: Int): VertexConsumer = this.color(color)
+    private fun VertexConsumer.setLight(lightmap: Int): VertexConsumer = this.uv2(lightmap)
+    //? }
+
     private fun blitFromSprite(pose: PoseStack.Pose, consumer: VertexConsumer, sprite: TextureAtlasSprite, x: Float, y: Float, texWidth: Int, texHeight: Int, uOffset: Float, vOffset: Float, uWidth: Float, vHeight: Float, color: Int = -1, z: Float = 0f, light: Int) {
         this.blitDirect(pose, consumer, x, y, uWidth, vHeight,
             sprite.getU(uOffset / texWidth), sprite.getV(vOffset / texHeight),
@@ -679,20 +708,28 @@ object BalloonRenderer {
             .setUv(u0, v0)
             .setColor(color)
             .setLight(light)
+            //? if <= 1.20.1
+            .endVertex()
 
         consumer.addVertex(pose, x, y2, z)
             .setUv(u0, v1)
             .setColor(color)
             .setLight(light)
+            //? if <= 1.20.1
+            .endVertex()
 
         consumer.addVertex(pose, x2, y2, z)
             .setUv(u1, v1)
             .setColor(color)
             .setLight(light)
+            //? if <= 1.20.1
+            .endVertex()
 
         consumer.addVertex(pose, x2, y, z)
             .setUv(u1, v0)
             .setColor(color)
             .setLight(light)
+            //? if <= 1.20.1
+            .endVertex()
     }
 }

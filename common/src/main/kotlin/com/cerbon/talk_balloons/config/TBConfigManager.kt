@@ -11,6 +11,10 @@ import net.minecraft.resources.ResourceLocation as Identifier
  *///?}
 import xyz.bluspring.sunset.SunsetConfig
 import xyz.bluspring.sunset.serializer.JsonWithCommentsSerializer
+//? if <= 1.20.1 {
+import com.mojang.datafixers.util.Either
+import java.util.function.Function
+//? }
 import kotlin.io.path.Path
 
 object TBConfigManager {
@@ -25,16 +29,16 @@ object TBConfigManager {
         integer("balloonAge", 0, 120, TBConfig::balloonAge)
             .comment("In seconds")
 
-        value("balloonOpacity", Codec.withAlternative(
+        value("balloonOpacity", withAlternative(
             Codec.floatRange(0.15f, 1f),
             Codec.INT.xmap({ it / 255f }, { (it * 255).toInt() })
         ), TBConfig::balloonOpacity)
-        value("balloonSneakingOpacity", Codec.withAlternative(
+        value("balloonSneakingOpacity", withAlternative(
             Codec.floatRange(0.15f, 1f),
             Codec.INT.xmap({ it / 255f }, { (it * 255).toInt() })
         ), TBConfig::balloonSneakingOpacity)
 
-        value("balloonStyle", Codec.withAlternative(
+        value("balloonStyle", withAlternative(
             // convert old balloon style to new variant
             Codec.STRING.comapFlatMap({ oldId -> if (oldId.contains(":")) DataResult.error { "This is an actual ID!" } else DataResult.success(TalkBalloons.id("classic/${oldId.lowercase()}")) }, Identifier::toString),
             Identifier.CODEC
@@ -50,4 +54,14 @@ object TBConfigManager {
 
         value("syncedConfigs", SynchronizedConfigType.SET_CODEC, TBConfig::syncedConfigs)
     }
+
+    //? if <= 1.20.1 {
+    private fun <T> withAlternative(primary: Codec<T>, alternative: Codec<out T>): Codec<T> {
+        return Codec.either(primary, alternative)
+            .xmap({ it.map(Function.identity(), Function.identity()) }, { Either.left(it) })
+    }
+    //? } else {
+    /*private fun <T> withAlternative(primary: Codec<T>, alternative: Codec<out T>): Codec<T>
+        = Codec.withAlternative(primary, alternative)
+    *///? }
 }

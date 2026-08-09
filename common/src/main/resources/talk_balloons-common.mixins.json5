@@ -27,6 +27,11 @@
         //? if >= 1.21.8 {
         /*"GuiRendererMixin",
         *///? }
+
+        //? if <= 1.20.1 {
+        "SpriteContentsMixin",
+        "SpriteLoaderMixin",
+        //? }
     ],
     "injectors": {
         "defaultRequire": 1

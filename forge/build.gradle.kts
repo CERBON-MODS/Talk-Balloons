@@ -27,7 +27,19 @@ dependencies {
     annotationProcessor(libs.mixinextras.forge)
     jarJar(libs.mixinextras.forge)
     moddedApi("dev.nyon:KotlinLangForge:${libs.versions.kotlinlangforge.get()}-${klfLangVersion}+forge")
-    moddedApi(libs.sunset)
-    jarJar(libs.sunset)
+
+    api(jarJar("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}") {
+        isTransitive = false
+    })
+    if (stonecutter.eval(stonecutter.current.version, "<=1.20.4")) {
+        api(jarJar("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu6") {
+            isTransitive = false
+        })
+    } else {
+        api(jarJar("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu8") {
+            isTransitive = false
+        })
+    }
+
     moddedApi("xyz.bluspring.modernnetworking:modernnetworking-forge:${libs.versions.modernnetworking.get()}+${mod.dep("modernnetworking_mc", common?.project?.mod?.dep("modernnetworking_mc"))}")
 }

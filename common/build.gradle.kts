@@ -36,11 +36,26 @@ dependencies {
     api(libs.fabric.kotlin) // Provides all the Kotlin stuff we'd ever need
 //    annotationProcessor(libs.mixinextras.common) // MixinExtras
     api(libs.mixinextras.common)
-    api(libs.sunset) {
-        isTransitive = false
+
+    api("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}")
+    if (stonecutter.eval(stonecutter.current.version, "<=1.20.4")) {
+        api("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu6")
+    } else {
+        api("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu8")
     }
-    compileOnly(libs.iris)
-    compileOnly("dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-${if (isLegacy) "forge" else "neoforge"}") // Use the Neo variant, since this is MDG.
+
+    if (stonecutter.eval(stonecutter.current.version, ">=1.21.5")) {
+        compileOnly(libs.iris.modern)
+    } else {
+        compileOnly(libs.iris.legacy)
+    }
+    val yaclDep = "dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-${if (isLegacy) "forge" else "neoforge"}" // Use the Neo variant, since this is MDG.
+
+    if (stonecutter.eval(stonecutter.current.version, "<=1.20.1")) {
+        "modCompileOnly"(yaclDep)
+    } else {
+        compileOnly(yaclDep)
+    }
 
     api(libs.modernnetworking.api)
     api("xyz.bluspring.modernnetworking:modernnetworking-common:${libs.versions.modernnetworking.get()}+${mod.dep("modernnetworking_mc", common?.project?.mod?.dep("modernnetworking_mc"))}")

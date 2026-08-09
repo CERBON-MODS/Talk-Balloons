@@ -22,18 +22,6 @@ public class TBClientEvents {
             TalkBalloonsClient.onClientDisconnect();
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(TBPackets.STATUS.type(), (packet, ctx) -> {
-            TBClientPacketHandler.handleStatus(packet);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(TBPackets.CREATE_BALLOON.type(), (packet, ctx) -> {
-            TBClientPacketHandler.handleCreateBalloon(packet);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(TBPackets.SYNC_CONFIG_TO_PLAYER.type(), (packet, ctx) -> {
-            TBClientPacketHandler.handleSyncConfigToPlayer(packet);
-        });
-
         //? if <= 1.21.11 {
         WorldRenderEvents.AFTER_ENTITIES
         //? } else {

@@ -15,7 +15,7 @@ enum class SynchronizedConfigType(private val serialized: String) : StringRepres
     }
 
     companion object {
-        @JvmField val CODEC: Codec<SynchronizedConfigType> = StringRepresentable.fromValues(SynchronizedConfigType::values)
+        @JvmField val CODEC: Codec<SynchronizedConfigType> = StringRepresentable.fromEnum(SynchronizedConfigType::values)
         @JvmField val SET_CODEC: Codec<EnumSet<SynchronizedConfigType>> = CODEC.listOf().xmap({
             if (it.isNotEmpty())
                 EnumSet.copyOf(it)

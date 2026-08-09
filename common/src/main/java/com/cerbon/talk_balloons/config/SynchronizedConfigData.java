@@ -9,8 +9,6 @@ import xyz.bluspring.modernnetworking.api.v2.codec.NetworkCodecs;
 import xyz.bluspring.modernnetworking.minecraft.api.v2.codec.MinecraftNetworkCodecs;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 //? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation;
     //?} else {

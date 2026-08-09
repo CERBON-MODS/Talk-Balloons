@@ -30,7 +30,7 @@ interface ITBConfig {
     val showOwnBalloon: Boolean
     val onlyDisplayBalloons: Boolean
 
-    var shouldTryUseFallback: Boolean
+    val shouldTryUseFallback: Boolean
 
     val balloonFadeOut: Float
 

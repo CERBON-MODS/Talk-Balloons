@@ -1,4 +1,5 @@
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
+import net.fabricmc.loom.api.fabricapi.FabricApiExtension
 
 plugins {
     alias(libs.plugins.fletching.table)
@@ -27,8 +28,13 @@ dependencies {
     moddedImplementation("com.terraformersmc:modmenu:${mod.dep("modmenu", common?.project?.mod?.dep("modmenu"))}")
     api(libs.mixinextras.fabric)
     annotationProcessor(libs.mixinextras.fabric)
-    moddedApi(libs.sunset)
-    "include"(libs.sunset)
+    api("include"("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}")!!)
+    if (stonecutter.eval(stonecutter.current.version, "<=1.20.4")) {
+        api("include"("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu6")!!)
+    } else {
+        api("include"("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu8")!!)
+    }
     "include"(moddedApi("dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-fabric")!!)
+    moddedApi(libs.modernnetworking.api)
     moddedApi("xyz.bluspring.modernnetworking:modernnetworking-fabric:${libs.versions.modernnetworking.get()}+${mod.dep("modernnetworking_mc", common?.project?.mod?.dep("modernnetworking_mc"))}")
 }

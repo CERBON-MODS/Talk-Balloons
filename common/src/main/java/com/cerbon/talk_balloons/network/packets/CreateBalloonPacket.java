@@ -11,11 +11,12 @@ import xyz.bluspring.modernnetworking.api.v2.packet.NetworkPacket;
 import xyz.bluspring.modernnetworking.api.v2.packet.PacketDefinition;
 import xyz.bluspring.modernnetworking.minecraft.api.v2.codec.MinecraftNetworkCodecs;
 
-import net.minecraft.core.UUIDUtil;
-//? if >= 1.20.6
-//import net.minecraft.network.RegistryFriendlyByteBuf;
+//? if >= 1.20.6 {
+/*import net.minecraft.network.RegistryFriendlyByteBuf;
+*///? } else {
+import net.minecraft.network.FriendlyByteBuf;
+//? }
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 
 import java.util.UUID;
 
@@ -25,8 +26,8 @@ public record CreateBalloonPacket(
     int balloonAge // If -1, use the client config's balloon age.
 ) implements NetworkPacket {
     public static final NetworkCodec</*? if >= 1.20.6 {*//*RegistryFriendlyByteBuf*//*?} else {*/FriendlyByteBuf/*?}*/, CreateBalloonPacket> CODEC = CompositeCodecs.composite(
-        MinecraftNetworkCodecs.toNetworkCodec(UUIDUtil.STREAM_CODEC), CreateBalloonPacket::uuid,
-        MinecraftNetworkCodecs.toNetworkCodec(ComponentSerialization.STREAM_CODEC), CreateBalloonPacket::message,
+        NetworkCodecs.UUID, CreateBalloonPacket::uuid,
+        MinecraftNetworkCodecs.COMPONENT, CreateBalloonPacket::message,
         NetworkCodecs.VAR_INT, CreateBalloonPacket::balloonAge,
         CreateBalloonPacket::new
     );

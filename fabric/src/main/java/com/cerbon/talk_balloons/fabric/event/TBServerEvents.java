@@ -16,13 +16,5 @@ public class TBServerEvents {
         ServerPlayConnectionEvents.DISCONNECT.register((listener, server) -> {
             TalkBalloons.onPlayerDisconnect(listener.getPlayer().getUUID());
         });
-
-        ServerPlayNetworking.registerGlobalReceiver(TBPackets.STATUS.type(), (packet, ctx) -> {
-            TBServerPacketHandler.handleStatus(ctx.player(), packet);
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(TBPackets.SYNC_BALLOON_CONFIG.type(), (packet, ctx) -> {
-            TBServerPacketHandler.handleSyncBalloonConfig(ctx.player(), packet);
-        });
     }
 }
