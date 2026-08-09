@@ -373,6 +373,15 @@ fun generateConfigGui(lastScreen: Screen?): Screen = YetAnotherConfigLib(TBConst
                 controller = tickBox()
             }
 
+            val shouldTryUseFallback by options.registering {
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+
+                binding = bindingFromSunset("shouldTryUseFallback")
+                controller = tickBox()
+            }
+
             val maxBalloons by options.registering {
                 descriptionBuilder {
                     addDefaultText(1)

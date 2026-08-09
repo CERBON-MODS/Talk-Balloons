@@ -29,6 +29,8 @@
 
     "yacl3.config.talk_balloons.category.global.group.preferences.option.isEnabled": "Enable Mod",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.isEnabled.description": "When disabled, all balloons will stop rendering.",
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.shouldTryUseFallback": "Try use fallback message detection?",
+    "yacl3.config.talk_balloons.category.global.group.preferences.option.shouldTryUseFallback.description": "When enabled, Talk Balloons will try to automatically detect every system message sent by the server to detect for chat messages from players. Usually useful for many minigame network servers.",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.maxBalloons": "Max balloons",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.maxBalloons.description": "The maximum amount of balloons that are allowed for a player.",
     "yacl3.config.talk_balloons.category.global.group.preferences.option.balloonAge": "Balloon age",

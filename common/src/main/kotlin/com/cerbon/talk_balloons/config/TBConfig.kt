@@ -31,7 +31,7 @@ object TBConfig : ITBConfig {
     override var showOwnBalloon: Boolean = true
     override var onlyDisplayBalloons: Boolean = false
 
-    override var shouldTryUseFallback: Boolean = false
+    override var shouldTryUseFallback: Boolean = true
 
     override var balloonFadeOut: Float = 0.4f
 

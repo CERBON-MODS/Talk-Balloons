@@ -49,6 +49,7 @@ object TBConfigManager {
         value("isEnabled", Codec.BOOL, TBConfig::isEnabled)
         value("showOwnBalloon", Codec.BOOL, TBConfig::showOwnBalloon)
         value("onlyDisplayBalloons", Codec.BOOL, TBConfig::onlyDisplayBalloons)
+        value("shouldTryUseFallback", Codec.BOOL, TBConfig::shouldTryUseFallback)
 
         float("balloonFadeOut", 0f, 5f, TBConfig::balloonFadeOut)
 
