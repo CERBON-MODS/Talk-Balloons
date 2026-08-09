@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation as Identifier
  *///?}
 import xyz.bluspring.sunset.SunsetConfig
 import xyz.bluspring.sunset.serializer.JsonWithCommentsSerializer
-//? if <= 1.20.1 {
+//? if <= 1.20.4 {
 import com.mojang.datafixers.util.Either
 import java.util.function.Function
 //? }
@@ -55,7 +55,7 @@ object TBConfigManager {
         value("syncedConfigs", SynchronizedConfigType.SET_CODEC, TBConfig::syncedConfigs)
     }
 
-    //? if <= 1.20.1 {
+    //? if <= 1.20.4 {
     private fun <T> withAlternative(primary: Codec<T>, alternative: Codec<out T>): Codec<T> {
         return Codec.either(primary, alternative)
             .xmap({ it.map(Function.identity(), Function.identity()) }, { Either.left(it) })

@@ -21,6 +21,6 @@ public record TalkBalloonsStatusServerPacket(
 
     @Override
     public @NotNull PacketDefinition<? extends ByteBuf, ? extends NetworkPacket> getDefinition() {
-        return TBPackets.STATUS_SERVER;
+        return TBPackets.STATUS;
     }
 }

@@ -1,6 +1,6 @@
 package com.cerbon.talk_balloons.client
 
-//? if > 1.20.1 {
+//? if > 1.20.4 {
 /*import com.mojang.blaze3d.vertex.MeshData
 *///? } else {
 import com.mojang.blaze3d.vertex.BufferBuilder
@@ -11,7 +11,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder
 
 @JvmRecord
 data class QueuedBalloonRender(
-    //? if > 1.20.1 {
+    //? if > 1.20.4 {
     /*val meshData: MeshData,
     *///? } else {
     val meshData: BufferBuilder.RenderedBuffer,

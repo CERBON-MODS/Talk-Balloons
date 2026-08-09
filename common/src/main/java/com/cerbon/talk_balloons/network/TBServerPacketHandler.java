@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class TBServerPacketHandler {
     public static void init() {
-        MinecraftServerPacketHandlers.PLAY.register(TBPackets.STATUS_SERVER, (packet, ctx) -> handleStatus(ctx.getPlayer(), packet));
+        MinecraftServerPacketHandlers.PLAY.register(TBPackets.STATUS, (packet, ctx) -> handleStatus(ctx.getPlayer(), packet));
         MinecraftServerPacketHandlers.PLAY.register(TBPackets.SYNC_BALLOON_CONFIG, (packet, ctx) -> handleSyncBalloonConfig(ctx.getPlayer(), packet));
     }
 

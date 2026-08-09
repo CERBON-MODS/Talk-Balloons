@@ -121,6 +121,4 @@ sealed interface GuiSpriteScaling {
         }
     }
 }
-//? } else {
-/*typealias GuiSpriteScaling = net.minecraft.client.resources.metadata.gui.GuiSpriteScaling
-*///? }
+//? }

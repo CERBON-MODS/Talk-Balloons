@@ -16,12 +16,12 @@ import xyz.bluspring.modernnetworking.minecraft.api.v2.packet.MinecraftPacketReg
 import net.minecraft.network.FriendlyByteBuf;
 
 public class TBPackets {
-    public static final int PROTOCOL_VERSION = 2;
+    public static final int PROTOCOL_VERSION = 3;
     private static final NamespacedPacketRegistry SERVER_REGISTRY = MinecraftPacketRegistries.SERVER_PLAY.namespaced(TBConstants.MOD_ID);
     private static final NamespacedPacketRegistry CLIENT_REGISTRY = MinecraftPacketRegistries.CLIENT_PLAY.namespaced(TBConstants.MOD_ID);
 
     // Dual (C <-> S) packets
-    public static final PacketDefinition<FriendlyByteBuf, TalkBalloonsStatusServerPacket> STATUS_SERVER = SERVER_REGISTRY.register("status/server", TalkBalloonsStatusServerPacket.CODEC);
+    public static final PacketDefinition<FriendlyByteBuf, TalkBalloonsStatusServerPacket> STATUS = SERVER_REGISTRY.register("status", TalkBalloonsStatusServerPacket.CODEC);
     public static final PacketDefinition<FriendlyByteBuf, TalkBalloonsStatusClientPacket> STATUS_CLIENT = CLIENT_REGISTRY.register("status/client", TalkBalloonsStatusClientPacket.CODEC);
 
     // Serverbound (C -> S) packets

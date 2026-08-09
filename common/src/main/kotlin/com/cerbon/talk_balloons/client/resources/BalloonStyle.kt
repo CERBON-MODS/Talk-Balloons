@@ -3,7 +3,7 @@ package com.cerbon.talk_balloons.client.resources
 import com.cerbon.talk_balloons.TalkBalloons
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-//? if <= 1.20.1 {
+//? if <= 1.20.4 {
 import com.mojang.datafixers.util.Either
 import com.mojang.serialization.DataResult
 import java.util.function.Function
@@ -82,7 +82,7 @@ data class BalloonStyle(
                 .apply(instance, ::BalloonStyle)
         }
 
-        //? if <= 1.20.1 {
+        //? if <= 1.20.4 {
         private fun <T> withAlternative(primary: Codec<T>, alternative: Codec<out T>): Codec<T> {
             return Codec.either(primary, alternative)
                 .xmap({ it.map(Function.identity(), Function.identity()) }, { Either.left(it) })

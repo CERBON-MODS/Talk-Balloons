@@ -8,7 +8,11 @@ import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager
 *///? }
 import com.cerbon.talk_balloons.client.resources.BalloonStyle
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager
+//? if <= 1.20.1 {
 import com.cerbon.talk_balloons.client.resources.GuiSpriteScaling
+//? } else {
+/*import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling
+*///? }
 import com.cerbon.talk_balloons.compat.CompatHandler
 import com.cerbon.talk_balloons.compat.iris.IrisCompat
 import com.cerbon.talk_balloons.config.ITBConfig
@@ -45,7 +49,7 @@ import java.util.OptionalInt
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferBuilder
 
-//? if > 1.20.1 {
+//? if > 1.20.4 {
 /*import com.mojang.blaze3d.vertex.ByteBufferBuilder
 *///? }
 
@@ -181,7 +185,7 @@ object BalloonRenderer {
 
     private const val BALLOON_BUFFER_SIZE = 1 * 1024 * 1024 // 1 MiB of data max
 
-    //? if > 1.20.1 {
+    //? if > 1.20.4 {
     /*private val bufferBuilder = ByteBufferBuilder(BALLOON_BUFFER_SIZE)
     *///? }
 
@@ -243,7 +247,7 @@ object BalloonRenderer {
         val arrowSprite = balloonAtlas.getSprite(style.arrow)
         *///? }
 
-        //? if > 1.20.1 {
+        //? if > 1.20.4 {
         /*val consumer = BufferBuilder(this.bufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.PARTICLE)
         *///? } else {
         val consumer = BufferBuilder(BALLOON_BUFFER_SIZE)
@@ -341,7 +345,7 @@ object BalloonRenderer {
         }
 
         val meshData = consumer
-            //? if > 1.20.1 {
+            //? if > 1.20.4 {
             /*.build()
             *///? } else {
             .endOrDiscardIfEmpty()
@@ -681,7 +685,9 @@ object BalloonRenderer {
     //? if <= 1.20.1 {
     private fun TextureAtlasSprite.getU(u: Float): Float = this.getU(u.toDouble() * 16)
     private fun TextureAtlasSprite.getV(v: Float): Float = this.getV(v.toDouble() * 16)
+    //? }
 
+    //? if <= 1.20.4 {
     private fun VertexConsumer.addVertex(pose: PoseStack.Pose, x: Float, y: Float, z: Float): VertexConsumer = this.vertex(pose.pose(), x, y, z)
     private fun VertexConsumer.setUv(u: Float, v: Float): VertexConsumer = this.uv(u, v)
     private fun VertexConsumer.setColor(color: Int): VertexConsumer = this.color(color)
@@ -708,28 +714,28 @@ object BalloonRenderer {
             .setUv(u0, v0)
             .setColor(color)
             .setLight(light)
-            //? if <= 1.20.1
+            //? if <= 1.20.4
             .endVertex()
 
         consumer.addVertex(pose, x, y2, z)
             .setUv(u0, v1)
             .setColor(color)
             .setLight(light)
-            //? if <= 1.20.1
+            //? if <= 1.20.4
             .endVertex()
 
         consumer.addVertex(pose, x2, y2, z)
             .setUv(u1, v1)
             .setColor(color)
             .setLight(light)
-            //? if <= 1.20.1
+            //? if <= 1.20.4
             .endVertex()
 
         consumer.addVertex(pose, x2, y, z)
             .setUv(u1, v0)
             .setColor(color)
             .setLight(light)
-            //? if <= 1.20.1
+            //? if <= 1.20.4
             .endVertex()
     }
 }

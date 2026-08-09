@@ -18,10 +18,10 @@ import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 /*import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 *///? }
 //? if > 1.20.4 {
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-//?} else {
-/*import net.neoforged.neoforge.client.ConfigScreenHandler;
-*///?}
+/*import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+*///?} else {
+import net.neoforged.neoforge.client.ConfigScreenHandler;
+//?}
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
@@ -29,16 +29,16 @@ public class TBClientEventsNeoForge {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         //? if > 1.20.4 {
-        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> (client, parent) -> {
-        //?} else {
-        /*ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> {
-        *///?}
+        /*ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> (client, parent) -> {
+        *///?} else {
+        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> {
+        //?}
             return TBConfigGuiKt.generateConfigGui(parent);
         //? if > 1.20.4 {
-        });
-        //?} else {
-        /*}));
-        *///?}
+        /*});
+        *///?} else {
+        }));
+        //?}
     }
 
     //? if < 1.21.4 {

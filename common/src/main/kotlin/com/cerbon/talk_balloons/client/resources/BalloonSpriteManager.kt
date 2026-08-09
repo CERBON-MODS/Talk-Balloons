@@ -34,8 +34,8 @@ class BalloonSpriteManager(textureManager: TextureManager) : TextureAtlasHolder(
         //? if < 1.21.4 {
         AnimationMetadataSection.SERIALIZER,
         //? } else {
-        /^AnimationMetadataSection.TYPE,
-        ^///? }
+        /*AnimationMetadataSection.TYPE,
+        *///? }
         GuiMetadataSection.TYPE
     )
     *///? }
