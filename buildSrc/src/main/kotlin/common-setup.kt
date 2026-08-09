@@ -99,6 +99,10 @@ fun Project.setupCommon(module: String) {
                     }
                 }
 
+                requires {
+                    slug = "modernnetworking"
+                }
+
                 embeds {
                     slug = "yacl"
                 }
@@ -126,6 +130,10 @@ fun Project.setupCommon(module: String) {
                     requires {
                         slug = "kotlinlangforge"
                     }
+                }
+
+                requires {
+                    slug = "modernnetworking"
                 }
 
                 embeds {
