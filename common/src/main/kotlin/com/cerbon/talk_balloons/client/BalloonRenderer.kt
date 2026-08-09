@@ -279,13 +279,16 @@ object BalloonRenderer {
             val textColor = defaultTextColor or (balloonOpacity shl 24)
             val balloonTint = defaultBalloonTint or (balloonOpacity shl 24)
 
+            val dividedMessage = font.split(message.text, config.maxBalloonWidth)
+            if (dividedMessage.isEmpty()) // Safeguard against messages somehow being empty
+                return@forEachIndexed
+
             poseStack.pushPose()
 
             poseStack.translate(0.0f, playerHeight + config.balloonsHeightOffset, 0.0f)
             poseStack.mulPose(Axis.YP.rotationDegrees(-cameraYaw))
             poseStack.scale(-0.025f, -0.025f, -0.025f)
 
-            val dividedMessage = font.split(message.text, config.maxBalloonWidth)
             val greatestTextWidth = dividedMessage.maxOf { font.width(it) }
 
             var textDistance = 0
