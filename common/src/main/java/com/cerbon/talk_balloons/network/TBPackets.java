@@ -31,10 +31,6 @@ public class TBPackets {
     public static final PacketDefinition</*? if >= 1.20.6 {*//*RegistryFriendlyByteBuf*//*?} else {*/FriendlyByteBuf/*?}*/, CreateBalloonPacket> CREATE_BALLOON = CLIENT_REGISTRY.register("create_balloon", CreateBalloonPacket.CODEC);
     public static final PacketDefinition<FriendlyByteBuf, SyncBalloonConfigToPlayerPacket> SYNC_CONFIG_TO_PLAYER = CLIENT_REGISTRY.register("sync_config_to_player", SyncBalloonConfigToPlayerPacket.CODEC);
 
-    private static <B extends FriendlyByteBuf, V extends NetworkPacket> PacketDefinition<B, V> registerDual(String path, NetworkCodec<B, V> codec) {
-        return SERVER_REGISTRY.register(CLIENT_REGISTRY.register(path, codec));
-    }
-
     public static void init() {
         TBServerPacketHandler.init();
         TBClientPacketHandler.init();

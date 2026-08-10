@@ -50,7 +50,11 @@ object BalloonStyleManager : SimplePreparableReloadListener<Map<Identifier, Ball
                 resource.openAsReader().use { reader ->
                     val json = JsonParser.parseReader(reader)
                     map[id] = BalloonStyle.CODEC.decode(JsonOps.INSTANCE, json)
+                        //? if <= 1.20.4 {
                         .get().orThrow().first
+                        //? } else {
+                        /*.orThrow.first
+                        *///? }
                 }
             } catch (e: Throwable) {
                 logger.error("Failed to parse balloon style $id from $fileId", e)

@@ -143,13 +143,13 @@ fun Project.setupCommon(module: String) {
         }
 
         tasks.named<Jar>("jar") {
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             from(zipTree(commonProj.tasks.named<Jar>("jar").get().archiveFile))
             archiveClassifier = "dev"
         }
 
         tasks.named<Jar>("sourcesJar") {
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             from(zipTree(commonProj.tasks.named<Jar>("sourcesJar").get().archiveFile))
         }
 
@@ -160,12 +160,7 @@ fun Project.setupCommon(module: String) {
                 archiveClassifier = null
             }
 
-            if (module == "neoforge") {
-                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-            } else if (!shouldRemap()) {
-                duplicatesStrategy = DuplicatesStrategy.INCLUDE
-            }
-
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             from(zipTree(tasks.named<Jar>("jar").get().archiveFile))
         }
 
