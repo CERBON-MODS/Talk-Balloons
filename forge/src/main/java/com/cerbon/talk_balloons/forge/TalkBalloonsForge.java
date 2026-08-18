@@ -10,12 +10,14 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.LoadingModList;
 
 @Mod(TBConstants.MOD_ID)
 public class TalkBalloonsForge {
-    public TalkBalloonsForge(IEventBus bus) {
+    public TalkBalloonsForge() {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         TalkBalloons.init();
         CompatHandler.isIrisLoaded = isModLoaded("iris") || isModLoaded("oculus");
 

@@ -24,11 +24,11 @@ dependencies {
         isTransitive = false
     })
     if (stonecutter.eval(stonecutter.current.version, "<=1.20.4")) {
-        api(jarJar("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu6") {
+        api(jarJar("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu6-merged") {
             isTransitive = false
         })
     } else {
-        api(jarJar("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu8") {
+        api(jarJar("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu8-merged") {
             isTransitive = false
         })
     }
