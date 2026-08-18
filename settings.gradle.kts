@@ -35,4 +35,6 @@ stonecutter {
     }
 }
 
+includeBuild("build-logic")
+
 rootProject.name = "TalkBalloons"

@@ -50,9 +50,10 @@ iris-legacy = { module = "maven.modrinth:iris", version.ref = "iris-legacy" }
 modernnetworking-api = { module = "xyz.bluspring.modernnetworking:modernnetworking-api", version.ref = "modernnetworking" }
 
 [plugins]
+fabric-loom = { id = "net.fabricmc.fabric-loom", version.ref = "fabric-loom" }
 moddevgradle = { id = "net.neoforged.moddev" }
 moddevgradle-legacy = { id = "net.neoforged.moddev.legacyforge" }
-kotlin = { id = "org.jetbrains.kotlin.jvm" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 fletching-table = { id = "dev.kikugie.fletching-table", version.ref = "fletching-table" }
-shadow = { id = "com.gradleup.shadow" }
-mod-publish = { id = "me.modmuss50.mod-publish-plugin" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+mod-publish = { id = "me.modmuss50.mod-publish-plugin", version.ref = "mod-publish" }
