@@ -14,7 +14,12 @@ import net.minecraft.server.packs.resources.Resource;
 
 @Mixin(SpriteLoader.class)
 public abstract class SpriteLoaderMixin {
-    @ModifyReturnValue(method = "loadSprite", at = @At("RETURN"))
+    @SuppressWarnings("UnresolvedMixinReference") // Forge sucks.
+    @ModifyReturnValue(method = {
+        "loadSprite",
+        //? if <= 1.20.1
+        "m_245083_",
+    }, at = @At("RETURN"))
     private static SpriteContents tryLoadGuiSpriteMetadata(SpriteContents original, @Local(argsOnly = true) Resource resource) {
         try {
             var guiSection = resource.metadata().getSection(BalloonSpriteManager.SECTION_SERIALIZER);

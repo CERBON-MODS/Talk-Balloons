@@ -55,7 +55,12 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<
     }
 
     //? if <= 1.21.1 {
-    @Inject(method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"))
+    @SuppressWarnings("UnresolvedMixinReference") // Forge sucks.
+    @Inject(method = {
+        "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+        //? if <= 1.20.1
+        "m_7392_(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+    }, at = @At("HEAD"))
     private void tb_render(AbstractClientPlayer player, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
         if (player.isInvisible() || !player.isAlive()) return;
 

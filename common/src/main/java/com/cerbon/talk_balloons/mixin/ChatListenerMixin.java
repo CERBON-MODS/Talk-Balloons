@@ -31,15 +31,26 @@ import java.util.UUID;
 public class ChatListenerMixin {
     //? if >= 1.19.2 {
     // Try to extract the player from the sent message, to workaround an incompatibility with No Chat Reports.
-    @WrapWithCondition(method = "handleSystemMessage",
+    @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"}) // Forge sucks.
+    @WrapWithCondition(
+        method = {
+            "handleSystemMessage",
+            //? if <= 1.20.1
+            "m_240494_",
+        },
         //? if <= 1.21.11 {
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;)V")
+        at = {
+            @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;)V"),
+            //? if <= 1.20.1
+            @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;m_93785_(Lnet/minecraft/network/chat/Component;)V"),
+        },
         //? } else {
         /*at = {
             @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addClientSystemMessage(Lnet/minecraft/network/chat/Component;)V"),
             @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addServerSystemMessage(Lnet/minecraft/network/chat/Component;)V")
-        }
+        },
         *///? }
+        expect = 1, require = 1
     )
     private boolean tryGetChatMessageNCR(ChatComponent instance, Component component) {
         if (TalkBalloonsClient.hasServerSupport() || !TalkBalloons.config.getShouldTryUseFallback())
@@ -69,9 +80,19 @@ public class ChatListenerMixin {
         return !config.onlyDisplayBalloons().orElse(TalkBalloons.config.getOnlyDisplayBalloons());
     }
 
-    @WrapWithCondition(method = "showMessageToPlayer",
+    @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"}) // Forge sucks.
+    @WrapWithCondition(
+        method = {
+            "showMessageToPlayer",
+            //? if <= 1.20.1
+            "m_246494_",
+        },
         //? if <= 1.21.11 {
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", ordinal = 0)
+        at = {
+            @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", ordinal = 0),
+            //? if <= 1.20.1
+            @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;m_240964_(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", ordinal = 0),
+        }
         //? } else {
         /*at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addPlayerMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)V", ordinal = 0)
         *///? }

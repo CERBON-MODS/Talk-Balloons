@@ -47,7 +47,12 @@ public abstract class PlayerMixin extends LivingEntity implements ITalkBalloonsP
         return talk_balloons$balloonMessages;
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @SuppressWarnings("UnresolvedMixinReference") // Forge sucks.
+    @Inject(method = {
+        "tick",
+        //? if <= 1.20.1
+        "m_8119_",
+    }, at = @At("HEAD"))
     private void tickQueuedEvents(CallbackInfo ci) {
         if (this.talk_balloons$balloonMessages == null)
             return;
