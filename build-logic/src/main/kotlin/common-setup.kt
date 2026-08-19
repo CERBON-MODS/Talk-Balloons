@@ -143,14 +143,14 @@ fun Project.setupCommon(module: String) {
         }
 
         tasks.named<Jar>("jar") {
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE // intentional, otherwise no-remap Fabric breaks
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             from(zipTree(commonProj.tasks.named<Jar>("jar").get().archiveFile))
             if (module != "forge") // ??????
                 archiveClassifier = "dev"
         }
 
         tasks.named<Jar>("sourcesJar") {
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE // intentional, otherwise no-remap Fabric breaks
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             from(zipTree(commonProj.tasks.named<Jar>("sourcesJar").get().archiveFile))
         }
 
@@ -161,11 +161,7 @@ fun Project.setupCommon(module: String) {
                 archiveClassifier = null
             }
 
-            if (module == "neoforge") {
-                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-            } else if (!shouldRemap()) {
-                duplicatesStrategy = DuplicatesStrategy.INCLUDE // To future me: do not remove this, this is needed because shadowJar is stupid.
-            }
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             from(zipTree(tasks.named<Jar>("jar").get().archiveFile))
         }
 
