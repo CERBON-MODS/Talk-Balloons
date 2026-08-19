@@ -52,7 +52,7 @@ public abstract class PlayerMixin extends LivingEntity implements ITalkBalloonsP
         "tick",
         //? if <= 1.20.1
         "m_8119_",
-    }, at = @At("HEAD"), expect = 1, require = 1, allow = 1)
+    }, at = @At("HEAD"), expect = 1, require = 1)
     private void tickQueuedEvents(CallbackInfo ci) {
         if (this.talk_balloons$balloonMessages == null)
             return;

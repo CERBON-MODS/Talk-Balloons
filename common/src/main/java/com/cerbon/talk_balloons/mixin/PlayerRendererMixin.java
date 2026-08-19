@@ -60,7 +60,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<
         "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
         //? if <= 1.20.1
         "m_7392_(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-    }, at = @At("HEAD"), expect = 1, require = 1, allow = 1)
+    }, at = @At("HEAD"), expect = 1, require = 1)
     private void tb_render(AbstractClientPlayer player, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
         if (player.isInvisible() || !player.isAlive()) return;
 
