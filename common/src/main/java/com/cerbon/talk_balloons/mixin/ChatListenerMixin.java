@@ -95,7 +95,7 @@ public class ChatListenerMixin {
         },
         allow = 1, require = 1
         //? } else {
-        /*at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addPlayerMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)V", ordinal = 0),
+        /*at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;addPlayerMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)V", ordinal = 0)
         *///? }
     )
     private boolean getChatMessage(ChatComponent instance, Component component, MessageSignature messageSignature, GuiMessageTag guiMessageTag, @Local(argsOnly = true) PlayerChatMessage chatMessage) {
