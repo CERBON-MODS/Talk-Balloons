@@ -163,10 +163,12 @@ fun Project.setupCommon(module: String) {
 
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             from(zipTree(tasks.named<Jar>("jar").get().archiveFile))
+            if (module == "fabric" && !shouldRemap())
+                exclude { it.path.startsWith("META-INF/jars") }
         }
 
         tasks.named<ProcessResources>("processResources") {
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             from(commonProj.extensions.getByName<SourceSetContainer>("sourceSets").named("main").get().resources)
         }
 
