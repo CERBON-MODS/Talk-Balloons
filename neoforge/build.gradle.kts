@@ -20,9 +20,6 @@ val shadedDep by configurations.named("shadedDep")
 dependencies {
     api("dev.nyon:KotlinLangForge:${libs.versions.kotlinlangforge.get()}-${klfLangVersion}+neoforge")
 
-    api(jarJar("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}") {
-        isTransitive = false
-    })
     if (stonecutter.eval(stonecutter.current.version, "<=1.20.4")) {
         api(jarJar("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu6-merged") {
             isTransitive = false
