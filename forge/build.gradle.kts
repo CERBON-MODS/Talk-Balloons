@@ -13,8 +13,8 @@ legacyForge {
 }
 
 mixin {
+    config("${mod.id}-common.mixins.json")
     config("${mod.id}.mixins.json")
-    config("${mod.id}.forge.mixins.json")
 }
 
 setupCommon("forge")
