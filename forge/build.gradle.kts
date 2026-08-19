@@ -43,3 +43,13 @@ dependencies {
     })
     moddedApi("xyz.bluspring.modernnetworking:modernnetworking-forge:${libs.versions.modernnetworking.get()}+${mod.dep("modernnetworking_mc", common?.project?.mod?.dep("modernnetworking_mc"))}")
 }
+
+tasks {
+    jar {
+        manifest {
+            attributes(mapOf(
+                "MixinConfigs" to "${mod.id}-common.mixins.json,${mod.id}.mixins.json"
+            ))
+        }
+    }
+}
