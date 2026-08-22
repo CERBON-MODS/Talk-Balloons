@@ -113,6 +113,8 @@ fun Project.setupCommon(module: String) {
                 accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
 
                 minecraftVersions.addAll(common.project.mod.prop("supported_versions").split(","))
+                client = true
+                server = true
 
                 if (module == "fabric") {
                     requires {
