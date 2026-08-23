@@ -4,6 +4,7 @@ import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.compat.CompatHandler;
 import com.cerbon.talk_balloons.forge.event.TBClientEventsForge;
 import com.cerbon.talk_balloons.forge.event.TBServerEventsForge;
+import com.cerbon.talk_balloons.network.TBPackets;
 import com.cerbon.talk_balloons.util.TBConstants;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,6 +30,7 @@ public class TalkBalloonsForge {
                  *///? }
                 == Dist.CLIENT
         ) {
+            TBPackets.initClient();
             MinecraftForge.EVENT_BUS.register(TBClientEventsForge.TBForgeClientEvents.class);
             bus.register(TBClientEventsForge.class);
         }

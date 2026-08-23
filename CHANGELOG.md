@@ -1,5 +1,2 @@
-## [1.6.0] - 2026-08-23
-- Implement config for disabling "fallback mode" for balloon text detection.
-- Re-add Modern Networking dependency.
-- Reimplement support for Minecraft 1.20.1 and 1.20.4.
-- Fix random crashes caused by blank messages being detected
+## [1.6.1] - 2026-08-23
+- Fix servers crashing with Talk Balloons installed

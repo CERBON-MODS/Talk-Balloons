@@ -4,6 +4,7 @@ import com.cerbon.talk_balloons.TalkBalloons;
 import com.cerbon.talk_balloons.compat.CompatHandler;
 import com.cerbon.talk_balloons.neoforge.event.TBClientEventsNeoForge;
 import com.cerbon.talk_balloons.neoforge.event.TBServerEventsNeoForge;
+import com.cerbon.talk_balloons.network.TBPackets;
 import com.cerbon.talk_balloons.util.TBConstants;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -27,6 +28,7 @@ public class TalkBalloonsNeoForge {
             *///? }
                 == Dist.CLIENT
         ) {
+            TBPackets.initClient();
             NeoForge.EVENT_BUS.register(TBClientEventsNeoForge.TBNeoForgeClientEvents.class);
             bus.register(TBClientEventsNeoForge.class);
         }

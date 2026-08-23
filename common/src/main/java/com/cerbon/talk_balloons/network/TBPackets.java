@@ -33,6 +33,9 @@ public class TBPackets {
 
     public static void init() {
         TBServerPacketHandler.init();
+    }
+
+    public static void initClient() {
         TBClientPacketHandler.init();
     }
 }

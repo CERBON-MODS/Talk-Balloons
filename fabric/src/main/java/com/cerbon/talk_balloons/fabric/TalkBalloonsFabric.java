@@ -13,6 +13,7 @@ import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
 import com.cerbon.talk_balloons.compat.CompatHandler;
 import com.cerbon.talk_balloons.fabric.event.TBClientEvents;
 import com.cerbon.talk_balloons.fabric.event.TBServerEvents;
+import com.cerbon.talk_balloons.network.TBPackets;
 
 //? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation;
@@ -41,6 +42,7 @@ public class TalkBalloonsFabric implements ModInitializer, ClientModInitializer 
 
     @Override
     public void onInitializeClient() {
+        TBPackets.initClient();
         TBClientEvents.init();
         //? if < 1.21.9 {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
