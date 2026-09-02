@@ -1,2 +1,2 @@
-## [1.6.1] - 2026-08-23
-- Fix servers crashing with Talk Balloons installed
+## [1.6.2] - 2026-09-02
+- Fixed unable to connect to Neo/Forge servers with Talk Balloons installed

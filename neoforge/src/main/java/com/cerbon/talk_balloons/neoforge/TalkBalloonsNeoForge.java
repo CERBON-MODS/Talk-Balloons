@@ -20,6 +20,8 @@ public class TalkBalloonsNeoForge {
         TalkBalloons.init();
         CompatHandler.isIrisLoaded = isModLoaded("iris") || isModLoaded("oculus");
 
+        TBPackets.initClient(); // Forge is weird, you need to register the handlers on the server too.
+
         if (
             //? if < 1.21.10 {
             FMLLoader.getDist()
@@ -28,7 +30,6 @@ public class TalkBalloonsNeoForge {
             *///? }
                 == Dist.CLIENT
         ) {
-            TBPackets.initClient();
             NeoForge.EVENT_BUS.register(TBClientEventsNeoForge.TBNeoForgeClientEvents.class);
             bus.register(TBClientEventsNeoForge.class);
         }

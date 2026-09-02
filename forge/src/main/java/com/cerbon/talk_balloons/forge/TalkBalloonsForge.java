@@ -22,6 +22,8 @@ public class TalkBalloonsForge {
         TalkBalloons.init();
         CompatHandler.isIrisLoaded = isModLoaded("iris") || isModLoaded("oculus");
 
+        TBPackets.initClient(); // Forge is weird, you need to register the handlers on the server too.
+
         if (
             //? if < 1.21.10 {
             FMLLoader.getDist()
@@ -30,7 +32,6 @@ public class TalkBalloonsForge {
                  *///? }
                 == Dist.CLIENT
         ) {
-            TBPackets.initClient();
             MinecraftForge.EVENT_BUS.register(TBClientEventsForge.TBForgeClientEvents.class);
             bus.register(TBClientEventsForge.class);
         }
