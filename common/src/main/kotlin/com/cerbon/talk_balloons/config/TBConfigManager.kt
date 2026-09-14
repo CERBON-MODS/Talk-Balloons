@@ -46,10 +46,10 @@ object TBConfigManager {
         integer("textColor", TBConfig::textColor)
         integer("balloonTint", TBConfig::balloonTint)
 
-        value("isEnabled", Codec.BOOL, TBConfig::isEnabled)
-        value("showOwnBalloon", Codec.BOOL, TBConfig::showOwnBalloon)
-        value("onlyDisplayBalloons", Codec.BOOL, TBConfig::onlyDisplayBalloons)
-        value("shouldTryUseFallback", Codec.BOOL, TBConfig::shouldTryUseFallback)
+        boolean("isEnabled", TBConfig::isEnabled)
+        boolean("showOwnBalloon", TBConfig::showOwnBalloon)
+        boolean("onlyDisplayBalloons", TBConfig::onlyDisplayBalloons)
+        boolean("shouldTryUseFallback", TBConfig::shouldTryUseFallback)
 
         float("balloonFadeOut", 0f, 5f, TBConfig::balloonFadeOut)
 
