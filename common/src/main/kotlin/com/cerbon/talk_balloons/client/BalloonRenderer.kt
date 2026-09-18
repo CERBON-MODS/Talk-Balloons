@@ -19,6 +19,20 @@ import com.cerbon.talk_balloons.config.ITBConfig
 import com.cerbon.talk_balloons.util.HistoricalData
 import com.cerbon.talk_balloons.config.SynchronizedConfigData
 import com.cerbon.talk_balloons.util.BalloonData
+
+//? if >= 26.3 {
+/*import com.mojang.renderpearl.api.buffers.GpuBuffer
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
+import com.mojang.renderpearl.api.pipeline.BlendFunction
+import com.mojang.renderpearl.api.pipeline.ColorTargetState
+import com.mojang.renderpearl.api.pipeline.CompareOp
+import com.mojang.renderpearl.api.pipeline.DepthStencilState
+import com.mojang.renderpearl.api.pipeline.PrimitiveTopology
+import com.mojang.renderpearl.api.textures.FilterMode
+import com.mojang.renderpearl.api.textures.GpuSampler
+import com.mojang.renderpearl.api.textures.GpuTextureView
+import net.minecraft.client.gui.font.TextRenderable
+*///? } else {
 //? if >= 1.21.5 {
 /*import com.mojang.blaze3d.buffers.GpuBuffer
 //? if <= 1.21.5 {
@@ -38,13 +52,13 @@ import com.mojang.blaze3d.pipeline.DepthStencilState
 import com.mojang.blaze3d.platform.CompareOp
 *///? }
 import com.mojang.blaze3d.shaders.UniformType
-import java.util.OptionalDouble
 import java.util.OptionalInt
 *///? }
 
 //? if >= 1.21.11 {
 /*import com.mojang.blaze3d.textures.FilterMode
 *///? }
+//? }
 
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferBuilder
@@ -59,7 +73,9 @@ import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+//? if < 26.3 {
 import com.mojang.blaze3d.vertex.VertexFormat
+//? }
 import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
@@ -76,7 +92,8 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.math.min
 
 //? if >= 1.21.8 {
-/*import com.mojang.blaze3d.textures.GpuTextureView
+/*//? if < 26.3 {
+import com.mojang.blaze3d.textures.GpuTextureView
 
 //? if > 1.21.8 {
 /*import net.minecraft.client.gui.font.TextRenderable
@@ -84,12 +101,14 @@ import kotlin.math.min
 import net.minecraft.client.gui.font.glyphs.BakedGlyph
 //? }
 
+//? }
+
 import net.minecraft.client.renderer.RenderPipelines
 *///? }
 
 //? if < 1.21.11 {
 import net.minecraft.resources.ResourceLocation as Identifier
-//? } else {
+//? } else if < 26.3 {
 /*import com.mojang.blaze3d.textures.GpuSampler
 *///? }
 
@@ -98,7 +117,8 @@ import net.minecraft.resources.ResourceLocation as Identifier
 *///? }
 
 //? if >= 26.2 {
-/*import com.mojang.blaze3d.PrimitiveTopology
+/*//? if < 26.3
+import com.mojang.blaze3d.PrimitiveTopology
 import com.mojang.blaze3d.pipeline.RenderTarget
 import net.minecraft.client.renderer.BindGroupLayouts
 import net.minecraft.client.renderer.rendertype.RenderType
@@ -106,6 +126,9 @@ import org.joml.Matrix4f
 import java.util.Optional
 
 *///? }
+
+//? if >= 1.21.5
+//import java.util.OptionalDouble
 
 object BalloonRenderer {
     //? if < 1.21.9 {
@@ -150,7 +173,12 @@ object BalloonRenderer {
         .withUniform("Fog", UniformType.UNIFORM_BUFFER)
         *///? } else {
         /*// Globals snippet
+        //? if < 26.3 {
         .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+        //? } else {
+        /*.withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
+        .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+        *///? }
         .withBindGroupLayout(BindGroupLayouts.FOG)
         *///? }
         // Particle snippet
@@ -286,7 +314,11 @@ object BalloonRenderer {
             poseStack.pushPose()
 
             poseStack.translate(0.0f, playerHeight + config.balloonsHeightOffset, 0.0f)
+            //? if < 26.3 {
             poseStack.mulPose(Axis.YP.rotationDegrees(-cameraYaw))
+            //? } else {
+            /*poseStack.rotate(Axis.YP.rotationDegrees(-cameraYaw))
+            *///? }
             poseStack.scale(-0.025f, -0.025f, -0.025f)
 
             val greatestTextWidth = dividedMessage.maxOf { font.width(it) }
@@ -499,6 +531,7 @@ object BalloonRenderer {
                 pass.setUniform("DynamicTransforms", dynamicTransforms)
                 *///? }
 
+                //? if < 26.3 {
                 //? if <= 1.21.10 {
 
                 //? if <= 1.21.5 {
@@ -525,6 +558,13 @@ object BalloonRenderer {
                 *///? }
 
                 pass.setPipeline(pipeline)
+                //? } else {
+                /*pass.setUniform("Sampler0", textureView, sampler)
+                pass.setUniform("Sampler2", Minecraft.getInstance().gameRenderer.lightmap(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR))
+
+                pass.setPipeline(RenderSystem.getCompiledPipeline(pipeline))
+                *///? }
+
                 pass.setVertexBuffer(0, vertexBuffer
                     //? if >= 26.2
                     //.slice()

@@ -1,2 +1,2 @@
-## [1.6.3] - 2026-09-15
-- Fixed crash when trying to save config
+## [1.6.4] - 2026-09-19
+- Updated to 26.3

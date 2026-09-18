@@ -2,7 +2,7 @@
 # https://fabricmc.net/develop/
 fabric-loom = "1.17.+"
 # https://projects.neoforged.net/neoforged/moddevgradle
-moddevgradle = "2.0.143"
+moddevgradle = "2.0.147"
 # https://kotlinlang.org/docs/releases.html
 kotlin = "2.3.21"
 # https://codeberg.org/stonecutter/fletching-table/src/branch/main/build.gradle.kts#L18
@@ -33,6 +33,7 @@ sunset = "1.3.3"
 modernnetworking = "2.0.0"
 
 # https://modrinth.com/mod/iris/versions
+iris-moderner = "1.11.6+26.3-fabric"
 iris-modern = "1.8.11+1.21.5-fabric"
 iris-legacy = "1.7.6+1.20.1"
 
@@ -44,6 +45,7 @@ mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
 mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
 mixinextras-fabric = { module = "io.github.llamalad7:mixinextras-fabric", version.ref = "mixinextras" }
 mixinextras-forge = { module = "io.github.llamalad7:mixinextras-forge", version.ref = "mixinextras" }
+iris-moderner = { module = "maven.modrinth:iris", version.ref = "iris-moderner" }
 iris-modern = { module = "maven.modrinth:iris", version.ref = "iris-modern" }
 iris-legacy = { module = "maven.modrinth:iris", version.ref = "iris-legacy" }
 

@@ -32,6 +32,8 @@
         "SpriteContentsMixin",
         "SpriteLoaderMixin",
         //? }
+
+        "LevelRendererMixin",
     ],
     "injectors": {
         "defaultRequire": 1

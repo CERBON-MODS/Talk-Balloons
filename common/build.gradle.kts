@@ -44,12 +44,14 @@ dependencies {
         api("xyz.bluspring.sunset:sunset-config:${libs.versions.sunset.get()}:dfu8")
     }
 
-    if (stonecutter.eval(stonecutter.current.version, ">=1.21.5")) {
+    if (stonecutter.eval(stonecutter.current.version, ">=26.3")) {
+        compileOnly(libs.iris.moderner)
+    } else if (stonecutter.eval(stonecutter.current.version, ">=1.21.5")) {
         compileOnly(libs.iris.modern)
     } else {
         compileOnly(libs.iris.legacy)
     }
-    val yaclDep = "dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-${if (isLegacy) "forge" else "neoforge"}" // Use the Neo variant, since this is MDG.
+    val yaclDep = "dev.isxander:yet-another-config-lib:${mod.dep("yacl", common?.project?.mod?.dep("yacl"))}-${if (isLegacy) "forge" else if (shouldRemap()) "neoforge" else "fabric"}"
 
     if (stonecutter.eval(stonecutter.current.version, "<=1.20.1")) {
         "modCompileOnly"(yaclDep)

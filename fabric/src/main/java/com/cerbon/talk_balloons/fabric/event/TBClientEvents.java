@@ -22,6 +22,7 @@ public class TBClientEvents {
             TalkBalloonsClient.onClientDisconnect();
         });
 
+        //? if < 26.3 {
         //? if <= 1.21.11 {
         WorldRenderEvents.AFTER_ENTITIES
         //? } else {
@@ -30,5 +31,6 @@ public class TBClientEvents {
             .register(context -> {
                 BalloonRenderer.renderBalloons();
             });
+        //? }
     }
 }

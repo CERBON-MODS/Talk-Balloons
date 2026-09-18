@@ -71,6 +71,7 @@ public class TBClientEventsNeoForge {
             TalkBalloonsClient.onClientDisconnect();
         }
 
+        //? if < 26.3 {
         @SubscribeEvent
         //? if >= 26.1 {
         /*public static void onRenderEntities(RenderLevelStageEvent.AfterOpaqueFeatures event) {
@@ -82,5 +83,6 @@ public class TBClientEventsNeoForge {
         //? }
             BalloonRenderer.renderBalloons();
         }
+        //? }
     }
 }
