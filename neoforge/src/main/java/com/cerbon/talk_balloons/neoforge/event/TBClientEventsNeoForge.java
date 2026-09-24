@@ -11,13 +11,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 //? if < 1.21.4 {
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
-//? } else {
-/*import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
-*///? }
+/*import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+*///? } else {
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
+//? }
 //? if >= 1.21.5 {
-/*import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
-*///? }
+import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
+//? }
 //? if > 1.20.4 {
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 //?} else {
@@ -43,27 +43,27 @@ public class TBClientEventsNeoForge {
     }
 
     //? if < 1.21.4 {
-    @SubscribeEvent
+    /*@SubscribeEvent
     public static void onRegisterResourceReloaders(RegisterClientReloadListenersEvent event) {
         event.registerReloadListener(BalloonRenderer.SPRITE_MANAGER);
         event.registerReloadListener(BalloonStyleManager.INSTANCE);
     }
-    //? } else {
-    /*@SubscribeEvent
+    *///? } else {
+    @SubscribeEvent
     public static void onRegisterResourceReloaders(AddClientReloadListenersEvent event) {
         //? if < 1.21.9 {
-        event.addListener(BalloonSpriteManager.ID, BalloonRenderer.SPRITE_MANAGER);
-        //? }
+        /*event.addListener(BalloonSpriteManager.ID, BalloonRenderer.SPRITE_MANAGER);
+        *///? }
         event.addListener(BalloonStyleManager.ID, BalloonStyleManager.INSTANCE);
     }
-    *///? }
+    //? }
 
     //? if >= 1.21.5 {
-    /*@SubscribeEvent
+    @SubscribeEvent
     public static void onRegisterPipelines(RegisterRenderPipelinesEvent event) {
         event.registerPipeline(BalloonRenderer.BALLOON_PIPELINE);
     }
-    *///? }
+    //? }
 
     public static class TBNeoForgeClientEvents {
         @SubscribeEvent
@@ -72,17 +72,17 @@ public class TBClientEventsNeoForge {
         }
 
         //? if < 26.3 {
-        @SubscribeEvent
+        /*@SubscribeEvent
         //? if >= 26.1 {
-        /*public static void onRenderEntities(RenderLevelStageEvent.AfterOpaqueFeatures event) {
-        *///? } else if >= 1.21.8 && <= 1.21.11 {
-        /*public static void onRenderEntities(RenderLevelStageEvent.AfterEntities event) {
-        *///? } else {
-        public static void onRenderEntities(RenderLevelStageEvent event) {
+        public static void onRenderEntities(RenderLevelStageEvent.AfterOpaqueFeatures event) {
+        //? } else if >= 1.21.8 && <= 1.21.11 {
+        /^public static void onRenderEntities(RenderLevelStageEvent.AfterEntities event) {
+        ^///? } else {
+        /^public static void onRenderEntities(RenderLevelStageEvent event) {
             if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) return;
-        //? }
+        ^///? }
             BalloonRenderer.renderBalloons();
         }
-        //? }
+        *///? }
     }
 }

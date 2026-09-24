@@ -30,7 +30,7 @@ stonecutter {
             versions(versions.filter { stonecutter.eval(it, "<=1.20.1") })
         }
         branch("neoforge") {
-            versions(versions.filter { stonecutter.eval(it, ">=1.20.4") && it != "26.3" }) // FIXME: When YACL updates to 26.3 NeoForge, remove this filter
+            versions(versions.filter { stonecutter.eval(it, ">=1.20.4") })
         }
     }
 }
