@@ -215,7 +215,9 @@ object BalloonRenderer {
 
     //? if > 1.20.4 {
     /*private val bufferBuilder = ByteBufferBuilder(BALLOON_BUFFER_SIZE)
-    *///? }
+    *///? } else {
+    private val consumer = BufferBuilder(BALLOON_BUFFER_SIZE)
+    //? }
 
     //? if >= 1.21.8 {
     /*private val textBufferBuilder = ByteBufferBuilder(4 * 1024 * 1024) // 4 MiB of data max
@@ -278,7 +280,6 @@ object BalloonRenderer {
         //? if > 1.20.4 {
         /*val consumer = BufferBuilder(this.bufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.PARTICLE)
         *///? } else {
-        val consumer = BufferBuilder(BALLOON_BUFFER_SIZE)
         consumer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
         //? }
         //? if >= 1.21.8 {
