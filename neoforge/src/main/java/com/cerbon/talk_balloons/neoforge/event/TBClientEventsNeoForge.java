@@ -4,8 +4,8 @@ import com.cerbon.talk_balloons.client.BalloonRenderer;
 import com.cerbon.talk_balloons.client.TalkBalloonsClient;
 import com.cerbon.talk_balloons.client.config.TBConfigGuiKt;
 //? if >= 1.21.4 && < 1.21.9 {
-/*import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager;
-*///? }
+import com.cerbon.talk_balloons.client.resources.BalloonSpriteManager;
+//? }
 import com.cerbon.talk_balloons.client.resources.BalloonStyleManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
@@ -52,8 +52,8 @@ public class TBClientEventsNeoForge {
     @SubscribeEvent
     public static void onRegisterResourceReloaders(AddClientReloadListenersEvent event) {
         //? if < 1.21.9 {
-        /*event.addListener(BalloonSpriteManager.ID, BalloonRenderer.SPRITE_MANAGER);
-        *///? }
+        event.addListener(BalloonSpriteManager.ID, BalloonRenderer.SPRITE_MANAGER);
+        //? }
         event.addListener(BalloonStyleManager.ID, BalloonStyleManager.INSTANCE);
     }
     //? }
@@ -72,17 +72,17 @@ public class TBClientEventsNeoForge {
         }
 
         //? if < 26.3 {
-        /*@SubscribeEvent
+        @SubscribeEvent
         //? if >= 26.1 {
-        public static void onRenderEntities(RenderLevelStageEvent.AfterOpaqueFeatures event) {
-        //? } else if >= 1.21.8 && <= 1.21.11 {
-        /^public static void onRenderEntities(RenderLevelStageEvent.AfterEntities event) {
-        ^///? } else {
-        /^public static void onRenderEntities(RenderLevelStageEvent event) {
+        /*public static void onRenderEntities(RenderLevelStageEvent.AfterOpaqueFeatures event) {
+        *///? } else if >= 1.21.8 && <= 1.21.11 {
+        public static void onRenderEntities(RenderLevelStageEvent.AfterEntities event) {
+        //? } else {
+        /*public static void onRenderEntities(RenderLevelStageEvent event) {
             if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) return;
-        ^///? }
+        *///? }
             BalloonRenderer.renderBalloons();
         }
-        *///? }
+        //? }
     }
 }

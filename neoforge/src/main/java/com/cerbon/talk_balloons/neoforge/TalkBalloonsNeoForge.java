@@ -24,10 +24,10 @@ public class TalkBalloonsNeoForge {
 
         if (
             //? if < 1.21.10 {
-            /*FMLLoader.getDist()
-            *///? } else {
-            FMLLoader.getCurrent().getDist()
-            //? }
+            FMLLoader.getDist()
+            //? } else {
+            /*FMLLoader.getCurrent().getDist()
+            *///? }
                 == Dist.CLIENT
         ) {
             NeoForge.EVENT_BUS.register(TBClientEventsNeoForge.TBNeoForgeClientEvents.class);
